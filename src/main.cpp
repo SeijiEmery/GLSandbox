@@ -13,11 +13,11 @@ using namespace std;
 
 int main(int argc, const char * argv[]) {
     try {
-        auto & app = gl_sandbox::Application::instance();
+        gl_sandbox::Application app;
         app.run();
-    } catch (std::runtime_error & e) {
+    } catch (gl_sandbox::InitializationError & e) {
         std::cerr << e.what() << std::endl;
-        return 0;
+        return -1;
     }
     return 0;
 }

@@ -21,6 +21,7 @@ static void keyCallback (GLFWwindow * window, int key, int scancode, int action,
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
         glfwSetWindowShouldClose(window, GL_TRUE);
     }
+    static_cast<Application*>(glfwGetWindowUserPointer(window))->glfw_keyCallback(window, key, scancode, action, mods);
 }
 
 
@@ -29,8 +30,7 @@ static void keyCallback (GLFWwindow * window, int key, int scancode, int action,
 Application::Application () {
     // Helper function
     auto initFail = [] (const char * msg, bool terminateGLFW = true) {
-//        if (terminateGLFW) glfwTerminate();
-        throw std::runtime_error(msg);
+        throw InitializationError(msg);
         return false;
     };
     
@@ -45,6 +45,8 @@ Application::Application () {
     
     m_mainWindow = glfwCreateWindow(640, 480, "Hello world", NULL, NULL);
     m_mainWindow || initFail("Failed to create window\n");
+    glfwSetWindowUserPointer(m_mainWindow, this);
+//    glfwSetKeyCallback(m_mainWindow, keyCallback);
     
     glfwMakeContextCurrent(m_mainWindow);
     glfwSwapInterval(1);
@@ -55,7 +57,6 @@ Application::Application () {
     std::cout << "Renderer: " << glGetString(GL_RENDERER) << '\n';
     std::cout << "Opengl version: " << glGetString(GL_VERSION) << std::endl;
     
-//    initFail("Failed to success!");
 }
 
 Application::~Application () {

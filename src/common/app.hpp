@@ -11,30 +11,30 @@
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-#include <memory>
+#include <stdexcept>
 
 namespace gl_sandbox {
+    
+struct InitializationError : public std::runtime_error {
+    InitializationError (const char * msg) : std::runtime_error(msg) {}
+};
 
 class Application {
-private:
+public:
     Application ();
+    ~Application ();
+    
+    // Non-copyable, etc
     Application (const Application &) = delete;
     Application & operator= (const Application &) = delete;
-    ~Application();
-public:
-    static Application & instance () {
-        static Application instance;
-        return instance;
-    }
+
     void run ();
-private:
+public:
     void glfw_keyCallback (GLFWwindow * window, int key, int scancode, int action, int mods);
     void glfw_errorCallback (int error, const char * descr);
-    
 protected:
     GLFWwindow * m_mainWindow = nullptr;
 };
-
     
 }; // namespace gl_sandbox
 
