@@ -14,11 +14,12 @@
 		815D61FC1C1F65C2005DB2A8 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 815D61FB1C1F65C2005DB2A8 /* Cocoa.framework */; };
 		815D61FF1C1F65E7005DB2A8 /* libGLEW.1.12.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 815D61FD1C1F65E7005DB2A8 /* libGLEW.1.12.0.dylib */; };
 		815D62001C1F65E7005DB2A8 /* libglfw3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 815D61FE1C1F65E7005DB2A8 /* libglfw3.a */; };
+		815D62091C1F670F005DB2A8 /* app.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 815D62071C1F670F005DB2A8 /* app.cpp */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		815D61DF1C1F652A005DB2A8 /* GLSandbox.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GLSandbox.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		815D61ED1C1F652B005DB2A8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		815D61ED1C1F652B005DB2A8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = GLSandbox/Info.plist; sourceTree = "<group>"; };
 		815D61F31C1F6574005DB2A8 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = src/main.cpp; sourceTree = SOURCE_ROOT; };
 		815D61F51C1F65B0005DB2A8 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		815D61F71C1F65B9005DB2A8 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
@@ -26,6 +27,8 @@
 		815D61FB1C1F65C2005DB2A8 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		815D61FD1C1F65E7005DB2A8 /* libGLEW.1.12.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libGLEW.1.12.0.dylib; path = ../../../../usr/local/Cellar/glew/1.12.0/lib/libGLEW.1.12.0.dylib; sourceTree = "<group>"; };
 		815D61FE1C1F65E7005DB2A8 /* libglfw3.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libglfw3.a; path = ../../../../usr/local/lib/libglfw3.a; sourceTree = "<group>"; };
+		815D62071C1F670F005DB2A8 /* app.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = app.cpp; path = src/common/app.cpp; sourceTree = SOURCE_ROOT; };
+		815D62081C1F670F005DB2A8 /* app.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = app.hpp; path = src/common/app.hpp; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,8 +57,10 @@
 				815D61F91C1F65BE005DB2A8 /* IOKit.framework */,
 				815D61F71C1F65B9005DB2A8 /* CoreVideo.framework */,
 				815D61F51C1F65B0005DB2A8 /* OpenGL.framework */,
-				815D61E11C1F652A005DB2A8 /* GLSandbox */,
+				815D62041C1F66BD005DB2A8 /* shaders */,
+				815D62011C1F667F005DB2A8 /* src */,
 				815D61E01C1F652A005DB2A8 /* Products */,
+				815D61ED1C1F652B005DB2A8 /* Info.plist */,
 			);
 			sourceTree = "<group>";
 		};
@@ -67,13 +72,55 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		815D61E11C1F652A005DB2A8 /* GLSandbox */ = {
+		815D62011C1F667F005DB2A8 /* src */ = {
 			isa = PBXGroup;
 			children = (
-				815D61ED1C1F652B005DB2A8 /* Info.plist */,
+				815D62031C1F66B3005DB2A8 /* modules */,
+				815D62021C1F669E005DB2A8 /* common */,
 				815D61F31C1F6574005DB2A8 /* main.cpp */,
 			);
+			name = src;
 			path = GLSandbox;
+			sourceTree = "<group>";
+		};
+		815D62021C1F669E005DB2A8 /* common */ = {
+			isa = PBXGroup;
+			children = (
+				815D62071C1F670F005DB2A8 /* app.cpp */,
+				815D62081C1F670F005DB2A8 /* app.hpp */,
+			);
+			name = common;
+			sourceTree = "<group>";
+		};
+		815D62031C1F66B3005DB2A8 /* modules */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = modules;
+			sourceTree = "<group>";
+		};
+		815D62041C1F66BD005DB2A8 /* shaders */ = {
+			isa = PBXGroup;
+			children = (
+				815D62061C1F66E3005DB2A8 /* modules */,
+				815D62051C1F66DC005DB2A8 /* common */,
+			);
+			name = shaders;
+			path = GLSandbox;
+			sourceTree = "<group>";
+		};
+		815D62051C1F66DC005DB2A8 /* common */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = common;
+			sourceTree = "<group>";
+		};
+		815D62061C1F66E3005DB2A8 /* modules */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = modules;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -144,6 +191,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				815D61F41C1F6574005DB2A8 /* main.cpp in Sources */,
+				815D62091C1F670F005DB2A8 /* app.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
