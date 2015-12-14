@@ -7,20 +7,25 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		815D61E41C1F652A005DB2A8 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 815D61E31C1F652A005DB2A8 /* AppDelegate.m */; };
-		815D61E71C1F652A005DB2A8 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 815D61E61C1F652A005DB2A8 /* main.m */; };
-		815D61E91C1F652A005DB2A8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 815D61E81C1F652A005DB2A8 /* Assets.xcassets */; };
-		815D61EC1C1F652B005DB2A8 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 815D61EA1C1F652B005DB2A8 /* MainMenu.xib */; };
+		815D61F41C1F6574005DB2A8 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 815D61F31C1F6574005DB2A8 /* main.cpp */; settings = {ASSET_TAGS = (); }; };
+		815D61F61C1F65B0005DB2A8 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 815D61F51C1F65B0005DB2A8 /* OpenGL.framework */; };
+		815D61F81C1F65B9005DB2A8 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 815D61F71C1F65B9005DB2A8 /* CoreVideo.framework */; };
+		815D61FA1C1F65BE005DB2A8 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 815D61F91C1F65BE005DB2A8 /* IOKit.framework */; };
+		815D61FC1C1F65C2005DB2A8 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 815D61FB1C1F65C2005DB2A8 /* Cocoa.framework */; };
+		815D61FF1C1F65E7005DB2A8 /* libGLEW.1.12.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 815D61FD1C1F65E7005DB2A8 /* libGLEW.1.12.0.dylib */; };
+		815D62001C1F65E7005DB2A8 /* libglfw3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 815D61FE1C1F65E7005DB2A8 /* libglfw3.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		815D61DF1C1F652A005DB2A8 /* GLSandbox.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GLSandbox.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		815D61E21C1F652A005DB2A8 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
-		815D61E31C1F652A005DB2A8 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		815D61E61C1F652A005DB2A8 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		815D61E81C1F652A005DB2A8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		815D61EB1C1F652B005DB2A8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		815D61ED1C1F652B005DB2A8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		815D61F31C1F6574005DB2A8 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = src/main.cpp; sourceTree = SOURCE_ROOT; };
+		815D61F51C1F65B0005DB2A8 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
+		815D61F71C1F65B9005DB2A8 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
+		815D61F91C1F65BE005DB2A8 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
+		815D61FB1C1F65C2005DB2A8 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		815D61FD1C1F65E7005DB2A8 /* libGLEW.1.12.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libGLEW.1.12.0.dylib; path = ../../../../usr/local/Cellar/glew/1.12.0/lib/libGLEW.1.12.0.dylib; sourceTree = "<group>"; };
+		815D61FE1C1F65E7005DB2A8 /* libglfw3.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libglfw3.a; path = ../../../../usr/local/lib/libglfw3.a; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -28,6 +33,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				815D61FF1C1F65E7005DB2A8 /* libGLEW.1.12.0.dylib in Frameworks */,
+				815D62001C1F65E7005DB2A8 /* libglfw3.a in Frameworks */,
+				815D61FC1C1F65C2005DB2A8 /* Cocoa.framework in Frameworks */,
+				815D61FA1C1F65BE005DB2A8 /* IOKit.framework in Frameworks */,
+				815D61F81C1F65B9005DB2A8 /* CoreVideo.framework in Frameworks */,
+				815D61F61C1F65B0005DB2A8 /* OpenGL.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -37,6 +48,12 @@
 		815D61D61C1F652A005DB2A8 = {
 			isa = PBXGroup;
 			children = (
+				815D61FD1C1F65E7005DB2A8 /* libGLEW.1.12.0.dylib */,
+				815D61FE1C1F65E7005DB2A8 /* libglfw3.a */,
+				815D61FB1C1F65C2005DB2A8 /* Cocoa.framework */,
+				815D61F91C1F65BE005DB2A8 /* IOKit.framework */,
+				815D61F71C1F65B9005DB2A8 /* CoreVideo.framework */,
+				815D61F51C1F65B0005DB2A8 /* OpenGL.framework */,
 				815D61E11C1F652A005DB2A8 /* GLSandbox */,
 				815D61E01C1F652A005DB2A8 /* Products */,
 			);
@@ -53,22 +70,10 @@
 		815D61E11C1F652A005DB2A8 /* GLSandbox */ = {
 			isa = PBXGroup;
 			children = (
-				815D61E21C1F652A005DB2A8 /* AppDelegate.h */,
-				815D61E31C1F652A005DB2A8 /* AppDelegate.m */,
-				815D61E81C1F652A005DB2A8 /* Assets.xcassets */,
-				815D61EA1C1F652B005DB2A8 /* MainMenu.xib */,
 				815D61ED1C1F652B005DB2A8 /* Info.plist */,
-				815D61E51C1F652A005DB2A8 /* Supporting Files */,
+				815D61F31C1F6574005DB2A8 /* main.cpp */,
 			);
 			path = GLSandbox;
-			sourceTree = "<group>";
-		};
-		815D61E51C1F652A005DB2A8 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				815D61E61C1F652A005DB2A8 /* main.m */,
-			);
-			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -128,8 +133,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				815D61E91C1F652A005DB2A8 /* Assets.xcassets in Resources */,
-				815D61EC1C1F652B005DB2A8 /* MainMenu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -140,23 +143,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				815D61E71C1F652A005DB2A8 /* main.m in Sources */,
-				815D61E41C1F652A005DB2A8 /* AppDelegate.m in Sources */,
+				815D61F41C1F6574005DB2A8 /* main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXVariantGroup section */
-		815D61EA1C1F652B005DB2A8 /* MainMenu.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				815D61EB1C1F652B005DB2A8 /* Base */,
-			);
-			name = MainMenu.xib;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		815D61EE1C1F652B005DB2A8 /* Debug */ = {
@@ -243,8 +234,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
+				HEADER_SEARCH_PATHS = /usr/local/include;
 				INFOPLIST_FILE = GLSandbox/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/usr/local/lib,
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "n-a.GLSandbox";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -255,8 +251,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
+				HEADER_SEARCH_PATHS = /usr/local/include;
 				INFOPLIST_FILE = GLSandbox/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/usr/local/lib,
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "n-a.GLSandbox";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
