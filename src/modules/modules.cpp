@@ -69,10 +69,10 @@ void ModuleInterface::unloadModule (const char * moduleName) {
 //    });
     
     // wth, we can just implement this manually via swap-delete instead of relying on compiler optimizations to (hopefully) produce something like this:
-    for (auto i = m_runningModules.size()-1; i >= 0; --i) {
-        if (m_runningModules[i]->name == moduleName) {
-            if (i != m_runningModules.size()-1)                 // <- this branch can/should be moved outside when the comipler loop unrolls
-                m_runningModules[i] = std::move(m_runningModules.back());
+    for (auto i = m_runningModules.size(); i > 0; --i) {
+        if (m_runningModules[i-1]->name == moduleName) {
+            if (i != m_runningModules.size())                 // <- this branch can/should be moved outside when the comipler loop unrolls
+                m_runningModules[i-1] = std::move(m_runningModules.back());
             m_runningModules.pop_back();
             return;
         }
