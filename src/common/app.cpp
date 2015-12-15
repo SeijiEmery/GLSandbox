@@ -14,7 +14,7 @@
 
 using namespace gl_sandbox;
 
-// GLFW Callbacks
+// GLFW C Callbacks
 static Application * g_activeApplication = nullptr; // hack
 extern "C" {
     static void errorCallback (int error, const char * description) {
@@ -70,7 +70,7 @@ Application::Application () {
 }
 
 Application::~Application () {
-    g_activeApplication = nullptr;
+    g_activeApplication = nullptr; // disables application-specific error handling -- after this glfw errors are just directed to stderr (as opposed to log files, visual warnings, etc)
     if (m_mainWindow) {
         glfwDestroyWindow(m_mainWindow);
     }
@@ -78,9 +78,44 @@ Application::~Application () {
     glfwTerminate();
 }
 
+
+struct FPSWindowCounter {
+    FPSWindowCounter () : lastTime(glfwGetTime() - UPDATE_FREQUENCY) {}
+    
+    void update (GLFWwindow * window) {
+        double currentTime = glfwGetTime();
+        samples += 1;
+        if ((currentTime - lastTime) > UPDATE_FREQUENCY) {
+            currentDtAvg = (currentTime - lastTime) / (double)samples;
+            currentFpsAvg = 1.0 / currentDtAvg;
+            samples = 0;
+            lastTime = currentTime;
+            updateWindow(window);
+        }
+    }
+protected:
+    void updateWindow (GLFWwindow * window) {
+        static char windowTitleBuffer [256];
+        snprintf(windowTitleBuffer, sizeof(windowTitleBuffer), "GL sandbox -- %0.2fms (%0.2f fps)", currentDtAvg * 1000, currentFpsAvg);
+        glfwSetWindowTitle(window, windowTitleBuffer);
+    }
+protected:
+    double lastTime;
+    uint16_t samples = 0;
+    static constexpr double UPDATE_FREQUENCY = 0.15; // Re-upate fps every 150 ms
+public:
+    double currentFpsAvg = 0.0;
+    double currentDtAvg  = 0.0;
+};
+
 void Application::run () {
+    
+    FPSWindowCounter counter;
+    
     while (!glfwWindowShouldClose(m_mainWindow))
     {
+        counter.update(m_mainWindow);
+        
         float ratio;
         int width, height;
         glfwGetFramebufferSize(m_mainWindow, &width, &height);
