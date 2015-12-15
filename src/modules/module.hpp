@@ -14,12 +14,12 @@
 namespace gl_sandbox {
 
 struct Module {
+    virtual ~Module () {}
     virtual void drawFrame () = 0;
     std::string name;
     
 protected:
     Module (const char * name) : name(name) {}
-    virtual ~Module () {}
 };
     
 }; // namespace gl_sandbox

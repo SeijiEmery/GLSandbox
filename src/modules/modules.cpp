@@ -15,7 +15,7 @@
 using namespace gl_sandbox;
 
 #define CONSTRUCTABLE_MODULE(cls) \
-Module_metaclass { cls::MODULE_NAME, []() { return std::unique_ptr<Module>(static_cast<Module*>(new cls())); } }
+Module_metaclass { cls::MODULE_NAME, []() { return static_cast<Module*>(new cls()); } }
 
 ModuleInterface::ModuleInterface () : m_runnableModules {
     // List of constructable modules gets defined here
@@ -52,8 +52,8 @@ void ModuleInterface::loadModule(const char * moduleName) {
     // If no such module exists, log an error.
     for (auto i = 0; i < m_runnableModules.size(); ++i) {
         if (m_runnableModules[i].name == moduleName) {
-            auto newModule = m_runnableModules[i].constructor();
-            m_runnableModules.emplace_back(std::move(newModule));
+            auto newModule = m_runnableModules[i].construct();
+            m_runningModules.emplace_back(newModule);
             return;
         }
     }
@@ -93,16 +93,4 @@ void ModuleInterface::runModules() {
         module->drawFrame();
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
 

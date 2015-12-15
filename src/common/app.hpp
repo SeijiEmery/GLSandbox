@@ -9,6 +9,8 @@
 #ifndef app_hpp
 #define app_hpp
 
+#include "../modules/modules.hpp"
+
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <stdexcept>
@@ -34,6 +36,7 @@ public:
     void glfw_errorCallback (int error, const char * descr);
 protected:
     GLFWwindow * m_mainWindow = nullptr;
+    ModuleInterface m_modules;
 };
     
 }; // namespace gl_sandbox

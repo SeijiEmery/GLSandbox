@@ -19,10 +19,14 @@ namespace gl_sandbox {
     
 struct Module_metaclass {
     std::string name;
-    std::function<std::unique_ptr<Module>()> constructor;
+    std::function<Module*()> construct;
     
-    Module_metaclass (const char * name, const decltype(constructor) & constructor) :
-        name(name), constructor(constructor) {}
+    Module_metaclass (const char * name, const decltype(construct) & construct) :
+        name(name), construct(construct) {}
+    Module_metaclass (Module_metaclass && other) :
+        name(std::move(other.name)), construct(std::move(other.construct)) {}
+    Module_metaclass (const Module_metaclass & other) :
+        name(other.name), construct(other.construct) {}
 };
 
 class ModuleInterface {
