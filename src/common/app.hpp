@@ -23,7 +23,7 @@ struct InitializationError : public std::runtime_error {
 
 class Application {
 public:
-    Application ();
+    Application (const char * baseResourcePath);
     ~Application ();
     
     // Non-copyable, etc
@@ -36,6 +36,7 @@ public:
     void glfw_errorCallback (int error, const char * descr);
 protected:
     GLFWwindow * m_mainWindow = nullptr;
+    ResourceLoader  m_resourceLoader;
     ModuleInterface m_modules;
 };
     

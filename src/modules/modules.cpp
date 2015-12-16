@@ -15,13 +15,18 @@
 using namespace gl_sandbox;
 
 #define CONSTRUCTABLE_MODULE(cls) \
-Module_metaclass { cls::MODULE_NAME, []() { return static_cast<Module*>(new cls()); } }
+Module_metaclass { cls::MODULE_NAME, [&]() { return cls::construct(moduleArgs); } }
 
-ModuleInterface::ModuleInterface () : m_runnableModules {
-    // List of constructable modules gets defined here
-    CONSTRUCTABLE_MODULE(TriangleModule),
-//    CONSTRUCTABLE_MODULE(TriangleModule)
-} {
+
+//Module_metaclass { cls::MODULE_NAME, []() { return static_cast<Module*>(new cls()); } }
+
+ModuleInterface::ModuleInterface (ResourceLoader * loader) : moduleArgs(loader),
+    m_runnableModules {
+        // List of constructable modules gets defined here
+        CONSTRUCTABLE_MODULE(TriangleModule),
+//      CONSTRUCTABLE_MODULE(TriangleModule)
+    }
+{
     // Do other initialization...
 }
                                                         

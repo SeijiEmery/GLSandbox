@@ -34,7 +34,10 @@ extern "C" {
 
 // Initialize glfw, create window, etc.
 // Throws a std::runtime_error on failure to init.
-Application::Application () {
+Application::Application (const char * baseResourcePath)
+    : m_resourceLoader(baseResourcePath),
+      m_modules(&m_resourceLoader)
+{
     // Helper function
     auto initFail = [] (const char * msg, bool terminateGLFW = true) {
         g_activeApplication = nullptr;

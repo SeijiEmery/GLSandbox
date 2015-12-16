@@ -7,6 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		81176D851C1FC90D0025EB6C /* basic_shader.fs in Resources */ = {isa = PBXBuildFile; fileRef = 81176D841C1FC90D0025EB6C /* basic_shader.fs */; settings = {ASSET_TAGS = (); }; };
+		81176D871C1FC9230025EB6C /* basic_shader.vs in Resources */ = {isa = PBXBuildFile; fileRef = 81176D861C1FC9230025EB6C /* basic_shader.vs */; settings = {ASSET_TAGS = (); }; };
+		81176D8A1C1FC9640025EB6C /* shaders.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 81176D881C1FC9640025EB6C /* shaders.cpp */; settings = {ASSET_TAGS = (); }; };
+		81176D901C1FCBEF0025EB6C /* resources.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 81176D8E1C1FCBEF0025EB6C /* resources.cpp */; settings = {ASSET_TAGS = (); }; };
+		81176D921C1FE43D0025EB6C /* libboost_filesystem.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 81176D911C1FE43D0025EB6C /* libboost_filesystem.a */; };
+		81176D981C1FE4B80025EB6C /* libboost_filesystem.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 81176D931C1FE4B80025EB6C /* libboost_filesystem.dylib */; };
+		81176D991C1FE4B80025EB6C /* libboost_iostreams.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 81176D941C1FE4B80025EB6C /* libboost_iostreams.a */; };
+		81176D9A1C1FE4B80025EB6C /* libboost_iostreams.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 81176D951C1FE4B80025EB6C /* libboost_iostreams.dylib */; };
+		81176D9B1C1FE4B80025EB6C /* libboost_system.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 81176D961C1FE4B80025EB6C /* libboost_system.a */; };
+		81176D9C1C1FE4B80025EB6C /* libboost_system.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 81176D971C1FE4B80025EB6C /* libboost_system.dylib */; };
+		81176DA41C21F5160025EB6C /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 81176DA31C21F5160025EB6C /* main.cpp */; };
 		815D61F41C1F6574005DB2A8 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 815D61F31C1F6574005DB2A8 /* main.cpp */; settings = {ASSET_TAGS = (); }; };
 		815D61F61C1F65B0005DB2A8 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 815D61F51C1F65B0005DB2A8 /* OpenGL.framework */; };
 		815D61F81C1F65B9005DB2A8 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 815D61F71C1F65B9005DB2A8 /* CoreVideo.framework */; };
@@ -19,7 +30,34 @@
 		815D62111C1F7E42005DB2A8 /* modules.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 815D620F1C1F7E42005DB2A8 /* modules.cpp */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		81176D9F1C21F5160025EB6C /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		81176D841C1FC90D0025EB6C /* basic_shader.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = basic_shader.fs; path = shaders/modules/triangles/basic_shader.fs; sourceTree = SOURCE_ROOT; };
+		81176D861C1FC9230025EB6C /* basic_shader.vs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = basic_shader.vs; path = shaders/modules/triangles/basic_shader.vs; sourceTree = SOURCE_ROOT; };
+		81176D881C1FC9640025EB6C /* shaders.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = shaders.cpp; path = src/common/gl/shaders.cpp; sourceTree = SOURCE_ROOT; };
+		81176D891C1FC9640025EB6C /* shaders.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = shaders.hpp; path = src/common/gl/shaders.hpp; sourceTree = SOURCE_ROOT; };
+		81176D8E1C1FCBEF0025EB6C /* resources.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = resources.cpp; path = src/common/resources.cpp; sourceTree = SOURCE_ROOT; };
+		81176D8F1C1FCBEF0025EB6C /* resources.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = resources.hpp; path = src/common/resources.hpp; sourceTree = SOURCE_ROOT; };
+		81176D911C1FE43D0025EB6C /* libboost_filesystem.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libboost_filesystem.a; path = ../../../../usr/local/Cellar/boost/1.58.0/lib/libboost_filesystem.a; sourceTree = "<group>"; };
+		81176D931C1FE4B80025EB6C /* libboost_filesystem.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libboost_filesystem.dylib; path = ../../../../usr/local/Cellar/boost/1.58.0/lib/libboost_filesystem.dylib; sourceTree = "<group>"; };
+		81176D941C1FE4B80025EB6C /* libboost_iostreams.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libboost_iostreams.a; path = ../../../../usr/local/Cellar/boost/1.58.0/lib/libboost_iostreams.a; sourceTree = "<group>"; };
+		81176D951C1FE4B80025EB6C /* libboost_iostreams.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libboost_iostreams.dylib; path = ../../../../usr/local/Cellar/boost/1.58.0/lib/libboost_iostreams.dylib; sourceTree = "<group>"; };
+		81176D961C1FE4B80025EB6C /* libboost_system.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libboost_system.a; path = ../../../../usr/local/Cellar/boost/1.58.0/lib/libboost_system.a; sourceTree = "<group>"; };
+		81176D971C1FE4B80025EB6C /* libboost_system.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libboost_system.dylib; path = ../../../../usr/local/Cellar/boost/1.58.0/lib/libboost_system.dylib; sourceTree = "<group>"; };
+		81176DA11C21F5160025EB6C /* ThreadingTest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = ThreadingTest; sourceTree = BUILT_PRODUCTS_DIR; };
+		81176DA31C21F5160025EB6C /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		81176DA81C221BED0025EB6C /* gl_error.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = gl_error.hpp; path = src/common/gl/gl_error.hpp; sourceTree = SOURCE_ROOT; };
 		815D61DF1C1F652A005DB2A8 /* GLSandbox.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GLSandbox.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		815D61ED1C1F652B005DB2A8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = GLSandbox/Info.plist; sourceTree = "<group>"; };
 		815D61F31C1F6574005DB2A8 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = src/main.cpp; sourceTree = SOURCE_ROOT; };
@@ -39,10 +77,23 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		81176D9E1C21F5160025EB6C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		815D61DC1C1F652A005DB2A8 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				81176D981C1FE4B80025EB6C /* libboost_filesystem.dylib in Frameworks */,
+				81176D991C1FE4B80025EB6C /* libboost_iostreams.a in Frameworks */,
+				81176D9A1C1FE4B80025EB6C /* libboost_iostreams.dylib in Frameworks */,
+				81176D9B1C1FE4B80025EB6C /* libboost_system.a in Frameworks */,
+				81176D9C1C1FE4B80025EB6C /* libboost_system.dylib in Frameworks */,
+				81176D921C1FE43D0025EB6C /* libboost_filesystem.a in Frameworks */,
 				815D61FF1C1F65E7005DB2A8 /* libGLEW.1.12.0.dylib in Frameworks */,
 				815D62001C1F65E7005DB2A8 /* libglfw3.a in Frameworks */,
 				815D61FC1C1F65C2005DB2A8 /* Cocoa.framework in Frameworks */,
@@ -55,9 +106,42 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		81176D831C1FC8E20025EB6C /* triangles */ = {
+			isa = PBXGroup;
+			children = (
+				81176D841C1FC90D0025EB6C /* basic_shader.fs */,
+				81176D861C1FC9230025EB6C /* basic_shader.vs */,
+			);
+			name = triangles;
+			sourceTree = "<group>";
+		};
+		81176D8D1C1FC9850025EB6C /* gl */ = {
+			isa = PBXGroup;
+			children = (
+				81176D881C1FC9640025EB6C /* shaders.cpp */,
+				81176D891C1FC9640025EB6C /* shaders.hpp */,
+				81176DA81C221BED0025EB6C /* gl_error.hpp */,
+			);
+			name = gl;
+			sourceTree = "<group>";
+		};
+		81176DA21C21F5160025EB6C /* ThreadingTest */ = {
+			isa = PBXGroup;
+			children = (
+				81176DA31C21F5160025EB6C /* main.cpp */,
+			);
+			path = ThreadingTest;
+			sourceTree = "<group>";
+		};
 		815D61D61C1F652A005DB2A8 = {
 			isa = PBXGroup;
 			children = (
+				81176D931C1FE4B80025EB6C /* libboost_filesystem.dylib */,
+				81176D941C1FE4B80025EB6C /* libboost_iostreams.a */,
+				81176D951C1FE4B80025EB6C /* libboost_iostreams.dylib */,
+				81176D961C1FE4B80025EB6C /* libboost_system.a */,
+				81176D971C1FE4B80025EB6C /* libboost_system.dylib */,
+				81176D911C1FE43D0025EB6C /* libboost_filesystem.a */,
 				815D61FD1C1F65E7005DB2A8 /* libGLEW.1.12.0.dylib */,
 				815D61FE1C1F65E7005DB2A8 /* libglfw3.a */,
 				815D61FB1C1F65C2005DB2A8 /* Cocoa.framework */,
@@ -66,6 +150,7 @@
 				815D61F51C1F65B0005DB2A8 /* OpenGL.framework */,
 				815D62041C1F66BD005DB2A8 /* shaders */,
 				815D62011C1F667F005DB2A8 /* src */,
+				81176DA21C21F5160025EB6C /* ThreadingTest */,
 				815D61E01C1F652A005DB2A8 /* Products */,
 				815D61ED1C1F652B005DB2A8 /* Info.plist */,
 			);
@@ -75,6 +160,7 @@
 			isa = PBXGroup;
 			children = (
 				815D61DF1C1F652A005DB2A8 /* GLSandbox.app */,
+				81176DA11C21F5160025EB6C /* ThreadingTest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -93,8 +179,12 @@
 		815D62021C1F669E005DB2A8 /* common */ = {
 			isa = PBXGroup;
 			children = (
+				81176D8D1C1FC9850025EB6C /* gl */,
 				815D62071C1F670F005DB2A8 /* app.cpp */,
 				815D62081C1F670F005DB2A8 /* app.hpp */,
+				81176D8E1C1FCBEF0025EB6C /* resources.cpp */,
+				815D620D1C1F7D9F005DB2A8 /* triangles.hpp */,
+				81176D8F1C1FCBEF0025EB6C /* resources.hpp */,
 			);
 			name = common;
 			sourceTree = "<group>";
@@ -130,6 +220,7 @@
 		815D62061C1F66E3005DB2A8 /* modules */ = {
 			isa = PBXGroup;
 			children = (
+				81176D831C1FC8E20025EB6C /* triangles */,
 			);
 			name = modules;
 			sourceTree = "<group>";
@@ -138,7 +229,6 @@
 			isa = PBXGroup;
 			children = (
 				815D620C1C1F7D9F005DB2A8 /* triangles.cpp */,
-				815D620D1C1F7D9F005DB2A8 /* triangles.hpp */,
 			);
 			name = triangles;
 			sourceTree = "<group>";
@@ -146,6 +236,23 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		81176DA01C21F5160025EB6C /* ThreadingTest */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 81176DA51C21F5160025EB6C /* Build configuration list for PBXNativeTarget "ThreadingTest" */;
+			buildPhases = (
+				81176D9D1C21F5160025EB6C /* Sources */,
+				81176D9E1C21F5160025EB6C /* Frameworks */,
+				81176D9F1C21F5160025EB6C /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ThreadingTest;
+			productName = ThreadingTest;
+			productReference = 81176DA11C21F5160025EB6C /* ThreadingTest */;
+			productType = "com.apple.product-type.tool";
+		};
 		815D61DE1C1F652A005DB2A8 /* GLSandbox */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 815D61F01C1F652B005DB2A8 /* Build configuration list for PBXNativeTarget "GLSandbox" */;
@@ -172,6 +279,9 @@
 				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = "Seiji Emery";
 				TargetAttributes = {
+					81176DA01C21F5160025EB6C = {
+						CreatedOnToolsVersion = 7.0;
+					};
 					815D61DE1C1F652A005DB2A8 = {
 						CreatedOnToolsVersion = 7.0;
 					};
@@ -191,6 +301,7 @@
 			projectRoot = "";
 			targets = (
 				815D61DE1C1F652A005DB2A8 /* GLSandbox */,
+				81176DA01C21F5160025EB6C /* ThreadingTest */,
 			);
 		};
 /* End PBXProject section */
@@ -200,26 +311,52 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				81176D871C1FC9230025EB6C /* basic_shader.vs in Resources */,
+				81176D851C1FC90D0025EB6C /* basic_shader.fs in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		81176D9D1C21F5160025EB6C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				81176DA41C21F5160025EB6C /* main.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		815D61DB1C1F652A005DB2A8 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				815D61F41C1F6574005DB2A8 /* main.cpp in Sources */,
 				815D62111C1F7E42005DB2A8 /* modules.cpp in Sources */,
+				81176D8A1C1FC9640025EB6C /* shaders.cpp in Sources */,
 				815D620E1C1F7D9F005DB2A8 /* triangles.cpp in Sources */,
 				815D62091C1F670F005DB2A8 /* app.cpp in Sources */,
+				81176D901C1FCBEF0025EB6C /* resources.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
+		81176DA61C21F5160025EB6C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		81176DA71C21F5160025EB6C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		815D61EE1C1F652B005DB2A8 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -303,13 +440,16 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				COMBINE_HIDPI_IMAGES = YES;
+				GCC_ENABLE_CPP_RTTI = NO;
 				HEADER_SEARCH_PATHS = /usr/local/include;
 				INFOPLIST_FILE = GLSandbox/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					/usr/local/lib,
+					/usr/local/Cellar/boost/1.58.0/lib,
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "n-a.GLSandbox";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -320,13 +460,16 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				COMBINE_HIDPI_IMAGES = YES;
+				GCC_ENABLE_CPP_RTTI = NO;
 				HEADER_SEARCH_PATHS = /usr/local/include;
 				INFOPLIST_FILE = GLSandbox/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					/usr/local/lib,
+					/usr/local/Cellar/boost/1.58.0/lib,
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "n-a.GLSandbox";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -336,6 +479,14 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		81176DA51C21F5160025EB6C /* Build configuration list for PBXNativeTarget "ThreadingTest" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				81176DA61C21F5160025EB6C /* Debug */,
+				81176DA71C21F5160025EB6C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
 		815D61DA1C1F652A005DB2A8 /* Build configuration list for PBXProject "GLSandbox" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -352,6 +503,7 @@
 				815D61F21C1F652B005DB2A8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

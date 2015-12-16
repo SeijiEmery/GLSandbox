@@ -31,7 +31,7 @@ struct Module_metaclass {
 
 class ModuleInterface {
 public:
-    ModuleInterface ();
+    ModuleInterface (ResourceLoader * loader);
     ~ModuleInterface () {}
     
     void loadModule (const char * moduleName);
@@ -43,6 +43,8 @@ public:
 protected:
     std::vector<std::unique_ptr<Module>> m_runningModules;
     std::vector<Module_metaclass> m_runnableModules;
+    
+    ModuleConstructorArgs moduleArgs;
 };
     
 }; // namespace gl_sandbox
