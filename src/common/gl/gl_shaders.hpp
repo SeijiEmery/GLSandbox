@@ -96,18 +96,19 @@ struct UniformBuffer {
         GLint blockSize;
         glGetActiveUniformBlockiv(shader.handle(), index, GL_UNIFORM_BLOCK_DATA_SIZE, &blockSize);
         if (blockSize != sizeof(T)) {
-            std::cerr << "Warning: Uniform block '" << uniformBlockName << "' in shader '" << shader.name << "' size does not match underlying data structure (" << blockSize << " != " << sizeof(T) << ". This will likely cause data alignment issues, etc\n";
+            std::cerr << "Warning: Uniform block '" << uniformBlockName << "' in shader '" << shader.name << "' size does not match cpp data structure (" << blockSize << " != " << sizeof(T) << "). This will likely cause data alignment issues, etc\n";
         }
         m_blockSize = std::min((size_t)std::max((decltype(blockSize))0, blockSize), sizeof(T));
     }
     void bufferData (const T & data) {
         glBindBuffer(GL_UNIFORM_BUFFER, handle);
-        glBufferData(GL_UNIFORM_BUFFER, m_blockSize, &data);
+        glBufferData(GL_UNIFORM_BUFFER, m_blockSize, &data, GL_DYNAMIC_DRAW);
     }
+protected:
+    VBO m_buffer;
 public:
     const GLuint handle;
 protected:
-    VBO m_buffer;
     size_t m_blockSize = 0;
 };
     
@@ -138,6 +139,9 @@ struct UniformBuffer {
         size_t fieldSize;
         void * fieldPtr;
         
+        template <typename U>
+        FieldDescriptor (const char * name, size_t fieldSize, U * fieldPtr) :
+            FieldDescriptor(name, fieldSize, (void*)fieldPtr) {}
         FieldDescriptor (const char * name, size_t fieldSize, void * fieldPtr) :
             name(name), fieldSize(fieldSize), fieldPtr(fieldPtr) {}
     };
@@ -149,6 +153,8 @@ struct UniformBuffer {
         FieldOffset (size_t src_offset, size_t dst_offset, size_t size) :
             src_offset(src_offset), dst_offset(dst_offset), size(size) {}
     };
+    
+    UniformBuffer (const Shader & shader, const char * uniformBlockName, T * startPtr, std::initializer_list<FieldDescriptor> fields) : UniformBuffer(shader, uniformBlockName, (void*)startPtr, fields) {}
     
     UniformBuffer (const Shader & shader, const char * uniformBlockName, void * startPtr, std::initializer_list<FieldDescriptor> fields) :
         handle(m_buffer.handle),
@@ -187,11 +193,13 @@ struct UniformBuffer {
         }
         assert(sizeof(T) >= totalSize);
     }
-    void bufferData (const T * data) {
+    void bufferData (const T & data) {
         if (m_block == nullptr) // invalid ubo
             return;
+        
+        uint8_t * src = (uint8_t*)&data;
         for (auto field : m_offsets)
-            memcpy(m_block + field.dst_offset, data + field.src_offset, field.size);
+            memcpy(m_block + field.dst_offset, src + field.src_offset, field.size);
         glBindBuffer(GL_UNIFORM_BUFFER, handle);
         glBufferData(GL_UNIFORM_BUFFER, m_blockSize, m_block, GL_DYNAMIC_DRAW);
     }
@@ -227,7 +235,7 @@ inline void example () {
         { "RadiusInner", sizeof(foo.radiusInner), &foo.radiusInner },
         { "RadiusOuter", sizeof(foo.radiusOuter), &foo.radiusOuter }
     } };
-    fooUbo.bufferData(&foo);
+    fooUbo.bufferData(foo);
 }
     
     

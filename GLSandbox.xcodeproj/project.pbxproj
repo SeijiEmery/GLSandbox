@@ -19,6 +19,7 @@
 		81176D9C1C1FE4B80025EB6C /* libboost_system.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 81176D971C1FE4B80025EB6C /* libboost_system.dylib */; };
 		81176DA41C21F5160025EB6C /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 81176DA31C21F5160025EB6C /* main.cpp */; };
 		81176DAC1C22325E0025EB6C /* gl_wrapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 81176DAA1C22325E0025EB6C /* gl_wrapper.cpp */; settings = {ASSET_TAGS = (); }; };
+		81176DB01C229E3E0025EB6C /* ubo_test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 81176DAE1C229E3D0025EB6C /* ubo_test.cpp */; settings = {ASSET_TAGS = (); }; };
 		815D61F41C1F6574005DB2A8 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 815D61F31C1F6574005DB2A8 /* main.cpp */; settings = {ASSET_TAGS = (); }; };
 		815D61F61C1F65B0005DB2A8 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 815D61F51C1F65B0005DB2A8 /* OpenGL.framework */; };
 		815D61F81C1F65B9005DB2A8 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 815D61F71C1F65B9005DB2A8 /* CoreVideo.framework */; };
@@ -62,6 +63,8 @@
 		81176DA91C2220880025EB6C /* gl_traits.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = gl_traits.hpp; path = src/common/gl/gl_traits.hpp; sourceTree = SOURCE_ROOT; };
 		81176DAA1C22325E0025EB6C /* gl_wrapper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = gl_wrapper.cpp; path = src/common/gl/gl_wrapper.cpp; sourceTree = SOURCE_ROOT; };
 		81176DAB1C22325E0025EB6C /* gl_wrapper.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = gl_wrapper.hpp; path = src/common/gl/gl_wrapper.hpp; sourceTree = SOURCE_ROOT; };
+		81176DAE1C229E3D0025EB6C /* ubo_test.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ubo_test.cpp; path = src/modules/ubo_test/ubo_test.cpp; sourceTree = SOURCE_ROOT; };
+		81176DAF1C229E3D0025EB6C /* ubo_test.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = ubo_test.hpp; path = src/modules/ubo_test/ubo_test.hpp; sourceTree = SOURCE_ROOT; };
 		815D61DF1C1F652A005DB2A8 /* GLSandbox.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GLSandbox.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		815D61ED1C1F652B005DB2A8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = GLSandbox/Info.plist; sourceTree = "<group>"; };
 		815D61F31C1F6574005DB2A8 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = src/main.cpp; sourceTree = SOURCE_ROOT; };
@@ -140,6 +143,15 @@
 			path = ThreadingTest;
 			sourceTree = "<group>";
 		};
+		81176DAD1C229E240025EB6C /* ubo_test */ = {
+			isa = PBXGroup;
+			children = (
+				81176DAE1C229E3D0025EB6C /* ubo_test.cpp */,
+				81176DAF1C229E3D0025EB6C /* ubo_test.hpp */,
+			);
+			name = ubo_test;
+			sourceTree = "<group>";
+		};
 		815D61D61C1F652A005DB2A8 = {
 			isa = PBXGroup;
 			children = (
@@ -198,6 +210,7 @@
 		815D62031C1F66B3005DB2A8 /* modules */ = {
 			isa = PBXGroup;
 			children = (
+				81176DAD1C229E240025EB6C /* ubo_test */,
 				815D620B1C1F7D5E005DB2A8 /* triangles */,
 				815D620F1C1F7E42005DB2A8 /* modules.cpp */,
 				815D620A1C1F7CED005DB2A8 /* module.hpp */,
@@ -340,6 +353,7 @@
 			files = (
 				81176DAC1C22325E0025EB6C /* gl_wrapper.cpp in Sources */,
 				815D61F41C1F6574005DB2A8 /* main.cpp in Sources */,
+				81176DB01C229E3E0025EB6C /* ubo_test.cpp in Sources */,
 				815D62111C1F7E42005DB2A8 /* modules.cpp in Sources */,
 				81176D8A1C1FC9640025EB6C /* gl_shaders.cpp in Sources */,
 				815D620E1C1F7D9F005DB2A8 /* triangles.cpp in Sources */,

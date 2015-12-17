@@ -150,22 +150,30 @@ void Application::glfw_errorCallback(int error, const char *descr) {
     std::cerr << "glfw error: " << descr << '\n';
 }
 void Application::glfw_keyCallback(GLFWwindow *window, int key, int scancode, int action, int mods) {
-    static constexpr double MIN_KEY_DELAY = 0.2; // 200 ms
-    static double lastKeyPressTime = glfwGetTime() - MIN_KEY_DELAY;
+    static std::vector<std::tuple<int, std::string, bool>> toggleableModules {
+    //    key toggle,     module id,      currently pressed
+        { GLFW_KEY_T, "module-triangles", false },
+        { GLFW_KEY_Y, "ubo-dynamic-test", false },
+        { GLFW_KEY_U, "ubo-static-test",  false }
+    };
     
-    auto curTime = glfwGetTime();
-    if (curTime < lastKeyPressTime + MIN_KEY_DELAY)
-        return;
-    lastKeyPressTime = curTime;
-    
-    if (key == GLFW_KEY_T && !m_modules.hasRunningModuleWithName("module-triangles")) {
-        m_modules.loadModule("module-triangles");
-    } else if (key == GLFW_KEY_Y && m_modules.hasRunningModuleWithName("module-triangles")) {
-        m_modules.unloadModule("module-triangles");
-    } else if (key == GLFW_KEY_R) {
-        if (m_modules.hasRunnableModuleWithName("module-triangles"))
-            m_modules.unloadModule("module-triangles");
-        m_modules.loadModule("module-triangles");
+    // Toggle modules when specific keys are pressed.
+    // Extra logic is to keep track of pressed keys, so we activate only on the edges of key down events, not constantly for however long the key(s) are pressed.
+    for (auto & module : toggleableModules) {
+        if (key == std::get<0>(module)) {
+            if ((action == GLFW_PRESS) && !std::get<2>(module)) { // edge trigger -- key pressed
+                std::get<2>(module) = true;
+                // Toggle module
+                auto moduleName = std::get<1>(module).c_str();
+                if (m_modules.hasRunningModuleWithName(moduleName)) {
+                    m_modules.unloadModule(moduleName);
+                } else {
+                    m_modules.loadModule(moduleName);
+                }
+            } else if (action == GLFW_RELEASE) { // edge trigger -- key released
+                std::get<2>(module) = false;
+            }
+        }
     }
 }
 

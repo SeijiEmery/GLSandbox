@@ -7,6 +7,7 @@
 //
 
 #include "triangles/triangles.hpp"
+#include "ubo_test/ubo_test.hpp"
 
 #include "modules.hpp"
 #include "app.hpp"
@@ -14,6 +15,7 @@
 #include <iostream>
 
 using namespace gl_sandbox;
+using namespace gl_sandbox::modules;
 
 #define CONSTRUCTABLE_MODULE(cls) \
 Module_metaclass { cls::MODULE_NAME, [&]() { return cls::construct(m_sharedModuleArgs); } }
@@ -26,7 +28,8 @@ ModuleInterface::ModuleInterface (ResourceLoader * const resourceLoader) :
     m_runnableModules {
         // List of constructable modules gets defined here
         CONSTRUCTABLE_MODULE(TriangleModule),
-//      CONSTRUCTABLE_MODULE(TriangleModule)
+        CONSTRUCTABLE_MODULE(UboDynamicModule),
+        CONSTRUCTABLE_MODULE(UboStaticModule)
     }
 {
     // Do other initialization...
