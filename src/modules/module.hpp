@@ -15,12 +15,14 @@
 namespace gl_sandbox {
     
 struct ModuleConstructorArgs {
-    ResourceLoader * resourceLoader;
-    ModuleConstructorArgs (ResourceLoader * resourceLoader)
+    ResourceLoader * const resourceLoader;
+    ModuleConstructorArgs (ResourceLoader * const resourceLoader)
         : resourceLoader (resourceLoader) {}
 };
 
 struct Module {
+    friend class ModuleInterface;
+
     virtual ~Module () {}
     virtual void drawFrame () = 0;
     
@@ -29,12 +31,10 @@ struct Module {
     std::string name;
     std::string dirName;
 protected:
-    Module (const ModuleConstructorArgs & args, const char * name, const char * dirName) : resourceLoader(args.resourceLoader), name(name), dirName(dirName) {}
-    auto loadShader (const char * vertex_shader, const char * fragment_shader) {
-        return resourceLoader->loadShader(*this, vertex_shader, fragment_shader);
-    }
-private:
-    ResourceLoader * resourceLoader;
+    Module (const ModuleConstructorArgs & args, const char * name, const char * dirName)
+        : resourceLoader(args.resourceLoader), name(name), dirName(dirName) {}
+protected:
+    ResourceLoader * const resourceLoader; // owned by Application
 };
     
 }; // namespace gl_sandbox

@@ -9,6 +9,8 @@
 #ifndef gl_error_h
 #define gl_error_h
 
+#include <iostream>
+
 inline void check_gl_errors (const char * file, int line) {
     GLenum err;
     while((err = glGetError()) != GL_NO_ERROR) {

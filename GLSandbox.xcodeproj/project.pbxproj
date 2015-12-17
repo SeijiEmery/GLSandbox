@@ -190,7 +190,6 @@
 				815D62071C1F670F005DB2A8 /* app.cpp */,
 				815D62081C1F670F005DB2A8 /* app.hpp */,
 				81176D8E1C1FCBEF0025EB6C /* resources.cpp */,
-				815D620D1C1F7D9F005DB2A8 /* triangles.hpp */,
 				81176D8F1C1FCBEF0025EB6C /* resources.hpp */,
 			);
 			name = common;
@@ -200,8 +199,8 @@
 			isa = PBXGroup;
 			children = (
 				815D620B1C1F7D5E005DB2A8 /* triangles */,
-				815D620A1C1F7CED005DB2A8 /* module.hpp */,
 				815D620F1C1F7E42005DB2A8 /* modules.cpp */,
+				815D620A1C1F7CED005DB2A8 /* module.hpp */,
 				815D62101C1F7E42005DB2A8 /* modules.hpp */,
 			);
 			name = modules;
@@ -235,6 +234,7 @@
 		815D620B1C1F7D5E005DB2A8 /* triangles */ = {
 			isa = PBXGroup;
 			children = (
+				815D620D1C1F7D9F005DB2A8 /* triangles.hpp */,
 				815D620C1C1F7D9F005DB2A8 /* triangles.cpp */,
 			);
 			name = triangles;

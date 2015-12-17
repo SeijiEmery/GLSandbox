@@ -9,18 +9,20 @@
 #include "triangles/triangles.hpp"
 
 #include "modules.hpp"
+#include "app.hpp"
 
 #include <iostream>
 
 using namespace gl_sandbox;
 
 #define CONSTRUCTABLE_MODULE(cls) \
-Module_metaclass { cls::MODULE_NAME, [&]() { return cls::construct(moduleArgs); } }
+Module_metaclass { cls::MODULE_NAME, [&]() { return cls::construct(m_sharedModuleArgs); } }
 
 
 //Module_metaclass { cls::MODULE_NAME, []() { return static_cast<Module*>(new cls()); } }
 
-ModuleInterface::ModuleInterface (ResourceLoader * loader) : moduleArgs(loader),
+ModuleInterface::ModuleInterface (ResourceLoader * const resourceLoader) :
+    m_sharedModuleArgs(resourceLoader),
     m_runnableModules {
         // List of constructable modules gets defined here
         CONSTRUCTABLE_MODULE(TriangleModule),
@@ -29,8 +31,16 @@ ModuleInterface::ModuleInterface (ResourceLoader * loader) : moduleArgs(loader),
 {
     // Do other initialization...
 }
-                                                        
 #undef CONSTRUCTABLE_MODULE
+
+void ModuleInterface::initModule (Module * module) {
+    // Can add functionality later..
+    assert(module != nullptr);
+}
+void ModuleInterface::deinitModule (Module * module) {
+    // Do nothing for now (can add functionality as needed)
+    assert(module != nullptr);
+}
 
 bool ModuleInterface::hasRunnableModuleWithName(const char * moduleName) {
     for (const auto & module : m_runnableModules)
@@ -58,6 +68,7 @@ void ModuleInterface::loadModule(const char * moduleName) {
     for (auto i = 0; i < m_runnableModules.size(); ++i) {
         if (m_runnableModules[i].name == moduleName) {
             auto newModule = m_runnableModules[i].construct();
+            initModule(newModule);
             m_runningModules.emplace_back(newModule);
             return;
         }
@@ -76,6 +87,7 @@ void ModuleInterface::unloadModule (const char * moduleName) {
     // wth, we can just implement this manually via swap-delete instead of relying on compiler optimizations to (hopefully) produce something like this:
     for (auto i = m_runningModules.size(); i > 0; --i) {
         if (m_runningModules[i-1]->name == moduleName) {
+            deinitModule(m_runningModules[i-1].get());
             if (i != m_runningModules.size())                 // <- this branch can/should be moved outside when the comipler loop unrolls
                 m_runningModules[i-1] = std::move(m_runningModules.back());
             m_runningModules.pop_back();

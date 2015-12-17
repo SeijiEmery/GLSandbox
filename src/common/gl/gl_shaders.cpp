@@ -10,11 +10,11 @@
 #include <boost/format.hpp>
 #include <iostream>
 
-using namespace gl_sandbox::gl;
-
-namespace impl {
+namespace gl_sandbox {
+namespace gl {
+    
 template <typename T>
-static bool compileShader (T & shader, const char * src, std::function<void(const char *)> onError) {
+static bool impl_compileShader (T & shader, const char * src, std::function<void(const char *)> onError) {
     const char * srcs [] = { src };
     glShaderSource(shader.handle, 1, srcs, NULL); CHECK_GL_ERRORS();
     glCompileShader(shader.handle);              CHECK_GL_ERRORS();
@@ -37,14 +37,13 @@ static bool compileShader (T & shader, const char * src, std::function<void(cons
     }
     return true;
 }
-}; // namespace impl
 
 bool compileShader (FragmentShader & shader, const char * src, std::function<void(const char *)> onError) {
-    return impl::compileShader(shader, src, onError);
+    return impl_compileShader(shader, src, onError);
 }
 
 bool compileShader (VertexShader & shader, const char * src, std::function<void(const char *)> onError) {
-    return impl::compileShader(shader, src, onError);
+    return impl_compileShader(shader, src, onError);
 }
 
 bool linkShader (ShaderProgram & program, const VertexShader & vertexShader, const FragmentShader & fragmentShader, std::function<void(const char *)> onError) {
@@ -114,14 +113,6 @@ void Shader::dumpToStderr(const gl_sandbox::gl::ShaderLoadError &e) {
     std::cerr << e.what() << std::endl;
 }
 
-
-
-
-
-
-
-
-
-
-
+};
+};
 

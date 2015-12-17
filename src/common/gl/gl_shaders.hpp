@@ -38,16 +38,17 @@ protected:
     bool fragment_compiled = false;
     bool vertex_compiled = false;
     bool program_linked = false;
-    
+public:
     decltype(_program.handle) handle () const {
         return _program.handle;
     }
     typedef std::function<void(const ShaderLoadError &)> ErrorCallback;
-    
+
     bool compileFragment (const char * src, ErrorCallback onError = dumpToStderr);
     bool compileVertex (const char * src, ErrorCallback onError = dumpToStderr);
     bool linkProgram (ErrorCallback onError = dumpToStderr);
     
+protected:
     // Default impl for the optional onError parameter on compileFragment, etc;
     // Just takes message (e.what) and prints to stdout (cerr).
     static void dumpToStderr (const ShaderLoadError & e);

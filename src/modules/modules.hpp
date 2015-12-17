@@ -29,9 +29,10 @@ struct Module_metaclass {
         name(other.name), construct(other.construct) {}
 };
 
+class Application;
 class ModuleInterface {
 public:
-    ModuleInterface (ResourceLoader * loader);
+    ModuleInterface (ResourceLoader * const);
     ~ModuleInterface () {}
     
     void loadModule (const char * moduleName);
@@ -40,11 +41,15 @@ public:
     
     bool hasRunningModuleWithName (const char * moduleName);
     bool hasRunnableModuleWithName (const char * moduleName);
+    
+protected:
+    void initModule (Module * module);
+    void deinitModule (Module * module);
 protected:
     std::vector<std::unique_ptr<Module>> m_runningModules;
     std::vector<Module_metaclass> m_runnableModules;
     
-    ModuleConstructorArgs moduleArgs;
+    ModuleConstructorArgs m_sharedModuleArgs;
 };
     
 }; // namespace gl_sandbox

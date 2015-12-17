@@ -10,6 +10,7 @@
 #define triangles_hpp
 
 #include "../module.hpp"
+#include "../../common/gl/gl_wrapper.hpp"
 
 namespace gl_sandbox {
     
@@ -29,8 +30,9 @@ private:
         : Module(args, MODULE_NAME, MODULE_DIR) { initModule(); }
     void initModule ();
     
-    ShaderHandle::Ptr m_shader;
-    GLuint m_vaoHandle = 0;
+    gl::Shader m_shader { "basic_shader" };
+    gl::VAO    m_vao;
+    gl::VBO    m_buffers [2];
 };
     
 }; // namespace gl_sandbox

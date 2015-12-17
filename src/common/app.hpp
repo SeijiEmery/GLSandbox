@@ -10,8 +10,8 @@
 #define app_hpp
 
 #include "../modules/modules.hpp"
-
-#include "gl/gl_traits.hpp"
+#include "./gl/gl_wrapper.hpp"
+#include "./resources.hpp"
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
