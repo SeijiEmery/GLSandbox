@@ -41,13 +41,23 @@ struct Program {
 };
 struct VAO {
     typedef GLuint value_type;
-    static value_type create () { value_type v [1]; glGenVertexArrays(1, v); CHECK_GL_ERRORS(); return v[0]; }
-    static void destroy (value_type v) { value_type vs [] = { v }; glDeleteVertexArrays(1, vs); CHECK_GL_ERRORS(); }
+    static value_type create () { value_type v = 0; glGenVertexArrays(1, &v); CHECK_GL_ERRORS(); return v; }
+    static void destroy (value_type v) { glDeleteVertexArrays(1, &v); CHECK_GL_ERRORS(); }
 };
 struct VBO {
     typedef GLuint value_type;
-    static value_type create () { value_type v [1]; glGenBuffers(1, v); CHECK_GL_ERRORS(); return v[0]; }
-    static void destroy (value_type v) { value_type vs [] = { v }; glDeleteBuffers(1, vs); CHECK_GL_ERRORS(); }
+    static value_type create () {
+//        std::cout << "creating vbo\n";
+        value_type v = 0;
+        glGenBuffers(1, &v); CHECK_GL_ERRORS();
+//        std::cout << "done (= " << v << ")\n";
+        return v;
+    }
+    static void destroy (value_type v) {
+//        std::cout << "destroying vbo " << v << '\n';
+        glDeleteBuffers(1, &v); CHECK_GL_ERRORS();
+//        std::cout << "done\n";
+    }
 };
 #undef return_withCheck
 
@@ -58,6 +68,10 @@ struct GLObject {
     const typename traits::value_type handle;
     GLObject () : handle(traits::create()) {}
     ~GLObject () { traits::destroy(handle); }
+    
+    GLObject (const GLObject<traits> & other) = delete;
+    GLObject (GLObject<traits> && other)
+        : handle(other.handle) {}
 };
     
 template <typename traits>

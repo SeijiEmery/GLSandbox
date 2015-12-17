@@ -150,10 +150,22 @@ void Application::glfw_errorCallback(int error, const char *descr) {
     std::cerr << "glfw error: " << descr << '\n';
 }
 void Application::glfw_keyCallback(GLFWwindow *window, int key, int scancode, int action, int mods) {
+    static constexpr double MIN_KEY_DELAY = 0.2; // 200 ms
+    static double lastKeyPressTime = glfwGetTime() - MIN_KEY_DELAY;
+    
+    auto curTime = glfwGetTime();
+    if (curTime < lastKeyPressTime + MIN_KEY_DELAY)
+        return;
+    lastKeyPressTime = curTime;
+    
     if (key == GLFW_KEY_T && !m_modules.hasRunningModuleWithName("module-triangles")) {
         m_modules.loadModule("module-triangles");
     } else if (key == GLFW_KEY_Y && m_modules.hasRunningModuleWithName("module-triangles")) {
         m_modules.unloadModule("module-triangles");
+    } else if (key == GLFW_KEY_R) {
+        if (m_modules.hasRunnableModuleWithName("module-triangles"))
+            m_modules.unloadModule("module-triangles");
+        m_modules.loadModule("module-triangles");
     }
 }
 

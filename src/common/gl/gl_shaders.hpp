@@ -13,6 +13,9 @@
 #include "gl_error.hpp"
 #include <functional>
 #include <sstream>
+#include <cassert>
+#include <vector>
+#include <glm/glm.hpp>
 
 namespace gl_sandbox {
 namespace gl {
@@ -47,6 +50,31 @@ public:
     bool compileFragment (const char * src, ErrorCallback onError = dumpToStderr);
     bool compileVertex (const char * src, ErrorCallback onError = dumpToStderr);
     bool linkProgram (ErrorCallback onError = dumpToStderr);
+    
+    bool loaded () const {
+        assert(program_linked ? fragment_compiled && vertex_compiled : true); // sanity check state flags
+        return program_linked;
+    }
+    GLint getUniformLocation (const char * name) {
+        auto loc = glGetUniformLocation(handle(), name);
+        if (loc < 0)
+            std::cerr << "Error: No uniform '" << name << "' in shader '" << this->name << "'\n";
+        return loc;
+    }
+    void setUniform (GLint location, const glm::mat4x4 & m) {
+        glUniformMatrix4fv(location, 1, GL_FALSE, &m[0][0]);
+    }
+    void setUniform (GLint location, const glm::vec3 & v) {
+        glUniform3fv(location, 1, &v[0]);
+    }
+    void setUniform (GLint location, const glm::vec4 & v) {
+        glUniform4fv(location, 1, &v[0]);
+    }
+    void setUniform (GLint location, float s) {
+        glUniform1f(location, s);
+    }
+    template <typename T>
+    void setUniform (const char * name, const T & v) { setUniform(getUniformLocation(name), v); }
     
 protected:
     // Default impl for the optional onError parameter on compileFragment, etc;

@@ -28,10 +28,13 @@ static bool impl_compileShader (T & shader, const char * src, std::function<void
             char * log = new char [size];
             GLsizei written;
             glGetShaderInfoLog(shader.handle, size, &written, log);
+            
+            std::cout << "Shader src: \"" << src << "\"\n";
             onError(log);
             delete[] log;
             return false;
         } else {
+            std::cout << "Shader src: \"" << src << "\"\n";
             return onError("Failed to compile shader\n"), false;
         }
     }

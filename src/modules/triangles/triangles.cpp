@@ -8,11 +8,16 @@
 
 #include "triangles.hpp"
 #include "../../common/gl/gl_error.hpp"
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 #include <iostream>
 
 using namespace gl_sandbox;
 using namespace gl_sandbox::gl::references;
+
+using glm::mat4;
+using glm::vec3;
 
 const char * TriangleModule::MODULE_NAME = "module-triangles";
 const char * TriangleModule::MODULE_DIR  = "triangles";

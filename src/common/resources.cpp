@@ -39,8 +39,9 @@ bool ResourceLoader::loadTextFile(
     if (size == 0)
         return onError(RESOURCE_ERROR("Empty file '%s'", filepath)), false;
     f.seekg(0, std::ios::beg);
-    char * buffer = new char [size];
+    char * buffer = new char [size+1];
     f.read(buffer, size);
+    buffer[size] = 0;
     f.close();
     
     assert(*buffer != '\0');
