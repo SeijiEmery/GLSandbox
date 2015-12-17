@@ -8,6 +8,8 @@
 
 #include "triangles.hpp"
 #include "../../common/gl/gl_error.hpp"
+
+#define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -107,10 +109,9 @@ void TriangleModule::drawFrame() {
         
         double elapsedTime = startTime - glfwGetTime();
         
-        constexpr double HALF_PI = boost::math::constants::pi<double>() * 0.5;
         constexpr double TWO_PI  = boost::math::constants::pi<double>() * 2.0;
         
-        float angle = (float)((elapsedTime * (TWO_PI / ROTATION_PERIOD * 10)));//, HALF_PI);
+        float angle = (float)fmod((elapsedTime * (TWO_PI / ROTATION_PERIOD)), TWO_PI);
         mat4 rotationMatrix = glm::rotate(mat4(1.0f), angle, vec3(0.0f, 0.0f, 1.0f));
         
         m_shader.setUniform(uniform_rotationMatrix, rotationMatrix);
