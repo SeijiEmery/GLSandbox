@@ -64,8 +64,16 @@ Application::Application (const char * baseResourcePath)
     glfwMakeContextCurrent(m_mainWindow);
     glfwSwapInterval(1);
     
+    CHECK_GL_ERRORS();
+    
     glewExperimental = true;
     glewInit();// || initFail("Failed to initialize glew\n");
+    
+    // glewInit() seems to always raise an error... which seems to be invalid (just a bug I guess?), so we'll ignore it
+    while (glGetError()) {}
+    // https://stackoverflow.com/questions/10857335/opengl-glgeterror-returns-invalid-enum-after-call-to-glewinit
+    
+//    CHECK_GL_ERRORS();
     
     std::cout << "GL Sandbox\n";
     std::cout << "Renderer: " << glGetString(GL_RENDERER) << '\n';
@@ -77,6 +85,9 @@ Application::~Application () {
     if (m_mainWindow) {
         glfwDestroyWindow(m_mainWindow);
     }
+    
+    CHECK_GL_ERRORS();
+    
     std::cout << "Killing glfw" << std::endl;
     glfwTerminate();
 }
@@ -115,6 +126,8 @@ void Application::run () {
     
     FPSWindowCounter counter;
     
+    CHECK_GL_ERRORS();
+    
     while (!glfwWindowShouldClose(m_mainWindow))
     {
         counter.update(m_mainWindow);
@@ -123,12 +136,12 @@ void Application::run () {
         int width, height;
         glfwGetFramebufferSize(m_mainWindow, &width, &height);
         ratio = width / (float) height;
-        glViewport(0, 0, width, height);
-        glClear(GL_COLOR_BUFFER_BIT);
+        glViewport(0, 0, width, height);  CHECK_GL_ERRORS();
+        glClear(GL_COLOR_BUFFER_BIT);     CHECK_GL_ERRORS();
         
         m_modules.runModules();
         
-        glfwSwapBuffers(m_mainWindow);
+        glfwSwapBuffers(m_mainWindow);    CHECK_GL_ERRORS();
         glfwPollEvents();
     }
 }

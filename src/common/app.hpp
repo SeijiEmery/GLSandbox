@@ -15,6 +15,7 @@
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include "./gl/gl_error.hpp"
 #include <stdexcept>
 
 namespace gl_sandbox {

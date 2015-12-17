@@ -39,7 +39,7 @@ void TriangleModule::initModule() {
     });
     if (m_shader.linkProgram()) {
         std::cout << "Successfully loaded shader '" << m_shader.name << "'\n";
-        glUseProgram(m_shader.handle());
+        glUseProgram(m_shader.handle()); CHECK_GL_ERRORS();
     } else {
         std::cout << "Failed to load shader '" << m_shader.name << "'\n";
         glUseProgram(0);
@@ -82,7 +82,7 @@ TriangleModule::~TriangleModule() {
 }
 void TriangleModule::drawFrame() {
 //    std::cout << "Running triangle module" << std::endl;
-//    glUseProgram(m_shader.handle); CHECK_GL_ERRORS();
+    glUseProgram(m_shader.handle()); CHECK_GL_ERRORS();
     glBindVertexArray(m_vao.handle); CHECK_GL_ERRORS();
     glDrawArrays(GL_TRIANGLES, 0, 3); CHECK_GL_ERRORS();
 }
