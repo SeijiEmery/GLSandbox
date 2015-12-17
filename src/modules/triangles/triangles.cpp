@@ -37,18 +37,20 @@ void TriangleModule::initModule() {
     resourceLoader->loadTextFile(m_shader.name + ".vs", [this] (const char * src) {
         m_shader.compileVertex(src);
     });
+    
     if (m_shader.linkProgram()) {
         std::cout << "Successfully loaded shader '" << m_shader.name << "'\n";
         glUseProgram(m_shader.handle()); CHECK_GL_ERRORS();
+        glValidateProgram(m_shader.handle()); CHECK_GL_ERRORS();
     } else {
         std::cout << "Failed to load shader '" << m_shader.name << "'\n";
-        glUseProgram(0);
+        glUseProgram(0); CHECK_GL_ERRORS();
     }
     
     std::cout << "Loading vaos, etc\n";
 
     constexpr float positionData [] = {
-        -8.0f, -8.0f, 0.0f,
+        -0.8f, -0.8f, 0.0f,
         0.8f, -0.8f, 0.0f,
         0.0f, 0.8f, 0.0f
     };
@@ -58,7 +60,7 @@ void TriangleModule::initModule() {
         0.0f, 0.0f, 1.0f
     };
     
-    auto positionBuffer = m_buffers[0], colorBuffer = m_buffers[1];
+    auto &positionBuffer = m_buffers[0], &colorBuffer = m_buffers[1];
     
     glBindBuffer(GL_ARRAY_BUFFER, positionBuffer.handle); CHECK_GL_ERRORS();
     glBufferData(GL_ARRAY_BUFFER, 9 * sizeof(float), positionData, GL_STATIC_DRAW); CHECK_GL_ERRORS();
@@ -75,16 +77,28 @@ void TriangleModule::initModule() {
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL); CHECK_GL_ERRORS();
     
     glBindBuffer(GL_ARRAY_BUFFER, colorBuffer.handle); CHECK_GL_ERRORS();
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL); CHECK_GL_ERRORS();
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, NULL); CHECK_GL_ERRORS();
+
+//    glBindVertexArray(0); CHECK_GL_ERRORS();
+//    glBindBuffer(GL_ARRAY_BUFFER, 0); CHECK_GL_ERRORS();
+//    glUseProgram(0);
+//    glDisableVertexAttribArray(0); CHECK_GL_ERRORS();
+//    glDisableVertexAttribArray(1); CHECK_GL_ERRORS();
 }
 TriangleModule::~TriangleModule() {
     std::cout << "Killing triangle module" << std::endl;
 }
 void TriangleModule::drawFrame() {
 //    std::cout << "Running triangle module" << std::endl;
-    glUseProgram(m_shader.handle()); CHECK_GL_ERRORS();
-    glBindVertexArray(m_vao.handle); CHECK_GL_ERRORS();
-    glDrawArrays(GL_TRIANGLES, 0, 3); CHECK_GL_ERRORS();
+    if (m_shader.loaded()) {
+//        glUseProgram(m_shader.handle()); CHECK_GL_ERRORS();
+//        glBindVertexArray(m_vao.handle); CHECK_GL_ERRORS();
+        
+//        std::cout << "shader_prgm = " << m_shader.handle() << '\n';
+//        std::cout << "vao = " << m_vao.handle << '\n';
+        
+        glDrawArrays(GL_TRIANGLES, 0, 3); CHECK_GL_ERRORS();
+    }
 }
 
 
