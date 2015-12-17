@@ -172,7 +172,6 @@ ShaderHandle::Ptr ResourceLoader::loadShader (const Module & module, const char 
             }
             
             glValidateProgram(program_object); CHECK_GL_ERRORS();
-            glGetProgramiv(program_object, )
         }
         if (err) {
             return std::make_shared<ShaderHandle>(ShaderHandle::State::SHADER_LINK_ERROR);

@@ -11,6 +11,8 @@
 
 #include "../modules/modules.hpp"
 
+#include "gl/gl_traits.hpp"
+
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <stdexcept>
