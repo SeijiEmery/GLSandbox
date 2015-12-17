@@ -11,7 +11,10 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+#include <boost/math/constants/constants.hpp>
+
 #include <iostream>
+#include <math.h>
 
 using namespace gl_sandbox;
 using namespace gl_sandbox::gl::references;
@@ -94,14 +97,23 @@ TriangleModule::~TriangleModule() {
     std::cout << "Killing triangle module" << std::endl;
 }
 void TriangleModule::drawFrame() {
-//    std::cout << "Running triangle module" << std::endl;
+    static auto uniform_rotationMatrix = m_shader.getUniformLocation("RotationMatrix");
+    static double startTime = glfwGetTime();
+    static double ROTATION_PERIOD = 2.5; // rotate 360 deg every 2.5 secs
+    
     if (m_shader.loaded()) {
 //        glUseProgram(m_shader.handle()); CHECK_GL_ERRORS();
 //        glBindVertexArray(m_vao.handle); CHECK_GL_ERRORS();
         
-//        std::cout << "shader_prgm = " << m_shader.handle() << '\n';
-//        std::cout << "vao = " << m_vao.handle << '\n';
+        double elapsedTime = startTime - glfwGetTime();
         
+        constexpr double HALF_PI = boost::math::constants::pi<double>() * 0.5;
+        constexpr double TWO_PI  = boost::math::constants::pi<double>() * 2.0;
+        
+        float angle = (float)((elapsedTime * (TWO_PI / ROTATION_PERIOD * 10)));//, HALF_PI);
+        mat4 rotationMatrix = glm::rotate(mat4(1.0f), angle, vec3(0.0f, 0.0f, 1.0f));
+        
+        m_shader.setUniform(uniform_rotationMatrix, rotationMatrix);
         glDrawArrays(GL_TRIANGLES, 0, 3); CHECK_GL_ERRORS();
     }
 }
