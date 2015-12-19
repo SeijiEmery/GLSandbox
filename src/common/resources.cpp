@@ -6,17 +6,18 @@
 //  Copyright © 2015 Seiji Emery. All rights reserved.
 //
 
+#define STB_IMAGE_IMPLEMENTATION
+#include "../../libs/stb/stb_image.h"
+
+#define TINYOBJLOADER_IMPLEMENTATION
+#include "../../libs/tinyobjloader/tiny_obj_loader.h"
+
 #include "resources.hpp"
 #include "app.hpp"
-
 #include <boost/format.hpp>
 #include <iostream>
 
 using namespace gl_sandbox;
-
-bool ResourceLoader::loadTextFile(const char * filename, std::function<void (const char *)> onComplete, std::function<void (const ResourceError &)> onError) {
-    return loadTextFile({ filename }, onComplete, onError);
-}
 
 #define RESOURCE_ERROR(msg, rest) ResourceError { (format("ResourceError: " msg) % rest).str() }
 
@@ -49,6 +50,78 @@ bool ResourceLoader::loadTextFile(
     onComplete(buffer);
     delete[] buffer;
     return true;
+}
+
+bool ResourceLoader::loadImage(
+    const boost::filesystem::path &filepath,
+    ImageHandler onComplete,
+    ErrorHandler onError
+) {
+//    using boost::format;
+//    if (!boost::filesystem::exists(filepath))
+//        return onError(RESOURCE_ERROR("File '%s' does not exist\n", filepath)), false;
+
+    ImageInfo info;
+    const uint8_t * image_data = stbi_load(filepath.string().c_str(), &info.size_x, &info.size_y, &info.image_format, 0);
+    if (image_data != nullptr) {
+        onComplete(image_data, info);
+        stbi_image_free((void*)image_data);
+        return true;
+    } else {
+        onError(ResourceError { stbi_failure_reason() });
+        return false;
+    }
+}
+
+bool ResourceLoader::loadObj(const Path &filepath, ObjHandler onComplete, ErrorHandler onError
+) {
+    ObjData obj;
+    std::string err;
+    if (tinyobj::LoadObj(obj.shapes, obj.materials, err, filepath.string().c_str()))
+        return onComplete(obj), true;
+    else
+        return onError(ResourceError { err }), false;
+}
+
+
+bool ResourceLoader::resolvePath(const char *filename, const char *moduleDir, Path &path) {
+    using namespace boost::filesystem;
+    if (exists(m_baseResourcePath / filename))
+        return path = m_baseResourcePath / filename, true;
+    if (exists(m_baseResourcePath / "common" / filename))
+        return path = m_baseResourcePath / "common" / filename, true;
+    if (exists(m_baseResourcePath / moduleDir / filename))
+        return path = m_baseResourcePath / moduleDir / filename, true;
+    if (exists(m_baseResourcePath / "modules" / moduleDir / filename))
+        return path = m_baseResourcePath / "modules" / moduleDir / filename, true;
+    return false;
+}
+
+
+bool ResourceLoader::loadTextFile(const char *filename, const char *moduleDir, TextHandler onComplete, ErrorHandler onError)
+{
+    using boost::format;
+    boost::filesystem::path path;
+    if (resolvePath(filename, moduleDir, path))
+        return loadTextFile(path, onComplete, onError);
+    return onError(RESOURCE_ERROR("Cannot load resource (text): '%s' (module '%s')", filename % moduleDir)), false;
+}
+
+bool ResourceLoader::loadImage(const char *filename, const char *moduleDir, ImageHandler onComplete, ErrorHandler onError)
+{
+    using boost::format;
+    boost::filesystem::path path;
+    if (resolvePath(filename, moduleDir, path))
+        return loadImage(path, onComplete, onError);
+    return onError(RESOURCE_ERROR("Cannot load resource (image): '%s' (module '%s')", filename % moduleDir)), false;
+}
+
+bool ResourceLoader::loadObj(const char * filename, const char * moduleDir, ObjHandler onComplete, ErrorHandler onError) {
+    using boost::format;
+    boost::filesystem::path path;
+    if (resolvePath(filename, moduleDir, path))
+        return loadObj(path, onComplete);
+    return onError(RESOURCE_ERROR("Cannot load resource (.obj): '%s' (module '%s')", filename % moduleDir)), false;
 }
 
 //ShaderHandle::Ptr ResourceLoader::loadShader (const Module & module, const char * vertex_shader, const char * fragment_shader) {

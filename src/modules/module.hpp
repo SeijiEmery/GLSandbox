@@ -20,21 +20,45 @@ struct ModuleConstructorArgs {
         : resourceLoader (resourceLoader) {}
 };
 
-struct Module {
+struct Module : public ResourceLoader::ModuleInterface<Module> {
     friend class ModuleInterface;
 
     virtual ~Module () {}
     virtual void drawFrame () = 0;
     
-//    virtual Module * createModule (const Application & app) = 0;
-    
     std::string name;
     std::string dirName;
+    
+    const char * getDirName () const { return dirName.c_str(); }
 protected:
     Module (const ModuleConstructorArgs & args, const char * name, const char * dirName)
-        : resourceLoader(args.resourceLoader), name(name), dirName(dirName) {}
-protected:
-    ResourceLoader * const resourceLoader; // owned by Application
+        : ResourceLoader::ModuleInterface<Module>(args.resourceLoader), name(name), dirName(dirName) {}
+public:
+    // Utility methods, etc
+    
+    std::shared_ptr<gl::Shader> loadShader (const std::string & shaderName, std::function<void(gl::Shader&)> doLink) const {
+        auto shader = std::make_shared<gl::Shader>(shaderName);
+        
+        auto fs = shaderName + ".fs";
+        auto vs = shaderName + ".vs";
+        
+        loadTextFile(fs.c_str(), [&shader] (const char * src) {
+            shader->compileFragment(src);
+        });
+        loadTextFile(vs.c_str(), [&shader] (const char * src) {
+            shader->compileVertex(src);
+        });
+        doLink(*shader);
+        if (shader->linkProgram()) {
+            std::cout << "Successfully loaded shader '" << shader->name << "'\n";
+        } else {
+            std::cout << "Failed to laod shader '" << shader->name << "'\n";
+        }
+        return shader;
+    }
+    std::shared_ptr<gl::Shader> loadShader (const std::string & shaderName) const {
+        return loadShader(shaderName, [](gl::Shader&) {});
+    }
 };
     
 }; // namespace gl_sandbox

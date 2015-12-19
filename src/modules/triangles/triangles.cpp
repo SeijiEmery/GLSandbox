@@ -41,10 +41,10 @@ void TriangleModule::initModule() {
 //    });
 
     // But can settle for this in the meantime:
-    resourceLoader->loadTextFile(m_shader.name + ".fs", [this] (const char * src) {
+    loadTextFile((m_shader.name + ".fs").c_str(), [this] (const char * src) {
         m_shader.compileFragment(src);
     });
-    resourceLoader->loadTextFile(m_shader.name + ".vs", [this] (const char * src) {
+    loadTextFile((m_shader.name + ".vs").c_str(), [this] (const char * src) {
         m_shader.compileVertex(src);
     });
     
@@ -112,7 +112,7 @@ void TriangleModule::drawFrame() {
         constexpr double TWO_PI  = boost::math::constants::pi<double>() * 2.0;
         
         float angle = (float)fmod((elapsedTime * (TWO_PI / ROTATION_PERIOD)), TWO_PI);
-        mat4 rotationMatrix = glm::rotate(mat4(1.0f), angle, vec3(0.0f, 0.0f, 1.0f));
+        mat4 rotationMatrix = glm::rotate(mat4(1.0f), angle, vec3(1.0f, 0.0f, 0.0f));
         
         m_shader.setUniform(uniform_rotationMatrix, rotationMatrix);
         glDrawArrays(GL_TRIANGLES, 0, 3); CHECK_GL_ERRORS();

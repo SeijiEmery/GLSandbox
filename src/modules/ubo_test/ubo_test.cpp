@@ -40,27 +40,27 @@ struct Foo {
     Foo () {}
 };
 
-std::unique_ptr<Shader> createShader (gl_sandbox::ResourceLoader *resourceLoader, const std::string & shaderName) {
-    Shader * shader = new Shader(shaderName.c_str());
-    resourceLoader->loadTextFile(shaderName + ".fs", [shader] (const char * src) {
-        shader->compileFragment(src);
-    });
-    resourceLoader->loadTextFile(shaderName + ".vs", [shader] (const char * src) {
-        shader->compileVertex(src);
-    });
-    if (shader->linkProgram()) {
-        std::cout << "Successfully loaded shader '" << shader->name << "'\n";
-    } else {
-        std::cout << "Failed to load shader '" << shader->name << "'\n";
-    }
-    return std::unique_ptr<Shader> { shader };
-}
+//std::unique_ptr<Shader> createShader (gl_sandbox::ResourceLoader *resourceLoader, const std::string & shaderName) {
+//    Shader * shader = new Shader(shaderName.c_str());
+//    resourceLoader->loadTextFile(shaderName + ".fs", [shader] (const char * src) {
+//        shader->compileFragment(src);
+//    });
+//    resourceLoader->loadTextFile(shaderName + ".vs", [shader] (const char * src) {
+//        shader->compileVertex(src);
+//    });
+//    if (shader->linkProgram()) {
+//        std::cout << "Successfully loaded shader '" << shader->name << "'\n";
+//    } else {
+//        std::cout << "Failed to load shader '" << shader->name << "'\n";
+//    }
+//    return std::unique_ptr<Shader> { shader };
+//}
 
 struct gl_sandbox::modules::UboDynamicImpl {
 private:
 public:
-    UboDynamicImpl (const UboDynamicModule & module) :
-        shader(std::move(createShader(module.resourceLoader, "ubo_test"))),
+    UboDynamicImpl (const Module & module) :
+        shader(std::move(module.loadShader("ubo_test"))),
         ubo { *shader, "BlobSettings", (Foo*)&foo, {
             { "InnerColor", sizeof(foo.innerColor), &foo.innerColor },
             { "OuterColor", sizeof(foo.outerColor), &foo.outerColor },
@@ -70,19 +70,22 @@ public:
     {
         ::init(*this);
     }
+    
     Foo foo;
-    std::unique_ptr<Shader> shader;
+    std::shared_ptr<Shader> shader;
     ubo_dynamic::UniformBuffer<Foo> ubo;
 };
 struct gl_sandbox::modules::UboStaticImpl {
-    UboStaticImpl (const UboStaticModule & module) :
-        shader(std::move(createShader(module.resourceLoader, "ubo_test"))),
+    UboStaticImpl (const Module & module) :
+        shader(std::move(module.loadShader("ubo_test"))),
+//        shader(std::move(createShader(module.resourceLoader, "ubo_test"))),
         ubo { *shader, "BlobSettings" }
     {
         ::init(*this);
     }
+    
     Foo foo;
-    std::unique_ptr<Shader> shader;
+    std::shared_ptr<Shader> shader;
     ubo_fast::UniformBuffer<Foo> ubo;
 };
 
@@ -99,19 +102,19 @@ UboStaticModule::UboStaticModule (const ModuleConstructorArgs & args)
 }
 
 void UboDynamicModule::drawFrame () {
-    ::drawFrame(*impl);
+    ::drawFrame(*this);
 }
 void UboStaticModule::drawFrame () {
-    ::drawFrame(*impl);
+    ::drawFrame(*this);
 }
 
 UboDynamicModule::~UboDynamicModule() {
     std::cout << "Killing UBO dynamic test\n";
-    ::deinit(*impl);
+    ::deinit(*this);
 }
-UboStaticModule::~UboStaticModule () {
+UboStaticModule::~UboStaticModule() {
     std::cout << "Killing UBO static / fast test\n";
-    ::deinit(*impl);
+    ::deinit(*this);
 }
 
 

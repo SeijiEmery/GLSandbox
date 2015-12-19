@@ -32,6 +32,7 @@ struct ShaderLoadError : public std::runtime_error {
 class Shader {
 public:
     Shader (const char * name) : name(name) {}
+    Shader (const std::string & name) : name(name) {}
 protected:
     gl::ShaderProgram  _program;
     gl::FragmentShader _fs;
