@@ -14,75 +14,30 @@
 
 namespace gl_sandbox {
 namespace modules {
-    
-//template <class T, class Impl>
-//class PimplModule : public Module {
-//    PimplModule (const ModuleConstructorArgs & args) :
-//        Module(args, T::MODULE_NAME, T::MODULE_DIR),
-//        m_impl(static_cast<Module&>(*this)) {}
-//public:
-//    ~PimplModule () {}
-//    
-//    static Module * construct (const ModuleConstructorArgs & args) {
-//        return static_cast<Module*>(new T(args));
-//    }
-//    void drawFrame () override {
-//        return m_impl->drawFrame(static_cast<Module&>(*this));
-//    }
-//protected:
-//    std::unique_ptr<Impl> m_impl;
-//};
-//    
-//class UboDynamicImpl;
-//class UboStaticImpl;
-//class UboDynamicModule;
-//class UboStaticModule;
-//    
-//typedef PimplModule<UboDynamicModule,UboDynamicImpl> UboDynamicBase;
-//
-//struct UboDynamicModule : public UboDynamicBase {
-//    using UboDynamicBase::UboDynamicBase;
-//    static const char * MODULE_NAME;
-//    static const char * MODULE_DIR;
-//};
-//struct UboStaticModule : public PimplModule<UboStaticModule,UboStaticImpl> {
-//    using PimplModule<UboStaticModule,UboStaticImpl>::PimplModule;
-//    static const char * MODULE_NAME;
-//    static const char * MODULE_DIR;
-//};
-    
+
 class UboDynamicImpl;
 class UboStaticImpl;
-
-class UboDynamicModule : public Module {
-    UboDynamicModule (const ModuleConstructorArgs & args);
-    friend class UboDynamicImpl;
+    
+struct UboDynamicModule : public Module<UboDynamicModule> {
 public:
+    UboDynamicModule ();
     ~UboDynamicModule ();
+    void drawFrame () override;
     
     static const char * MODULE_NAME;
     static const char * MODULE_DIR;
-    
-    static Module * construct (const ModuleConstructorArgs & args) {
-        return static_cast<Module*>(new UboDynamicModule(args));
-    }
-    void drawFrame () override;
 private:
     std::unique_ptr<UboDynamicImpl> impl;
 };
-class UboStaticModule : public Module {
-    UboStaticModule (const ModuleConstructorArgs & args);
-    friend class UboStaticImpl;
+    
+class UboStaticModule : public Module<UboStaticModule> {
 public:
+    UboStaticModule ();
     ~UboStaticModule ();
+    void drawFrame () override;
     
     static const char * MODULE_NAME;
     static const char * MODULE_DIR;
-    
-    static Module * construct (const ModuleConstructorArgs & args) {
-        return static_cast<Module*>(new UboStaticModule(args));
-    }
-    void drawFrame () override;
 protected:
     std::unique_ptr<UboStaticImpl> impl;
 };

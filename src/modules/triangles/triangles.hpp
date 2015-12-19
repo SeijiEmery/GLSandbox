@@ -14,22 +14,16 @@
 
 namespace gl_sandbox {
     
-class TriangleModule : public Module {
+class TriangleModule : public Module<TriangleModule> {
 public:
+    TriangleModule ();
     ~TriangleModule ();
     void drawFrame () override;
     
-    static const char * MODULE_NAME;
-    static const char * MODULE_DIR;
-    
-    static Module * construct (const ModuleConstructorArgs & args) {
-        return static_cast<Module*>(new TriangleModule(args));
-    }
+    static constexpr const char* MODULE_NAME = "module-triangles";
+    static constexpr const char* MODULE_DIR  = "triangles";
 private:
-    TriangleModule (const ModuleConstructorArgs & args)
-        : Module(args, MODULE_NAME, MODULE_DIR) { initModule(); }
-    void initModule ();
-    
+    ResourceLoader m_resourceLoader { MODULE_DIR };
     gl::Shader m_shader { "basic_shader" };
     gl::VAO    m_vao;
     gl::VBO    m_buffers [2];

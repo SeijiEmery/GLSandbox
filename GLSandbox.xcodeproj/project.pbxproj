@@ -19,8 +19,6 @@
 		81176D9C1C1FE4B80025EB6C /* libboost_system.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 81176D971C1FE4B80025EB6C /* libboost_system.dylib */; };
 		81176DAC1C22325E0025EB6C /* gl_wrapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 81176DAA1C22325E0025EB6C /* gl_wrapper.cpp */; settings = {ASSET_TAGS = (); }; };
 		81176DB01C229E3E0025EB6C /* ubo_test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 81176DAE1C229E3D0025EB6C /* ubo_test.cpp */; settings = {ASSET_TAGS = (); }; };
-		81176DB61C23731D0025EB6C /* ubo_test.fs in Resources */ = {isa = PBXBuildFile; fileRef = 81176DB51C23731D0025EB6C /* ubo_test.fs */; settings = {ASSET_TAGS = (); }; };
-		81176DB81C23732E0025EB6C /* ubo_test.vs in Resources */ = {isa = PBXBuildFile; fileRef = 81176DB71C23732E0025EB6C /* ubo_test.vs */; settings = {ASSET_TAGS = (); }; };
 		81176DFD1C24D5580025EB6C /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = 81176DEA1C24D5580025EB6C /* README.md */; settings = {ASSET_TAGS = (); }; };
 		81176DFE1C24D5580025EB6C /* stb_vorbis.c in Sources */ = {isa = PBXBuildFile; fileRef = 81176DF91C24D5580025EB6C /* stb_vorbis.c */; settings = {ASSET_TAGS = (); }; };
 		815D61F41C1F6574005DB2A8 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 815D61F31C1F6574005DB2A8 /* main.cpp */; settings = {ASSET_TAGS = (); }; };
@@ -33,6 +31,8 @@
 		815D62091C1F670F005DB2A8 /* app.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 815D62071C1F670F005DB2A8 /* app.cpp */; settings = {ASSET_TAGS = (); }; };
 		815D620E1C1F7D9F005DB2A8 /* triangles.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 815D620C1C1F7D9F005DB2A8 /* triangles.cpp */; settings = {ASSET_TAGS = (); }; };
 		815D62111C1F7E42005DB2A8 /* modules.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 815D620F1C1F7E42005DB2A8 /* modules.cpp */; settings = {ASSET_TAGS = (); }; };
+		81AB41021C260CAA00151156 /* ubo_test.fs in Resources */ = {isa = PBXBuildFile; fileRef = 81AB41011C260CAA00151156 /* ubo_test.fs */; settings = {ASSET_TAGS = (); }; };
+		81AB41041C260CC800151156 /* ubo_test.vs in Resources */ = {isa = PBXBuildFile; fileRef = 81AB41031C260CC800151156 /* ubo_test.vs */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -69,8 +69,6 @@
 		81176DAF1C229E3D0025EB6C /* ubo_test.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = ubo_test.hpp; path = src/modules/ubo_test/ubo_test.hpp; sourceTree = SOURCE_ROOT; };
 		81176DB11C22BC160025EB6C /* listeners.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = listeners.cpp; path = src/common/listeners.cpp; sourceTree = SOURCE_ROOT; };
 		81176DB21C22BC160025EB6C /* listeners.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = listeners.hpp; path = src/common/listeners.hpp; sourceTree = SOURCE_ROOT; };
-		81176DB51C23731D0025EB6C /* ubo_test.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = ubo_test.fs; path = shaders/modules/ubo_test/ubo_test.fs; sourceTree = SOURCE_ROOT; };
-		81176DB71C23732E0025EB6C /* ubo_test.vs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = ubo_test.vs; path = shaders/modules/ubo_test/ubo_test.vs; sourceTree = SOURCE_ROOT; };
 		81176DD11C24C6ED0025EB6C /* tiny_obj_loader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tiny_obj_loader.h; sourceTree = "<group>"; };
 		81176DEA1C24D5580025EB6C /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = stb/README.md; sourceTree = "<group>"; };
 		81176DEB1C24D5580025EB6C /* stb_c_lexer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = stb_c_lexer.h; path = stb/stb_c_lexer.h; sourceTree = "<group>"; };
@@ -107,6 +105,8 @@
 		815D620D1C1F7D9F005DB2A8 /* triangles.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = triangles.hpp; path = src/modules/triangles/triangles.hpp; sourceTree = SOURCE_ROOT; };
 		815D620F1C1F7E42005DB2A8 /* modules.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = modules.cpp; path = src/modules/modules.cpp; sourceTree = SOURCE_ROOT; };
 		815D62101C1F7E42005DB2A8 /* modules.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = modules.hpp; path = src/modules/modules.hpp; sourceTree = SOURCE_ROOT; };
+		81AB41011C260CAA00151156 /* ubo_test.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = ubo_test.fs; path = shaders/modules/ubo_test/ubo_test.fs; sourceTree = SOURCE_ROOT; };
+		81AB41031C260CC800151156 /* ubo_test.vs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = ubo_test.vs; path = shaders/modules/ubo_test/ubo_test.vs; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -173,8 +173,8 @@
 		81176DB41C2372B90025EB6C /* ubo_test */ = {
 			isa = PBXGroup;
 			children = (
-				81176DB51C23731D0025EB6C /* ubo_test.fs */,
-				81176DB71C23732E0025EB6C /* ubo_test.vs */,
+				81AB41011C260CAA00151156 /* ubo_test.fs */,
+				81AB41031C260CC800151156 /* ubo_test.vs */,
 			);
 			name = ubo_test;
 			sourceTree = "<group>";
@@ -406,8 +406,8 @@
 			files = (
 				81176D871C1FC9230025EB6C /* basic_shader.vs in Resources */,
 				81176D851C1FC90D0025EB6C /* basic_shader.fs in Resources */,
-				81176DB61C23731D0025EB6C /* ubo_test.fs in Resources */,
-				81176DB81C23732E0025EB6C /* ubo_test.vs in Resources */,
+				81AB41021C260CAA00151156 /* ubo_test.fs in Resources */,
+				81AB41041C260CC800151156 /* ubo_test.vs in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -584,6 +584,7 @@
 				81176DA71C21F5160025EB6C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		815D61DA1C1F652A005DB2A8 /* Build configuration list for PBXProject "GLSandbox" */ = {
 			isa = XCConfigurationList;

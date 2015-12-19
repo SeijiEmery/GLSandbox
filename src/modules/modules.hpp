@@ -11,45 +11,33 @@
 
 #include "module.hpp"
 #include <vector>
+#include <unordered_map>
 #include <memory>
 #include <functional>
 #include <string>
 
 namespace gl_sandbox {
     
-struct Module_metaclass {
-    std::string name;
-    std::function<Module*()> construct;
-    
-    Module_metaclass (const char * name, const decltype(construct) & construct) :
-        name(name), construct(construct) {}
-    Module_metaclass (Module_metaclass && other) :
-        name(std::move(other.name)), construct(std::move(other.construct)) {}
-    Module_metaclass (const Module_metaclass & other) :
-        name(other.name), construct(other.construct) {}
-};
-
-class Application;
 class ModuleInterface {
 public:
-    ModuleInterface (ResourceLoader * const);
+    ModuleInterface ();
     ~ModuleInterface () {}
     
-    void loadModule (const char * moduleName);
-    void unloadModule (const char * moduleName);
+    void loadModule (const std::string & moduleName);
+    void unloadModule (const std::string & moduleName);
     void runModules ();
     
-    bool hasRunningModuleWithName (const char * moduleName);
-    bool hasRunnableModuleWithName (const char * moduleName);
+    bool hasRunningModuleWithName (const std::string & moduleName) const;
+    bool hasRunnableModuleWithName (const std::string & moduleName) const;
     
 protected:
-    void initModule (Module * module);
-    void deinitModule (Module * module);
+    void initModule (IModule * module);
+    void deinitModule (IModule * module);
 protected:
-    std::vector<std::unique_ptr<Module>> m_runningModules;
-    std::vector<Module_metaclass> m_runnableModules;
+    typedef std::function<IModule*()> ModuleConstructor;
     
-    ModuleConstructorArgs m_sharedModuleArgs;
+    std::vector<std::unique_ptr<IModule>> m_runningModules;
+    std::unordered_map<std::string, ModuleConstructor> m_moduleConstructors;
 };
     
 }; // namespace gl_sandbox

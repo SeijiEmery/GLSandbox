@@ -39,7 +39,6 @@ public:
     void glfw_errorCallback (int error, const char * descr);
 protected:
     GLFWwindow * m_mainWindow = nullptr;
-    ResourceLoader  m_resourceLoader;
     ModuleInterface m_modules;
 };
     

@@ -19,6 +19,8 @@
 
 using namespace gl_sandbox;
 
+boost::filesystem::path ResourceLoader::g_baseResourcePath;
+
 #define RESOURCE_ERROR(msg, rest) ResourceError { (format("ResourceError: " msg) % rest).str() }
 
 bool ResourceLoader::loadTextFile(
@@ -86,14 +88,14 @@ bool ResourceLoader::loadObj(const Path &filepath, ObjHandler onComplete, ErrorH
 
 bool ResourceLoader::resolvePath(const char *filename, const char *moduleDir, Path &path) {
     using namespace boost::filesystem;
-    if (exists(m_baseResourcePath / filename))
-        return path = m_baseResourcePath / filename, true;
-    if (exists(m_baseResourcePath / "common" / filename))
-        return path = m_baseResourcePath / "common" / filename, true;
-    if (exists(m_baseResourcePath / moduleDir / filename))
-        return path = m_baseResourcePath / moduleDir / filename, true;
-    if (exists(m_baseResourcePath / "modules" / moduleDir / filename))
-        return path = m_baseResourcePath / "modules" / moduleDir / filename, true;
+    if (exists(g_baseResourcePath / filename))
+        return path = g_baseResourcePath / filename, true;
+    if (exists(g_baseResourcePath / "common" / filename))
+        return path = g_baseResourcePath / "common" / filename, true;
+    if (exists(g_baseResourcePath / moduleDir / filename))
+        return path = g_baseResourcePath / moduleDir / filename, true;
+    if (exists(g_baseResourcePath / "modules" / moduleDir / filename))
+        return path = g_baseResourcePath / "modules" / moduleDir / filename, true;
     return false;
 }
 

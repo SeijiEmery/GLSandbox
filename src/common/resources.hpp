@@ -21,14 +21,12 @@ namespace gl_sandbox {
 struct ResourceError : public std::runtime_error {
     using std::runtime_error::runtime_error; // constructor
 };
-    
 class Application;
-class Module;
 class ResourceLoader {
-    void executeAsync (std::function<void()>);
+    friend class Application;
 public:
-    ResourceLoader (const char * baseResourcePath) :
-        m_baseResourcePath(baseResourcePath) {}
+    ResourceLoader (const char * modulePath) :
+        m_modulePath(modulePath) {}
     
     struct ImageInfo { int size_x, size_y, image_format; };
     struct ObjData {
@@ -49,36 +47,14 @@ public:
     bool loadTextFile (const char * filename, const char * moduleDir, TextHandler onComplete, ErrorHandler onError = dumpToStdout);
     bool loadImage (const char * filename, const char * moduleDir, ImageHandler onComplete, ErrorHandler onError = dumpToStdout);
     bool loadObj (const char * filename, const char * moduleDir, ObjHandler onComplete, ErrorHandler onError = dumpToStdout);
-    
-    
-    // CRTP Helper class -- Module derives from this to expose basic resource loading methods to module implementations.
-    // This struct thus defines what resource loading methods are exposed to modules, and how they get implemented.
-    template <typename T>
-    struct ModuleInterface {
-    protected:
-        ModuleInterface (ResourceLoader * resourceLoaderRef)
-            : m_resourceLoaderRef(resourceLoaderRef) { assert(m_resourceLoaderRef != nullptr); }
-        ResourceLoader * m_resourceLoaderRef;
-        
-#define GET_MODULE_DIR() static_cast<const T*>(this)->getDirName()
-        bool loadTextFile (const char * filename, TextHandler onComplete) const {
-            return m_resourceLoaderRef->loadTextFile(filename, GET_MODULE_DIR(), onComplete);
-        }
-        bool loadImage (const char * filename, ImageHandler onComplete) const {
-            return m_resourceLoaderRef->loadImage(filename, GET_MODULE_DIR(), onComplete);
-        }
-        bool loadObj (const char * filename, ObjHandler onComplete) const {
-            return m_resourceLoaderRef->loadObj(filename, GET_MODULE_DIR(), onComplete);
-        }
-#undef GET_MODULE_DIR
-    };
 protected:
     static void dumpToStdout (const ResourceError & e) {
         std::cerr << e.what() << std::endl;
     }
     bool resolvePath (const char * filename, const char * moduleDir, Path & path);
 protected:
-    boost::filesystem::path m_baseResourcePath;
+    static boost::filesystem::path g_baseResourcePath;
+    boost::filesystem::path m_modulePath;
 };
 
 }; // namespace gl_sandbox

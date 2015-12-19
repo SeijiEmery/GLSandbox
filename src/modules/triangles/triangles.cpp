@@ -24,10 +24,7 @@ using namespace gl_sandbox::gl::references;
 using glm::mat4;
 using glm::vec3;
 
-const char * TriangleModule::MODULE_NAME = "module-triangles";
-const char * TriangleModule::MODULE_DIR  = "triangles";
-
-void TriangleModule::initModule() {
+TriangleModule::TriangleModule() {
     
     CHECK_GL_ERRORS();
     
@@ -41,10 +38,10 @@ void TriangleModule::initModule() {
 //    });
 
     // But can settle for this in the meantime:
-    loadTextFile((m_shader.name + ".fs").c_str(), [this] (const char * src) {
+    m_resourceLoader.loadTextFile((m_shader.name + ".fs").c_str(), [this] (const char * src) {
         m_shader.compileFragment(src);
     });
-    loadTextFile((m_shader.name + ".vs").c_str(), [this] (const char * src) {
+    m_resourceLoader.loadTextFile((m_shader.name + ".vs").c_str(), [this] (const char * src) {
         m_shader.compileVertex(src);
     });
     

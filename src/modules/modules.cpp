@@ -17,41 +17,39 @@
 using namespace gl_sandbox;
 using namespace gl_sandbox::modules;
 
-#define CONSTRUCTABLE_MODULE(cls) \
+//#define CONSTRUCTABLE_MODULE(cls) \
 Module_metaclass { cls::MODULE_NAME, [&]() { return cls::construct(m_sharedModuleArgs); } }
+
+#define ADD_MODULE(cls) { std::string { cls::MODULE_NAME }, [](){ return cls::construct(); } }
 
 
 //Module_metaclass { cls::MODULE_NAME, []() { return static_cast<Module*>(new cls()); } }
 
-ModuleInterface::ModuleInterface (ResourceLoader * const resourceLoader) :
-    m_sharedModuleArgs(resourceLoader),
-    m_runnableModules {
-        // List of constructable modules gets defined here
-        CONSTRUCTABLE_MODULE(TriangleModule),
-        CONSTRUCTABLE_MODULE(UboDynamicModule),
-        CONSTRUCTABLE_MODULE(UboStaticModule)
+ModuleInterface::ModuleInterface () :
+    m_moduleConstructors {
+        ADD_MODULE(TriangleModule),
+        ADD_MODULE(UboDynamicModule),
+        ADD_MODULE(UboStaticModule)
     }
 {
     // Do other initialization...
 }
-#undef CONSTRUCTABLE_MODULE
+#undef ADD_MODULE
 
-void ModuleInterface::initModule (Module * module) {
+void ModuleInterface::initModule (IModule * module) {
     // Can add functionality later..
     assert(module != nullptr);
 }
-void ModuleInterface::deinitModule (Module * module) {
+void ModuleInterface::deinitModule (IModule * module) {
     // Do nothing for now (can add functionality as needed)
     assert(module != nullptr);
 }
 
-bool ModuleInterface::hasRunnableModuleWithName(const char * moduleName) {
-    for (const auto & module : m_runnableModules)
-        if (module.name == moduleName)
-            return true;
-    return false;
+bool ModuleInterface::hasRunnableModuleWithName(const std::string & moduleName) const {
+    auto x = m_moduleConstructors.find(moduleName);
+    return x != m_moduleConstructors.end();
 }
-bool ModuleInterface::hasRunningModuleWithName(const char * moduleName) {
+bool ModuleInterface::hasRunningModuleWithName(const std::string & moduleName) const {
     for (const auto & module : m_runningModules)
         if (module->name == moduleName)
             return true;
@@ -59,7 +57,7 @@ bool ModuleInterface::hasRunningModuleWithName(const char * moduleName) {
 }
 
 
-void ModuleInterface::loadModule(const char * moduleName) {
+void ModuleInterface::loadModule(const std::string & moduleName) {
     // Check if module is already loaded. If so, do nothing.
     if (hasRunningModuleWithName(moduleName)) {
         std::cout << "Already running module '" << moduleName << "'\n";
@@ -68,19 +66,17 @@ void ModuleInterface::loadModule(const char * moduleName) {
     
     // Otherwise, find constructable module with a matching name.
     // If no such module exists, log an error.
-    for (auto i = 0; i < m_runnableModules.size(); ++i) {
-        if (m_runnableModules[i].name == moduleName) {
-            auto newModule = m_runnableModules[i].construct();
-            initModule(newModule);
-            m_runningModules.emplace_back(newModule);
-            return;
-        }
+    auto x = m_moduleConstructors.find(moduleName);
+    if (x != m_moduleConstructors.end()) {
+        auto & constructor = x->second;
+        auto newModule = constructor();
+        m_runningModules.emplace_back(newModule);
+        return;
     }
-    
     std::cerr << "Cannot load module -- no module registered as '" << moduleName << "'\n";
 }
 
-void ModuleInterface::unloadModule (const char * moduleName) {
+void ModuleInterface::unloadModule (const std::string & moduleName) {
     // Find module and remove
 //    std::remove_if(m_runningModules.begin(), m_runningModules.end(),
 //                   [&moduleName](const std::unique_ptr<Module> & module) {
