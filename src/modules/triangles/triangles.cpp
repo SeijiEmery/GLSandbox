@@ -85,33 +85,25 @@ TriangleModule::TriangleModule() {
     
     glBindBuffer(GL_ARRAY_BUFFER, colorBuffer.handle); CHECK_GL_ERRORS();
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, NULL); CHECK_GL_ERRORS();
-
-//    glBindVertexArray(0); CHECK_GL_ERRORS();
-//    glBindBuffer(GL_ARRAY_BUFFER, 0); CHECK_GL_ERRORS();
-//    glUseProgram(0);
-//    glDisableVertexAttribArray(0); CHECK_GL_ERRORS();
-//    glDisableVertexAttribArray(1); CHECK_GL_ERRORS();
+    
+    m_uniform_rotationMatrix = m_shader.getUniformLocation("RotationMatrix");
+    m_startTime = glfwGetTime();
 }
 TriangleModule::~TriangleModule() {
     std::cout << "Killing triangle module" << std::endl;
 }
 void TriangleModule::drawFrame() {
-    static auto uniform_rotationMatrix = m_shader.getUniformLocation("RotationMatrix");
-    static double startTime = glfwGetTime();
-    static double ROTATION_PERIOD = 2.5; // rotate 360 deg every 2.5 secs
-    
     if (m_shader.loaded()) {
-//        glUseProgram(m_shader.handle()); CHECK_GL_ERRORS();
-//        glBindVertexArray(m_vao.handle); CHECK_GL_ERRORS();
+        glUseProgram(m_shader.handle()); CHECK_GL_ERRORS();
+        glBindVertexArray(m_vao.handle); CHECK_GL_ERRORS();
         
-        double elapsedTime = startTime - glfwGetTime();
-        
+        double elapsedTime = m_startTime - glfwGetTime();
         constexpr double TWO_PI  = boost::math::constants::pi<double>() * 2.0;
         
         float angle = (float)fmod((elapsedTime * (TWO_PI / ROTATION_PERIOD)), TWO_PI);
         mat4 rotationMatrix = glm::rotate(mat4(1.0f), angle, vec3(1.0f, 0.0f, 0.0f));
         
-        m_shader.setUniform(uniform_rotationMatrix, rotationMatrix);
+        m_shader.setUniform(m_uniform_rotationMatrix, rotationMatrix);
         glDrawArrays(GL_TRIANGLES, 0, 3); CHECK_GL_ERRORS();
     }
 }
