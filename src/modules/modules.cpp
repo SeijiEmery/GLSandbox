@@ -8,6 +8,7 @@
 
 #include "triangles/triangles.hpp"
 #include "ubo_test/ubo_test.hpp"
+#include "obj_viewer/obj_viewer.hpp"
 
 #include "modules.hpp"
 #include "app.hpp"
@@ -29,7 +30,8 @@ ModuleInterface::ModuleInterface () :
     m_moduleConstructors {
         ADD_MODULE(TriangleModule),
         ADD_MODULE(UboDynamicModule),
-        ADD_MODULE(UboStaticModule)
+        ADD_MODULE(UboStaticModule),
+        ADD_MODULE(ObjViewer),
     }
 {
     // Do other initialization...

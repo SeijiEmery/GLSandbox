@@ -155,7 +155,8 @@ void Application::glfw_keyCallback(GLFWwindow *window, int key, int scancode, in
     //    key toggle,     module id,      currently pressed
         { GLFW_KEY_T, "module-triangles", false },
         { GLFW_KEY_Y, "ubo-dynamic-test", false },
-        { GLFW_KEY_U, "ubo-static-test",  false }
+        { GLFW_KEY_U, "ubo-static-test",  false },
+        { GLFW_KEY_O, "module-objviewer", false },
     };
     
     // Toggle modules when specific keys are pressed.
