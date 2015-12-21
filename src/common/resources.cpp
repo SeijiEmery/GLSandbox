@@ -19,6 +19,13 @@
 
 using namespace gl_sandbox;
 
+typedef ResourceLoader::Path Path;
+typedef ResourceLoader::ObjHandler ObjHandler;
+typedef ResourceLoader::TextHandler TextHandler;
+typedef ResourceLoader::ImageHandler ImageHandler;
+typedef ResourceLoader::ErrorHandler ErrorHandler;
+
+
 boost::filesystem::path ResourceLoader::g_baseResourcePath;
 
 #define RESOURCE_ERROR(msg, rest) ResourceError { (format("ResourceError: " msg) % rest).str() }
@@ -59,10 +66,6 @@ bool ResourceLoader::loadImage(
     ImageHandler onComplete,
     ErrorHandler onError
 ) {
-//    using boost::format;
-//    if (!boost::filesystem::exists(filepath))
-//        return onError(RESOURCE_ERROR("File '%s' does not exist\n", filepath)), false;
-
     ImageInfo info;
     const uint8_t * image_data = stbi_load(filepath.string().c_str(), &info.size_x, &info.size_y, &info.image_format, 0);
     if (image_data != nullptr) {
@@ -75,6 +78,25 @@ bool ResourceLoader::loadImage(
     }
 }
 
+void ResourceLoader::loadImageAsync (const Path & filepath, ImageHandler onComplete, ErrorHandler onError) {
+    auto r = std::async([=](){
+        ImageInfo info;
+        const uint8_t * image_data = stbi_load(filepath.string().c_str(), &info.size_x, &info.size_y, &info.image_format, 0);
+        if (image_data != nullptr) {
+            runOnMainThread([=] {
+                onComplete(image_data, info);
+                stbi_image_free((void*)image_data);
+            });
+        } else {
+            std::string fail_reason { stbi_failure_reason() };
+            runOnMainThread([=] {
+                onError(ResourceError { fail_reason });
+            });
+        }
+    });
+    m_runningTasks.push_back(std::move(r));
+}
+
 bool ResourceLoader::loadObj(const Path &filepath, ObjHandler onComplete, ErrorHandler onError
 ) {
     ObjData obj;
@@ -85,6 +107,56 @@ bool ResourceLoader::loadObj(const Path &filepath, ObjHandler onComplete, ErrorH
         return onError(ResourceError { err }), false;
 }
 
+void ResourceLoader::loadObjAsync(const Path &filepath, ObjHandler onComplete, ErrorHandler onError) {
+    auto r = std::async(std::launch::async, [=](){
+        auto objData = std::make_shared<ObjData>();
+        std::string err;
+        
+        if (tinyobj::LoadObj(objData->shapes, objData->materials, err, filepath.string().c_str())) {
+            runOnMainThread([=]() {
+                onComplete(*objData);
+            });
+        } else {
+            runOnMainThread([=](){
+                onError(ResourceError { err });
+            });
+        }
+    });
+    m_runningTasks.push_back(std::move(r));
+}
+
+// Schedule arbitrary resource handling code to run on the main thread (used by ****Async methods)
+void ResourceLoader::runOnMainThread(std::function<void ()> f) {
+    std::lock_guard<std::mutex> lock { m_pendingTasksMutex };
+    m_pendingMainThreadTasks.push_back(f);
+}
+// Run arbitrary resource handling code, finishing async tasks on the main thread
+void ResourceLoader::finishAsyncTasks(double timeLimit) {
+    assert(timeLimit > 0);
+    if (m_pendingMainThreadTasks.size() != 0) {
+        std::lock_guard<std::mutex> lock { m_pendingTasksMutex };
+        double t0 = glfwGetTime(), elapsed;
+        assert(m_pendingMainThreadTasks.size() != 0);
+        int n = 0;
+        do {        // always run at least 1 task in case timeLimit is f***-ed
+            ++n;
+            m_pendingMainThreadTasks.back()(); // execute callback(s) on main thread
+            m_pendingMainThreadTasks.pop_back();
+        } while ((elapsed = glfwGetTime() - t0) < timeLimit && m_pendingMainThreadTasks.size() != 0);
+        
+        std::cout << "ResourceLoader: Ran " << n << " task callback(s) in " << (elapsed * 1e3) << " ms";
+        elapsed > timeLimit ?
+            std::cout << " (Overflow! " << (elapsed * 1e3) << " > " << (timeLimit * 1e3) << ")\n" :
+            std::cout << '\n';
+        if (m_pendingMainThreadTasks.size() > 0)
+            std::cout << m_pendingMainThreadTasks.size() << " remaining.";
+    }
+}
+ResourceLoader::~ResourceLoader () {
+    if (m_pendingMainThreadTasks.size() != 0) {
+        std::cout << "UsageError: ResourceLoader had " << m_pendingMainThreadTasks.size() << " pending thread tasks at exit (check that you're calling finishAsyncTasks()!)  (from module w/ path " << m_modulePath << ")";
+    }
+}
 
 bool ResourceLoader::resolvePath(const char *filename, const char *moduleDir, Path &path) {
     using namespace boost::filesystem;
@@ -125,6 +197,8 @@ bool ResourceLoader::loadObj(const char * filename, const char * moduleDir, ObjH
         return loadObj(path, onComplete);
     return onError(RESOURCE_ERROR("Cannot load resource (.obj): '%s' (module '%s')", filename % moduleDir)), false;
 }
+
+
 
 //ShaderHandle::Ptr ResourceLoader::loadShader (const Module & module, const char * vertex_shader, const char * fragment_shader) {
 //    // Check shader inputs -- make sure exactly one vertex shader and one fragment shader, etc

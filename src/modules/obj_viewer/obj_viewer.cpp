@@ -18,26 +18,28 @@ using namespace gl_sandbox::gl;
 
 typedef ObjViewer::ShaderRef ShaderRef;
 
+
+// Loads an .obj model 
 void ObjViewer::loadModel(const std::string &modelName) {
+    loadModelAsync(modelName);
+}
+
+void ObjViewer::loadModelAsync(const std::string &modelName) {
     std::cout << "Loading '" << modelName << "'\n";
     double startTime = glfwGetTime();
-    m_resourceLoader.loadObj(modelName, [=](auto modelData) {
+    m_resourceLoader.loadObjAsync(modelName, [=](const ResourceLoader::ObjData & modelData) {
         double loadTime = glfwGetTime() - startTime;
-    
+        
         std::cout << "Loaded '" << modelName << "' (took " << loadTime << " seconds)\n";
         std::cout << "Has " << modelData.shapes.size() << " shapes, "
-                   << modelData.materials.size() << " materials\n";
+        << modelData.materials.size() << " materials\n";
         for (auto & shape : modelData.shapes) {
             std::cout << "Shape '" << shape.name << "'\n";
         }
     });
 }
-void ObjViewer::loadModelAsync(const std::string &modelName) {
-    auto r = std::async(std::launch::async, [=](){
-        loadModel(modelName);
-    });
-    m_discardedAsyncResults.push_back(std::move(r));
-}
+
+
 
 ShaderRef ObjViewer::loadShader (const std::string & shaderName) {
     auto it = m_shaderCache.find(shaderName);
@@ -72,13 +74,14 @@ ObjViewer::ModelInstance::ModelInstance () {
 }
     
 void ObjViewer::ModelInstance::draw () {
-    
+
 }
 
 ObjViewer::~ObjViewer() {
     std::cout << "Killing model viewer\n";
 }
 void ObjViewer::drawFrame() {
+    m_resourceLoader.finishAsyncTasks();
     for (auto & model : m_modelInstances)
         model.draw();
 }

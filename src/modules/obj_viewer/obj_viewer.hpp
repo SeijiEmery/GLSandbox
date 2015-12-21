@@ -46,17 +46,23 @@ protected:
     void loadModelAsync (const std::string & modelName);
     
 private:
+    std::vector<std::future<void>> m_discardedAsyncResults;
+    // drawback of std::async -- returns a future object, which joins the thread when its destructor
+    // is called. Since we (obviously) don't want to JOIN THE THREAD on our async calls, we "fix" this
+    // by stashing its result (nothing -- these are void returns) in a throwaway vector so its dtor
+    // won't run until... oh, whenever the module gets unloaded...
+    //
+    // Oh, and uh, here's an interesting side effect of that: If the module gets reloaded _before_
+    // the load finishes, it'll join the thread + hang the app until the load finishes (which is better
+    // than doing something undefined b/c the module no longer exists in memory, I guess, but it means
+    // stuff can/will get loaded while the module dtor is running >_< Oh well, cross that bridge when
+    // we get there...
+    
     ResourceLoader m_resourceLoader { MODULE_NAME };
     
     std::mutex m_modelInstances_mutex; // models can be loaded async
     std::vector<ModelInstance> m_modelInstances;
     std::unordered_map<std::string, ShaderRef> m_shaderCache;
-    
-    std::vector<std::future<void>> m_discardedAsyncResults;
-    // drawback of std::async -- returns a future object, which joins the thread when its destructor,
-    // is called. Since we (obviously) don't want to do that for our async calls, we can (sorta)
-    // safely "throw away" the result by stashing it in a vector...
-    // oh god this approach is terrible >_<
 };
     
 }; // namespace modules
