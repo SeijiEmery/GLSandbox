@@ -76,6 +76,9 @@ public:
     void setUniform (GLint location, float s) {
         glUniform1f(location, s);
     }
+    void setUniform (GLint location, const glm::mat3x3 & m) {
+        glUniformMatrix3fv(location, 1, GL_FALSE, &m[0][0]);
+    }
     template <typename T>
     void setUniform (const char * name, const T & v) { setUniform(getUniformLocation(name), v); }
     

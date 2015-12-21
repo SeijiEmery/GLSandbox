@@ -83,6 +83,8 @@
 		81AB41721C27D66F00151156 /* default.png in Resources */ = {isa = PBXBuildFile; fileRef = 81AB41411C27D66F00151156 /* default.png */; settings = {ASSET_TAGS = (); }; };
 		81AB41731C27D66F00151156 /* teapot.max in Resources */ = {isa = PBXBuildFile; fileRef = 81AB41421C27D66F00151156 /* teapot.max */; settings = {ASSET_TAGS = (); }; };
 		81AB41741C27D66F00151156 /* teapot.obj in Resources */ = {isa = PBXBuildFile; fileRef = 81AB41431C27D66F00151156 /* teapot.obj */; settings = {ASSET_TAGS = (); }; };
+		81AB41761C2890E900151156 /* diffuse_1light.fs in Resources */ = {isa = PBXBuildFile; fileRef = 81AB41751C2890E900151156 /* diffuse_1light.fs */; settings = {ASSET_TAGS = (); }; };
+		81AB41781C2890FC00151156 /* diffuse_1light.vs in Resources */ = {isa = PBXBuildFile; fileRef = 81AB41771C2890FC00151156 /* diffuse_1light.vs */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -208,6 +210,8 @@
 		81AB41411C27D66F00151156 /* default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = default.png; sourceTree = "<group>"; };
 		81AB41421C27D66F00151156 /* teapot.max */ = {isa = PBXFileReference; lastKnownFileType = file; path = teapot.max; sourceTree = "<group>"; };
 		81AB41431C27D66F00151156 /* teapot.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = teapot.obj; sourceTree = "<group>"; };
+		81AB41751C2890E900151156 /* diffuse_1light.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = diffuse_1light.fs; path = shaders/common/diffuse_1light.fs; sourceTree = SOURCE_ROOT; };
+		81AB41771C2890FC00151156 /* diffuse_1light.vs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = diffuse_1light.vs; path = shaders/common/diffuse_1light.vs; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -407,6 +411,8 @@
 		815D62051C1F66DC005DB2A8 /* common */ = {
 			isa = PBXGroup;
 			children = (
+				81AB41751C2890E900151156 /* diffuse_1light.fs */,
+				81AB41771C2890FC00151156 /* diffuse_1light.vs */,
 			);
 			name = common;
 			sourceTree = "<group>";
@@ -630,6 +636,7 @@
 				81176D871C1FC9230025EB6C /* basic_shader.vs in Resources */,
 				81AB415A1C27D66F00151156 /* sponza.obj in Resources */,
 				81AB41741C27D66F00151156 /* teapot.obj in Resources */,
+				81AB41761C2890E900151156 /* diffuse_1light.fs in Resources */,
 				81AB416F1C27D66F00151156 /* sibenik.obj in Resources */,
 				81AB414E1C27D66F00151156 /* 01_STUB.JPG in Resources */,
 				81AB41501C27D66F00151156 /* KAMEN-bump.jpg in Resources */,
@@ -660,6 +667,7 @@
 				81AB41021C260CAA00151156 /* ubo_test.fs in Resources */,
 				81AB41691C27D66F00151156 /* KAMEN-stup.png in Resources */,
 				81AB41591C27D66F00151156 /* sponza.mtl in Resources */,
+				81AB41781C2890FC00151156 /* diffuse_1light.vs in Resources */,
 				81AB41531C27D66F00151156 /* prozor1.JPG in Resources */,
 				81AB414A1C27D66F00151156 /* 01_S_kap.JPG in Resources */,
 				81AB41621C27D66F00151156 /* lost_empire-RGB.png in Resources */,

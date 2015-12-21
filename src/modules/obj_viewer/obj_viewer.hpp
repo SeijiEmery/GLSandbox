@@ -29,13 +29,26 @@ public:
     
     typedef std::shared_ptr<gl::Shader> ShaderRef;
     
+    struct GPUMesh {
+        gl::VAO vao;
+        gl::VBO vertexBuffer;
+        gl::VBO indexBuffer;
+        ShaderRef shader;
+    };
+    
     struct ModelInstance {
-        gl::VAO m_vao;
-        gl::VBO m_buffers [2];
-        ShaderRef m_shader;
+        gl::VAO vao;
+        gl::VBO buffers [3];
+        ShaderRef shader;
+        unsigned numIndices = 0;
+        double startTime;
+        struct {
+            GLint LightPosition, Kd, Ld, ModelViewMatrix, NormalMatrix, ProjectionMatrix, MVP;
+        } shaderUniforms;
         
-        ModelInstance ();
+        ModelInstance (const ResourceLoader::ObjData &, ShaderRef shader);
         ModelInstance (const ModelInstance &) = delete;
+        ModelInstance (ModelInstance &&) = default;
         void draw ();
     };
 
@@ -46,21 +59,8 @@ protected:
     void loadModelAsync (const std::string & modelName);
     
 private:
-    std::vector<std::future<void>> m_discardedAsyncResults;
-    // drawback of std::async -- returns a future object, which joins the thread when its destructor
-    // is called. Since we (obviously) don't want to JOIN THE THREAD on our async calls, we "fix" this
-    // by stashing its result (nothing -- these are void returns) in a throwaway vector so its dtor
-    // won't run until... oh, whenever the module gets unloaded...
-    //
-    // Oh, and uh, here's an interesting side effect of that: If the module gets reloaded _before_
-    // the load finishes, it'll join the thread + hang the app until the load finishes (which is better
-    // than doing something undefined b/c the module no longer exists in memory, I guess, but it means
-    // stuff can/will get loaded while the module dtor is running >_< Oh well, cross that bridge when
-    // we get there...
-    
     ResourceLoader m_resourceLoader { MODULE_NAME };
     
-    std::mutex m_modelInstances_mutex; // models can be loaded async
     std::vector<ModelInstance> m_modelInstances;
     std::unordered_map<std::string, ShaderRef> m_shaderCache;
 };
