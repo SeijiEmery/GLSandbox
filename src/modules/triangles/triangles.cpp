@@ -24,6 +24,7 @@ using namespace gl_sandbox::gl::references;
 using glm::mat4;
 using glm::vec3;
 
+
 TriangleModule::TriangleModule() {
     
     CHECK_GL_ERRORS();
@@ -38,10 +39,10 @@ TriangleModule::TriangleModule() {
 //    });
 
     // But can settle for this in the meantime:
-    m_resourceLoader.loadTextFile((m_shader.name + ".fs").c_str(), [this] (const char * src) {
+    m_resourceLoader.loadTextFile(m_shader.name + ".fs", [this] (auto src) {
         m_shader.compileFragment(src);
     });
-    m_resourceLoader.loadTextFile((m_shader.name + ".vs").c_str(), [this] (const char * src) {
+    m_resourceLoader.loadTextFile(m_shader.name + ".vs", [this] (const char * src) {
         m_shader.compileVertex(src);
     });
     
@@ -94,7 +95,7 @@ TriangleModule::~TriangleModule() {
 }
 void TriangleModule::drawFrame() {
     if (m_shader.loaded()) {
-        glUseProgram(m_shader.handle()); CHECK_GL_ERRORS();
+        glUseProgram(m_shader ? m_shader.handle() : 0); CHECK_GL_ERRORS();
         glBindVertexArray(m_vao.handle); CHECK_GL_ERRORS();
         
         double elapsedTime = m_startTime - glfwGetTime();

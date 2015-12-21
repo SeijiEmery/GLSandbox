@@ -52,6 +52,7 @@ public:
     bool compileFragment (const char * src, ErrorCallback onError = dumpToStderr);
     bool compileVertex (const char * src, ErrorCallback onError = dumpToStderr);
     bool linkProgram (ErrorCallback onError = dumpToStderr);
+    operator bool () const { return loaded(); }
     
     bool loaded () const {
         assert(program_linked ? fragment_compiled && vertex_compiled : true); // sanity check state flags

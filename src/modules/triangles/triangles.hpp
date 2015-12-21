@@ -20,8 +20,8 @@ public:
     ~TriangleModule ();
     void drawFrame () override;
     
-    static constexpr char* MODULE_NAME = "module-triangles";
-    static constexpr char* MODULE_DIR  = "triangles";
+    static constexpr const char* MODULE_NAME = "module-triangles";
+    static constexpr const char* MODULE_DIR  = "triangles";
 private:
     ResourceLoader m_resourceLoader { MODULE_DIR };
     gl::Shader m_shader { "basic_shader" };

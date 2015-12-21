@@ -33,6 +33,7 @@
 		815D62111C1F7E42005DB2A8 /* modules.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 815D620F1C1F7E42005DB2A8 /* modules.cpp */; settings = {ASSET_TAGS = (); }; };
 		81AB41021C260CAA00151156 /* ubo_test.fs in Resources */ = {isa = PBXBuildFile; fileRef = 81AB41011C260CAA00151156 /* ubo_test.fs */; settings = {ASSET_TAGS = (); }; };
 		81AB41041C260CC800151156 /* ubo_test.vs in Resources */ = {isa = PBXBuildFile; fileRef = 81AB41031C260CC800151156 /* ubo_test.vs */; settings = {ASSET_TAGS = (); }; };
+		81AB410B1C27CF1A00151156 /* obj_viewer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 81AB41091C27CF1A00151156 /* obj_viewer.cpp */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -107,6 +108,8 @@
 		815D62101C1F7E42005DB2A8 /* modules.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = modules.hpp; path = src/modules/modules.hpp; sourceTree = SOURCE_ROOT; };
 		81AB41011C260CAA00151156 /* ubo_test.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = ubo_test.fs; path = shaders/modules/ubo_test/ubo_test.fs; sourceTree = SOURCE_ROOT; };
 		81AB41031C260CC800151156 /* ubo_test.vs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = ubo_test.vs; path = shaders/modules/ubo_test/ubo_test.vs; sourceTree = SOURCE_ROOT; };
+		81AB41091C27CF1A00151156 /* obj_viewer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = obj_viewer.cpp; path = src/modules/obj_viewer/obj_viewer.cpp; sourceTree = SOURCE_ROOT; };
+		81AB410A1C27CF1A00151156 /* obj_viewer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = obj_viewer.hpp; path = src/modules/obj_viewer/obj_viewer.hpp; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -282,6 +285,7 @@
 		815D62031C1F66B3005DB2A8 /* modules */ = {
 			isa = PBXGroup;
 			children = (
+				81AB41051C27CEC100151156 /* obj_viewer */,
 				81176DAD1C229E240025EB6C /* ubo_test */,
 				815D620B1C1F7D5E005DB2A8 /* triangles */,
 				815D620F1C1F7E42005DB2A8 /* modules.cpp */,
@@ -324,6 +328,15 @@
 				815D620C1C1F7D9F005DB2A8 /* triangles.cpp */,
 			);
 			name = triangles;
+			sourceTree = "<group>";
+		};
+		81AB41051C27CEC100151156 /* obj_viewer */ = {
+			isa = PBXGroup;
+			children = (
+				81AB41091C27CF1A00151156 /* obj_viewer.cpp */,
+				81AB410A1C27CF1A00151156 /* obj_viewer.hpp */,
+			);
+			name = obj_viewer;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -426,6 +439,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				81176DFE1C24D5580025EB6C /* stb_vorbis.c in Sources */,
+				81AB410B1C27CF1A00151156 /* obj_viewer.cpp in Sources */,
 				81176DAC1C22325E0025EB6C /* gl_wrapper.cpp in Sources */,
 				815D61F41C1F6574005DB2A8 /* main.cpp in Sources */,
 				81176DB01C229E3E0025EB6C /* ubo_test.cpp in Sources */,

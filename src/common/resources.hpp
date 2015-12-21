@@ -15,6 +15,7 @@
 #include <boost/filesystem/fstream.hpp>
 #include "../../libs/tinyobjloader/tiny_obj_loader.h"
 #include <string>
+#include <array>
 
 namespace gl_sandbox {
     
@@ -56,7 +57,6 @@ protected:
     static boost::filesystem::path g_baseResourcePath;
     boost::filesystem::path m_modulePath;
 };
-
 }; // namespace gl_sandbox
 
 #endif /* resources_hpp */
