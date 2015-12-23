@@ -12,6 +12,8 @@
 #include "../modules/modules.hpp"
 #include "./gl/gl_wrapper.hpp"
 #include "./resources.hpp"
+#include "./camera.hpp"
+#include "./input.hpp"
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -40,8 +42,15 @@ public:
 protected:
     GLFWwindow * m_mainWindow = nullptr;
     ModuleInterface m_modules;
-};
+    Camera m_mainCamera;
+    CameraController m_cameraController;
+    InputManager m_inputManager;
     
+public:
+    static Application  * g_applicationInstance;
+    static InputManager * g_inputManager;
+};
+
 }; // namespace gl_sandbox
 
 #endif /* app_hpp */

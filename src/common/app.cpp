@@ -32,10 +32,13 @@ extern "C" {
 // gl_sandbox::Application
 //
 
+InputManager * Application::g_inputManager = nullptr;
+Application * Application::g_applicationInstance = nullptr;
+
 // Initialize glfw, create window, etc.
 // Throws a std::runtime_error on failure to init.
 Application::Application (const char * baseResourcePath)
-    : m_modules()
+    : m_modules(), m_cameraController(&m_mainCamera)
 {
     ResourceLoader::g_baseResourcePath = baseResourcePath;
     
@@ -79,6 +82,11 @@ Application::Application (const char * baseResourcePath)
     std::cout << "GL Sandbox\n";
     std::cout << "Renderer: " << glGetString(GL_RENDERER) << '\n';
     std::cout << "Opengl version: " << glGetString(GL_VERSION) << std::endl;
+    
+    Application::g_applicationInstance = this;
+    Application::g_inputManager = &m_inputManager;
+    
+    m_modules.loadModule("module-input-logger");
 }
 
 Application::~Application () {
@@ -86,6 +94,9 @@ Application::~Application () {
     if (m_mainWindow) {
         glfwDestroyWindow(m_mainWindow);
     }
+    
+    Application::g_applicationInstance = nullptr;
+    Application::g_inputManager = nullptr;
     
     CHECK_GL_ERRORS();
     
@@ -133,6 +144,9 @@ void Application::run () {
     {
         counter.update(m_mainWindow);
         
+        m_inputManager.update();
+        m_cameraController.update();
+        
         float ratio;
         int width, height;
         glfwGetFramebufferSize(m_mainWindow, &width, &height);
@@ -157,6 +171,7 @@ void Application::glfw_keyCallback(GLFWwindow *window, int key, int scancode, in
         { GLFW_KEY_Y, "ubo-dynamic-test", false },
         { GLFW_KEY_U, "ubo-static-test",  false },
         { GLFW_KEY_O, "module-objviewer", false },
+        { GLFW_KEY_I, "module-input-logger", false },
     };
     
     // Toggle modules when specific keys are pressed.

@@ -86,12 +86,22 @@
 		81AB41761C2890E900151156 /* diffuse_1light.fs in Resources */ = {isa = PBXBuildFile; fileRef = 81AB41751C2890E900151156 /* diffuse_1light.fs */; settings = {ASSET_TAGS = (); }; };
 		81AB41781C2890FC00151156 /* diffuse_1light.vs in Resources */ = {isa = PBXBuildFile; fileRef = 81AB41771C2890FC00151156 /* diffuse_1light.vs */; settings = {ASSET_TAGS = (); }; };
 		81AB417B1C28B4E500151156 /* camera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 81AB41791C28B4E400151156 /* camera.cpp */; settings = {ASSET_TAGS = (); }; };
-		81AB417E1C28D2B100151156 /* gamepad_input.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 81AB417C1C28D2B100151156 /* gamepad_input.cpp */; settings = {ASSET_TAGS = (); }; };
 		81AB41841C2A967800151156 /* input.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 81AB41821C2A967800151156 /* input.cpp */; settings = {ASSET_TAGS = (); }; };
+		81AB41881C2ABE8200151156 /* input_test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 81AB41861C2ABE8200151156 /* input_test.cpp */; settings = {ASSET_TAGS = (); }; };
+		81AB41971C2B4AD400151156 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 81AB41951C2B4AD400151156 /* main.cpp */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		81176D9F1C21F5160025EB6C /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+		81AB418B1C2B4A8F00151156 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = /usr/share/man/man1/;
@@ -215,11 +225,13 @@
 		81AB41771C2890FC00151156 /* diffuse_1light.vs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = diffuse_1light.vs; path = shaders/common/diffuse_1light.vs; sourceTree = SOURCE_ROOT; };
 		81AB41791C28B4E400151156 /* camera.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = camera.cpp; path = src/common/camera.cpp; sourceTree = SOURCE_ROOT; };
 		81AB417A1C28B4E400151156 /* camera.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = camera.hpp; path = src/common/camera.hpp; sourceTree = SOURCE_ROOT; };
-		81AB417C1C28D2B100151156 /* gamepad_input.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = gamepad_input.cpp; path = src/common/gamepad_input.cpp; sourceTree = SOURCE_ROOT; };
-		81AB417D1C28D2B100151156 /* gamepad_input.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = gamepad_input.hpp; path = src/common/gamepad_input.hpp; sourceTree = SOURCE_ROOT; };
 		81AB41801C29093500151156 /* raii_signal.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = raii_signal.hpp; path = ../src/common/raii_signal.hpp; sourceTree = "<group>"; };
 		81AB41821C2A967800151156 /* input.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = input.cpp; path = src/common/input.cpp; sourceTree = SOURCE_ROOT; };
 		81AB41831C2A967800151156 /* input.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = input.hpp; path = src/common/input.hpp; sourceTree = SOURCE_ROOT; };
+		81AB41861C2ABE8200151156 /* input_test.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = input_test.cpp; path = src/modules/input_test/input_test.cpp; sourceTree = SOURCE_ROOT; };
+		81AB41871C2ABE8200151156 /* input_test.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = input_test.hpp; path = src/modules/input_test/input_test.hpp; sourceTree = SOURCE_ROOT; };
+		81AB418D1C2B4A8F00151156 /* raii-signals-test */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "raii-signals-test"; sourceTree = BUILT_PRODUCTS_DIR; };
+		81AB41951C2B4AD400151156 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = "tests/raii-signals-test/main.cpp"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -246,6 +258,13 @@
 				815D61FA1C1F65BE005DB2A8 /* IOKit.framework in Frameworks */,
 				815D61F81C1F65B9005DB2A8 /* CoreVideo.framework in Frameworks */,
 				815D61F61C1F65B0005DB2A8 /* OpenGL.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		81AB418A1C2B4A8F00151156 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -353,6 +372,7 @@
 				815D62011C1F667F005DB2A8 /* src */,
 				815D62041C1F66BD005DB2A8 /* shaders */,
 				81176DBB1C24C6ED0025EB6C /* libs */,
+				81AB41941C2B4A9F00151156 /* tests */,
 				815D61E01C1F652A005DB2A8 /* Products */,
 				815D61ED1C1F652B005DB2A8 /* Info.plist */,
 				81AB410C1C27D66F00151156 /* assets */,
@@ -364,6 +384,7 @@
 			children = (
 				815D61DF1C1F652A005DB2A8 /* GLSandbox.app */,
 				81176DA11C21F5160025EB6C /* ThreadingTest */,
+				81AB418D1C2B4A8F00151156 /* raii-signals-test */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -390,8 +411,6 @@
 				81AB41791C28B4E400151156 /* camera.cpp */,
 				81AB417A1C28B4E400151156 /* camera.hpp */,
 				81AB41801C29093500151156 /* raii_signal.hpp */,
-				81AB417C1C28D2B100151156 /* gamepad_input.cpp */,
-				81AB417D1C28D2B100151156 /* gamepad_input.hpp */,
 				81AB41821C2A967800151156 /* input.cpp */,
 				81AB41831C2A967800151156 /* input.hpp */,
 			);
@@ -401,6 +420,7 @@
 		815D62031C1F66B3005DB2A8 /* modules */ = {
 			isa = PBXGroup;
 			children = (
+				81AB41851C2ABE5800151156 /* input_test */,
 				81AB41051C27CEC100151156 /* obj_viewer */,
 				81176DAD1C229E240025EB6C /* ubo_test */,
 				815D620B1C1F7D5E005DB2A8 /* triangles */,
@@ -561,6 +581,31 @@
 			path = teapot;
 			sourceTree = "<group>";
 		};
+		81AB41851C2ABE5800151156 /* input_test */ = {
+			isa = PBXGroup;
+			children = (
+				81AB41861C2ABE8200151156 /* input_test.cpp */,
+				81AB41871C2ABE8200151156 /* input_test.hpp */,
+			);
+			name = input_test;
+			sourceTree = "<group>";
+		};
+		81AB418E1C2B4A8F00151156 /* raii-signals-test */ = {
+			isa = PBXGroup;
+			children = (
+				81AB41951C2B4AD400151156 /* main.cpp */,
+			);
+			path = "raii-signals-test";
+			sourceTree = "<group>";
+		};
+		81AB41941C2B4A9F00151156 /* tests */ = {
+			isa = PBXGroup;
+			children = (
+				81AB418E1C2B4A8F00151156 /* raii-signals-test */,
+			);
+			name = tests;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -598,6 +643,23 @@
 			productReference = 815D61DF1C1F652A005DB2A8 /* GLSandbox.app */;
 			productType = "com.apple.product-type.application";
 		};
+		81AB418C1C2B4A8F00151156 /* raii-signals-test */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 81AB41911C2B4A8F00151156 /* Build configuration list for PBXNativeTarget "raii-signals-test" */;
+			buildPhases = (
+				81AB41891C2B4A8F00151156 /* Sources */,
+				81AB418A1C2B4A8F00151156 /* Frameworks */,
+				81AB418B1C2B4A8F00151156 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "raii-signals-test";
+			productName = "raii-signals-test";
+			productReference = 81AB418D1C2B4A8F00151156 /* raii-signals-test */;
+			productType = "com.apple.product-type.tool";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -611,6 +673,9 @@
 						CreatedOnToolsVersion = 7.0;
 					};
 					815D61DE1C1F652A005DB2A8 = {
+						CreatedOnToolsVersion = 7.0;
+					};
+					81AB418C1C2B4A8F00151156 = {
 						CreatedOnToolsVersion = 7.0;
 					};
 				};
@@ -630,6 +695,7 @@
 			targets = (
 				815D61DE1C1F652A005DB2A8 /* GLSandbox */,
 				81176DA01C21F5160025EB6C /* ThreadingTest */,
+				81AB418C1C2B4A8F00151156 /* raii-signals-test */,
 			);
 		};
 /* End PBXProject section */
@@ -715,8 +781,8 @@
 				81176DFE1C24D5580025EB6C /* stb_vorbis.c in Sources */,
 				81AB410B1C27CF1A00151156 /* obj_viewer.cpp in Sources */,
 				81176DAC1C22325E0025EB6C /* gl_wrapper.cpp in Sources */,
+				81AB41881C2ABE8200151156 /* input_test.cpp in Sources */,
 				815D61F41C1F6574005DB2A8 /* main.cpp in Sources */,
-				81AB417E1C28D2B100151156 /* gamepad_input.cpp in Sources */,
 				81AB417B1C28B4E500151156 /* camera.cpp in Sources */,
 				81176DB01C229E3E0025EB6C /* ubo_test.cpp in Sources */,
 				815D62111C1F7E42005DB2A8 /* modules.cpp in Sources */,
@@ -725,6 +791,14 @@
 				81176DFD1C24D5580025EB6C /* README.md in Sources */,
 				815D62091C1F670F005DB2A8 /* app.cpp in Sources */,
 				81176D901C1FCBEF0025EB6C /* resources.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		81AB41891C2B4A8F00151156 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				81AB41971C2B4AD400151156 /* main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -831,6 +905,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_ENABLE_CPP_RTTI = NO;
+				GCC_THREADSAFE_STATICS = YES;
 				HEADER_SEARCH_PATHS = /usr/local/include;
 				INFOPLIST_FILE = GLSandbox/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
@@ -851,6 +926,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_ENABLE_CPP_RTTI = NO;
+				GCC_THREADSAFE_STATICS = YES;
 				HEADER_SEARCH_PATHS = /usr/local/include;
 				INFOPLIST_FILE = GLSandbox/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
@@ -860,6 +936,20 @@
 					/usr/local/Cellar/boost/1.58.0/lib,
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "n-a.GLSandbox";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		81AB41921C2B4A8F00151156 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		81AB41931C2B4A8F00151156 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -893,6 +983,14 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		81AB41911C2B4A8F00151156 /* Build configuration list for PBXNativeTarget "raii-signals-test" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				81AB41921C2B4A8F00151156 /* Debug */,
+				81AB41931C2B4A8F00151156 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 /* End XCConfigurationList section */
 	};

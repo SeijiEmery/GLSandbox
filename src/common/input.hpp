@@ -11,7 +11,9 @@
 
 #include "raii_signal.hpp"
 
+#include <GL/glew.h>
 #include <GLFW/glfw3.h>
+
 #include <map>
 #include <string>
 #include <array>
@@ -54,8 +56,8 @@ enum GamepadAxis {
 constexpr unsigned NUM_GAMEPAD_AXES = 8;
     
     
-constexpr const char * gamepadButtonToString (GamepadButton button);
-constexpr const char * gamepadAxisToString (GamepadAxis axis);
+const char * gamepadButtonToString (GamepadButton button);
+const char * gamepadAxisToString (GamepadAxis axis);
     
 }; // namespace input
     
@@ -67,43 +69,6 @@ enum class GamepadProfile {
     DUALSHOCK_4_PROFILE
 };
     
-namespace gamepad_profiles {
-    struct xbox_controller {
-        constexpr static input::GamepadButton buttons[] = {
-            input::BUTTON_DPAD_UP,
-            input::BUTTON_DPAD_DOWN,
-            input::BUTTON_DPAD_LEFT,
-            input::BUTTON_DPAD_RIGHT,
-            input::BUTTON_START,
-            input::BUTTON_SELECT,
-            input::BUTTON_LSTICK,
-            input::BUTTON_RSTICK,
-            input::BUTTON_LBUMPER,
-            input::BUTTON_RBUMPER,
-            input::BUTTON_HOME,
-            input::BUTTON_A,
-            input::BUTTON_B,
-            input::BUTTON_X,
-            input::BUTTON_Y
-        };
-        constexpr static unsigned NUM_BUTTONS = 15;
-        constexpr static input::GamepadAxis axes[] = {
-            input::AXIS_LY,
-            input::AXIS_LX,
-            input::AXIS_RX,
-            input::AXIS_RY,
-            input::AXIS_LTRIGGER,
-            input::AXIS_RTRIGGER
-        };
-        constexpr static unsigned NUM_AXES = 6;
-        constexpr static double   LAXIS_DEADZONE = 0.17;
-        constexpr static double   RAXIS_DEADZONE = 0.17;
-        constexpr static double   TRIGGER_DEADZONE = 0.1;
-        constexpr static bool     FLIP_LY = false;
-        constexpr static bool     FLIP_RY = false;
-    };
-};
-    
 class InputManager {
 public:
     InputManager ();
@@ -112,6 +77,10 @@ public:
     InputManager & operator= (const InputManager &) = delete;
     InputManager & operator= (InputManager &&) = default;
     
+    typedef raii::Observer<const std::string&> DeviceConnectedObserver;
+    typedef raii::Observer<input::GamepadButton> GamepadButtonObserver;
+    typedef raii::Observer<const float*> GamepadAxesObserver;
+
     raii::Signal<const std::string&> onDeviceConnected;
     raii::Signal<const std::string&> onDeviceDisconnected;
     raii::Signal<input::GamepadButton> onGamepadButtonPressed;

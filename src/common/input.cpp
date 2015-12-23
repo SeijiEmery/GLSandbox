@@ -13,7 +13,7 @@
 
 using namespace gl_sandbox;
 
-constexpr const char * input::gamepadButtonToString (input::GamepadButton button) {
+const char * gl_sandbox::input::gamepadButtonToString (input::GamepadButton button) {
     constexpr const char * names [] {
         "BUTTON_A",
         "BUTTON_B",
@@ -35,7 +35,7 @@ constexpr const char * input::gamepadButtonToString (input::GamepadButton button
     };
     return names[button];
 }
-constexpr const char * input::gamepadAxisToString(input::GamepadAxis axis) {
+const char * gl_sandbox::input::gamepadAxisToString(input::GamepadAxis axis) {
     constexpr const char * names [] {
         "AXIS_LEFT_X",
         "AXIS_LEFT_Y",
@@ -50,13 +50,50 @@ constexpr const char * input::gamepadAxisToString(input::GamepadAxis axis) {
 }
 
 static GamepadProfile getMatchingProfile (const std::string & name) {
+    if (name == "Xbox 360 Wired Controller")
+        return GamepadProfile::XBOX_PROFILE;
     return GamepadProfile::UNKNOWN_PROFILE;
 }
 
 namespace gl_sandbox {
 namespace gamepad_profiles {
+    namespace xbox_controller {
+        constexpr input::GamepadButton buttons[] = {
+            input::BUTTON_DPAD_UP,
+            input::BUTTON_DPAD_DOWN,
+            input::BUTTON_DPAD_LEFT,
+            input::BUTTON_DPAD_RIGHT,
+            input::BUTTON_START,
+            input::BUTTON_SELECT,
+            input::BUTTON_LSTICK,
+            input::BUTTON_RSTICK,
+            input::BUTTON_LBUMPER,
+            input::BUTTON_RBUMPER,
+            input::BUTTON_HOME,
+            input::BUTTON_A,
+            input::BUTTON_B,
+            input::BUTTON_X,
+            input::BUTTON_Y
+        };
+        constexpr unsigned NUM_BUTTONS = 15;
+        constexpr input::GamepadAxis axes[] = {
+            input::AXIS_LY,
+            input::AXIS_LX,
+            input::AXIS_RX,
+            input::AXIS_RY,
+            input::AXIS_LTRIGGER,
+            input::AXIS_RTRIGGER
+        };
+        constexpr unsigned NUM_AXES = 6;
+        constexpr double   LAXIS_DEADZONE = 0.17;
+        constexpr double   RAXIS_DEADZONE = 0.17;
+        constexpr double   TRIGGER_DEADZONE = 0.1;
+        constexpr bool     FLIP_LY = false;
+        constexpr bool     FLIP_RY = false;
+    };
+    
 #define EXPOSE_FIELD(field_name) \
-static const decltype(xbox_controller::field_name)& field_name (GamepadProfile profile) { \
+static constexpr const decltype(xbox_controller::field_name)& field_name (GamepadProfile profile) { \
     switch(profile) { \
         case GamepadProfile::DUALSHOCK_3_PROFILE: \
         case GamepadProfile::DUALSHOCK_4_PROFILE: \
@@ -79,7 +116,6 @@ static const decltype(xbox_controller::field_name)& field_name (GamepadProfile p
             case input::AXIS_RX: case input::AXIS_RY: return RAXIS_DEADZONE(profile);
             case input::AXIS_LTRIGGER: case input::AXIS_RTRIGGER: return TRIGGER_DEADZONE(profile);
             case input::AXIS_DPAD_X: case input::AXIS_DPAD_Y: return 0.0;
-            case input::NUM_GAMEPAD_AXES: return 0.0;
         }
     }
     
@@ -87,6 +123,8 @@ static const decltype(xbox_controller::field_name)& field_name (GamepadProfile p
     
 }; // namespace gamepad_profiles
 }; // namespace gl_sandbox
+
+InputManager::InputManager () {}
 
 void InputManager::update () {
     using namespace input;
@@ -100,10 +138,6 @@ void InputManager::update () {
         auto & state = m_gamepadStates[i];
         
         if (present != state.active || state.name != glfwGetJoystickName(i)) {
-            if (state.name != glfwGetJoystickName(i)) {
-                std::cerr << "GLFW Joystick name changed (from '" << state.name << "' to '" << glfwGetJoystickName(i) << "'\n";
-            }
-            
             state.active = present;
             if (present) {
                 state.name = glfwGetJoystickName(i);
@@ -114,11 +148,14 @@ void InputManager::update () {
             } else {
                 onDeviceDisconnected.emit(state.name);
             }
+        } else if (present && state.name != glfwGetJoystickName(i)) {
+            std::cerr << "Warning: GLFW Joystick name changed (from '" << state.name << "' to '" << glfwGetJoystickName(i) << "'\n";
+            state.name = glfwGetJoystickName(i);
         }
         if (present && state.profile != GamepadProfile::UNKNOWN_PROFILE) {
             int naxes, nbuttons;
             auto axes = glfwGetJoystickAxes(i, &naxes);
-            auto buttons = glfwGetJoystickAxes(i, &nbuttons);
+            auto buttons = glfwGetJoystickButtons(i, &nbuttons);
             
             // trigger axes count as 2 extra buttons
             assert(nbuttons + 2 >= input::NUM_GAMEPAD_BUTTONS);

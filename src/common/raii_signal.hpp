@@ -78,13 +78,13 @@ public:
     // Sweeps through the list of observers, and lazily removes any that have been released.
     // (by a call to <observer>.release(), which sets a flag on the callback fcn).
     void emit (Args... args) {
-        for (unsigned i = m_observerCallbacks.size(); i --> 0; ) {
-            if (m_observerCallbacks[i-1].released) {
+        for (auto i = m_observerCallbacks.size(); i --> 0; ) {
+            if (m_observerCallbacks[i]->released) {
                 if (i != m_observerCallbacks.size())
-                    m_observerCallbacks[i-1] = std::move(m_observerCallbacks.back());
-                m_observerCallbacks[i-1].pop();
+                    m_observerCallbacks[i] = std::move(m_observerCallbacks.back());
+                m_observerCallbacks.pop_back();
             } else {
-                m_observerCallbacks[i-1].fcn(args...);
+                m_observerCallbacks[i]->fcn(args...);
             }
         }
     }
