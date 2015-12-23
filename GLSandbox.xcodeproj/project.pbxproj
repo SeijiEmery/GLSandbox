@@ -85,6 +85,9 @@
 		81AB41741C27D66F00151156 /* teapot.obj in Resources */ = {isa = PBXBuildFile; fileRef = 81AB41431C27D66F00151156 /* teapot.obj */; settings = {ASSET_TAGS = (); }; };
 		81AB41761C2890E900151156 /* diffuse_1light.fs in Resources */ = {isa = PBXBuildFile; fileRef = 81AB41751C2890E900151156 /* diffuse_1light.fs */; settings = {ASSET_TAGS = (); }; };
 		81AB41781C2890FC00151156 /* diffuse_1light.vs in Resources */ = {isa = PBXBuildFile; fileRef = 81AB41771C2890FC00151156 /* diffuse_1light.vs */; settings = {ASSET_TAGS = (); }; };
+		81AB417B1C28B4E500151156 /* camera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 81AB41791C28B4E400151156 /* camera.cpp */; settings = {ASSET_TAGS = (); }; };
+		81AB417E1C28D2B100151156 /* gamepad_input.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 81AB417C1C28D2B100151156 /* gamepad_input.cpp */; settings = {ASSET_TAGS = (); }; };
+		81AB41841C2A967800151156 /* input.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 81AB41821C2A967800151156 /* input.cpp */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -119,8 +122,6 @@
 		81176DAB1C22325E0025EB6C /* gl_wrapper.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = gl_wrapper.hpp; path = src/common/gl/gl_wrapper.hpp; sourceTree = SOURCE_ROOT; };
 		81176DAE1C229E3D0025EB6C /* ubo_test.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ubo_test.cpp; path = src/modules/ubo_test/ubo_test.cpp; sourceTree = SOURCE_ROOT; };
 		81176DAF1C229E3D0025EB6C /* ubo_test.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = ubo_test.hpp; path = src/modules/ubo_test/ubo_test.hpp; sourceTree = SOURCE_ROOT; };
-		81176DB11C22BC160025EB6C /* listeners.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = listeners.cpp; path = src/common/listeners.cpp; sourceTree = SOURCE_ROOT; };
-		81176DB21C22BC160025EB6C /* listeners.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = listeners.hpp; path = src/common/listeners.hpp; sourceTree = SOURCE_ROOT; };
 		81176DD11C24C6ED0025EB6C /* tiny_obj_loader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tiny_obj_loader.h; sourceTree = "<group>"; };
 		81176DEA1C24D5580025EB6C /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = stb/README.md; sourceTree = "<group>"; };
 		81176DEB1C24D5580025EB6C /* stb_c_lexer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = stb_c_lexer.h; path = stb/stb_c_lexer.h; sourceTree = "<group>"; };
@@ -212,6 +213,13 @@
 		81AB41431C27D66F00151156 /* teapot.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = teapot.obj; sourceTree = "<group>"; };
 		81AB41751C2890E900151156 /* diffuse_1light.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = diffuse_1light.fs; path = shaders/common/diffuse_1light.fs; sourceTree = SOURCE_ROOT; };
 		81AB41771C2890FC00151156 /* diffuse_1light.vs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = diffuse_1light.vs; path = shaders/common/diffuse_1light.vs; sourceTree = SOURCE_ROOT; };
+		81AB41791C28B4E400151156 /* camera.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = camera.cpp; path = src/common/camera.cpp; sourceTree = SOURCE_ROOT; };
+		81AB417A1C28B4E400151156 /* camera.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = camera.hpp; path = src/common/camera.hpp; sourceTree = SOURCE_ROOT; };
+		81AB417C1C28D2B100151156 /* gamepad_input.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = gamepad_input.cpp; path = src/common/gamepad_input.cpp; sourceTree = SOURCE_ROOT; };
+		81AB417D1C28D2B100151156 /* gamepad_input.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = gamepad_input.hpp; path = src/common/gamepad_input.hpp; sourceTree = SOURCE_ROOT; };
+		81AB41801C29093500151156 /* raii_signal.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = raii_signal.hpp; path = ../src/common/raii_signal.hpp; sourceTree = "<group>"; };
+		81AB41821C2A967800151156 /* input.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = input.cpp; path = src/common/input.cpp; sourceTree = SOURCE_ROOT; };
+		81AB41831C2A967800151156 /* input.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = input.hpp; path = src/common/input.hpp; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -379,8 +387,13 @@
 				815D62081C1F670F005DB2A8 /* app.hpp */,
 				81176D8E1C1FCBEF0025EB6C /* resources.cpp */,
 				81176D8F1C1FCBEF0025EB6C /* resources.hpp */,
-				81176DB11C22BC160025EB6C /* listeners.cpp */,
-				81176DB21C22BC160025EB6C /* listeners.hpp */,
+				81AB41791C28B4E400151156 /* camera.cpp */,
+				81AB417A1C28B4E400151156 /* camera.hpp */,
+				81AB41801C29093500151156 /* raii_signal.hpp */,
+				81AB417C1C28D2B100151156 /* gamepad_input.cpp */,
+				81AB417D1C28D2B100151156 /* gamepad_input.hpp */,
+				81AB41821C2A967800151156 /* input.cpp */,
+				81AB41831C2A967800151156 /* input.hpp */,
 			);
 			name = common;
 			sourceTree = "<group>";
@@ -698,10 +711,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				81AB41841C2A967800151156 /* input.cpp in Sources */,
 				81176DFE1C24D5580025EB6C /* stb_vorbis.c in Sources */,
 				81AB410B1C27CF1A00151156 /* obj_viewer.cpp in Sources */,
 				81176DAC1C22325E0025EB6C /* gl_wrapper.cpp in Sources */,
 				815D61F41C1F6574005DB2A8 /* main.cpp in Sources */,
+				81AB417E1C28D2B100151156 /* gamepad_input.cpp in Sources */,
+				81AB417B1C28B4E500151156 /* camera.cpp in Sources */,
 				81176DB01C229E3E0025EB6C /* ubo_test.cpp in Sources */,
 				815D62111C1F7E42005DB2A8 /* modules.cpp in Sources */,
 				81176D8A1C1FC9640025EB6C /* gl_shaders.cpp in Sources */,
