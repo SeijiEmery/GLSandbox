@@ -54,20 +54,19 @@ enum GamepadAxis {
     AXIS_DPAD_Y
 };
 constexpr unsigned NUM_GAMEPAD_AXES = 8;
-    
-    
-const char * gamepadButtonToString (GamepadButton button);
-const char * gamepadAxisToString (GamepadAxis axis);
-    
-}; // namespace input
-    
-    
+
 enum class GamepadProfile {
     UNKNOWN_PROFILE,
     XBOX_PROFILE,
     DUALSHOCK_3_PROFILE,
     DUALSHOCK_4_PROFILE
 };
+    
+const char * gamepadButtonToString (GamepadButton button);
+const char * gamepadAxisToString (GamepadAxis axis);
+const char * gamepadProfileToString (GamepadProfile profile);
+    
+}; // namespace input
     
 class InputManager {
 public:
@@ -77,21 +76,27 @@ public:
     InputManager & operator= (const InputManager &) = delete;
     InputManager & operator= (InputManager &&) = default;
     
-    typedef raii::Observer<const std::string&> DeviceConnectedObserver;
+    typedef raii::Observer<const std::string&, input::GamepadProfile> DeviceConnectedObserver;
     typedef raii::Observer<input::GamepadButton> GamepadButtonObserver;
     typedef raii::Observer<const float*> GamepadAxesObserver;
 
-    raii::Signal<const std::string&> onDeviceConnected;
-    raii::Signal<const std::string&> onDeviceDisconnected;
+    raii::Signal<const std::string&, input::GamepadProfile> onDeviceConnected;
+    raii::Signal<const std::string&, input::GamepadProfile> onDeviceDisconnected;
     raii::Signal<input::GamepadButton> onGamepadButtonPressed;
     raii::Signal<input::GamepadButton> onGamepadButtonReleased;
     raii::Signal<const float *>        onGamepadAxesUpdate;
 
     void update ();
 protected:
+    // Note: we do not support coop-style discrete inputs (ie. separate input channels), but we do
+    // support multiple controller inputs from glfw. If two gamepads are plugged in, all button
+    // presses are merged into m_buttonPressState, and non-dead axis inputs (so long as they don't
+    // overlap) are merged into m_combinedAxes state, where they get broadcast as input events.
+    // You could effectively use 2+ controllers at once, provided that they didn't overlap
+    // (ie. left stick on gamepad 1, right stick on gamepad 2, etc)
     struct GamepadState {
         std::string name;
-        GamepadProfile profile = GamepadProfile::UNKNOWN_PROFILE;
+        input::GamepadProfile profile = input::GamepadProfile::UNKNOWN_PROFILE;
         bool active = false;
         std::array<float, input::NUM_GAMEPAD_AXES> lastAxesState;
     };

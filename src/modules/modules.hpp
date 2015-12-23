@@ -27,6 +27,9 @@ public:
     void unloadModule (const std::string & moduleName);
     void runModules ();
     
+    // Clears m_runningModules list (triggering dtors); called at app termination.
+    void killAllModules ();
+    
     bool hasRunningModuleWithName (const std::string & moduleName) const;
     bool hasRunnableModuleWithName (const std::string & moduleName) const;
     

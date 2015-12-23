@@ -12,6 +12,7 @@
 #include <cmath>
 
 using namespace gl_sandbox;
+using namespace input;
 
 const char * gl_sandbox::input::gamepadButtonToString (input::GamepadButton button) {
     constexpr const char * names [] {
@@ -48,10 +49,22 @@ const char * gl_sandbox::input::gamepadAxisToString(input::GamepadAxis axis) {
     };
     return names[axis];
 }
+const char * gl_sandbox::input::gamepadProfileToString(input::GamepadProfile profile) {
+    switch (profile) {
+        case GamepadProfile::UNKNOWN_PROFILE: return "unknown profile";
+        case GamepadProfile::XBOX_PROFILE:    return "xbox gamepad";
+        case GamepadProfile::DUALSHOCK_3_PROFILE: return "dualshock 3";
+        case GamepadProfile::DUALSHOCK_4_PROFILE: return "dualshock 4";
+    }
+}
 
-static GamepadProfile getMatchingProfile (const std::string & name) {
-    if (name == "Xbox 360 Wired Controller")
+static GamepadProfile getMatchingProfile (const std::string & name, int naxes, int nbuttons) {
+    if (name == "Xbox 360 Wired Controller" || (naxes == 6 && nbuttons == 15))
         return GamepadProfile::XBOX_PROFILE;
+    if (name == "Wireless Controller" && naxes == 6 && nbuttons == 18)
+        return GamepadProfile::DUALSHOCK_4_PROFILE;
+    
+    std::cerr << "input: Unknown profile for gamepad device '" << name << "', axes = " << naxes << ", buttons = " << nbuttons << '\n';
     return GamepadProfile::UNKNOWN_PROFILE;
 }
 
@@ -92,12 +105,50 @@ namespace gamepad_profiles {
         constexpr bool     FLIP_RY = false;
         constexpr bool     CLAMP_TRIGGERS_TO_0_1 = true;
     };
+    namespace dualshock_4 {
+        constexpr input::GamepadButton buttons[] = {
+            input::BUTTON_X,  // square
+            input::BUTTON_A,  // x
+            input::BUTTON_B,  // circle
+            input::BUTTON_Y,  // triangle
+            input::BUTTON_LBUMPER,
+            input::BUTTON_RBUMPER,
+            input::BUTTON_LTRIGGER, // ds4 actually has triggers aliased as buttons, apparently
+            input::BUTTON_RTRIGGER,
+            input::BUTTON_START,
+            input::BUTTON_SELECT, // share button
+            input::BUTTON_LSTICK,
+            input::BUTTON_RSTICK,
+            input::BUTTON_HOME,
+            input::BUTTON_SELECT, // center button
+            input::BUTTON_DPAD_UP,
+            input::BUTTON_DPAD_RIGHT,
+            input::BUTTON_DPAD_DOWN,
+            input::BUTTON_DPAD_LEFT,
+        };
+        constexpr unsigned NUM_BUTTONS = 15;
+        constexpr input::GamepadAxis axes[] = {
+            input::AXIS_LY,
+            input::AXIS_LX,
+            input::AXIS_RX,
+            input::AXIS_RY,
+            input::AXIS_LTRIGGER,
+            input::AXIS_RTRIGGER
+        };
+        constexpr unsigned NUM_AXES = 6;
+        constexpr double   LAXIS_DEADZONE = 0.06;
+        constexpr double   RAXIS_DEADZONE = 0.06;
+        constexpr double   TRIGGER_DEADZONE = 0.0;
+        constexpr bool     FLIP_LY = false;
+        constexpr bool     FLIP_RY = false;
+        constexpr bool     CLAMP_TRIGGERS_TO_0_1 = true;
+    };
     
 #define EXPOSE_FIELD(field_name) \
-static constexpr const decltype(xbox_controller::field_name)& field_name (GamepadProfile profile) { \
+static constexpr const auto field_name (GamepadProfile profile) { \
     switch(profile) { \
         case GamepadProfile::DUALSHOCK_3_PROFILE: \
-        case GamepadProfile::DUALSHOCK_4_PROFILE: \
+        case GamepadProfile::DUALSHOCK_4_PROFILE: return dualshock_4::field_name; \
         case GamepadProfile::UNKNOWN_PROFILE: \
         case GamepadProfile::XBOX_PROFILE: return xbox_controller::field_name; \
     } \
@@ -143,12 +194,14 @@ void InputManager::update () {
             state.active = present;
             if (present) {
                 state.name = glfwGetJoystickName(i);
-                state.profile = getMatchingProfile(state.name);
-                onDeviceConnected.emit(state.name);
-                if (state.profile == GamepadProfile::UNKNOWN_PROFILE)
-                    std::cerr << "input: Unknown profile for gamepad device '" << state.name << "'\n";
+
+                int naxes, nbuttons;
+                glfwGetJoystickAxes(i, &naxes);
+                glfwGetJoystickButtons(i, &nbuttons);
+                state.profile = getMatchingProfile(state.name, naxes, nbuttons);
+                onDeviceConnected.emit(state.name, state.profile);
             } else {
-                onDeviceDisconnected.emit(state.name);
+                onDeviceDisconnected.emit(state.name, state.profile);
             }
         } else if (present && state.name != glfwGetJoystickName(i)) {
             std::cerr << "Warning: GLFW Joystick name changed (from '" << state.name << "' to '" << glfwGetJoystickName(i) << "'\n";

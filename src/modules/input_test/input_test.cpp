@@ -14,11 +14,11 @@ using namespace gl_sandbox;
 using namespace gl_sandbox::modules;
 
 InputTestModule::InputTestModule () :
-m_deviceConnectedObserver(Application::g_inputManager->onDeviceConnected.connect([](auto deviceName) {
-    std::cout << "Device connected: '" << deviceName << "'\n";
+m_deviceConnectedObserver(Application::g_inputManager->onDeviceConnected.connect([](auto deviceName, auto profile) {
+    std::cout << "Device connected: '" << deviceName << "' (profile '" << input::gamepadProfileToString(profile) << "')\n";
 })),
-m_deviceDisconnectedObserver(Application::g_inputManager->onDeviceDisconnected.connect([](auto deviceName) {
-    std::cout << "Device disconnected: '" << deviceName << "'\n";
+m_deviceDisconnectedObserver(Application::g_inputManager->onDeviceDisconnected.connect([](auto deviceName, auto profile) {
+    std::cout << "Device disconnected: '" << deviceName << "' (profile '" << input::gamepadProfileToString(profile) << "')\n";
 })),
 m_gamepadButtonPressedObserver(Application::g_inputManager->onGamepadButtonPressed.connect([](auto button) {
     std::cout << "Gamepad button pressed: '" << input::gamepadButtonToString(button) << "'\n";

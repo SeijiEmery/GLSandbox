@@ -114,3 +114,7 @@ void ModuleInterface::runModules() {
     }
 }
 
+void ModuleInterface::killAllModules() {
+    m_runningModules.clear();
+}
+
