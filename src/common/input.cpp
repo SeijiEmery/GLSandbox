@@ -90,6 +90,7 @@ namespace gamepad_profiles {
         constexpr double   TRIGGER_DEADZONE = 0.1;
         constexpr bool     FLIP_LY = false;
         constexpr bool     FLIP_RY = false;
+        constexpr bool     CLAMP_TRIGGERS_TO_0_1 = true;
     };
     
 #define EXPOSE_FIELD(field_name) \
@@ -110,6 +111,7 @@ static constexpr const decltype(xbox_controller::field_name)& field_name (Gamepa
     EXPOSE_FIELD(TRIGGER_DEADZONE)
     EXPOSE_FIELD(FLIP_LY)
     EXPOSE_FIELD(FLIP_RY)
+    EXPOSE_FIELD(CLAMP_TRIGGERS_TO_0_1)
     static const double DEADZONE_FOR_AXIS (GamepadProfile profile, input::GamepadAxis axis) {
         switch (axis) {
             case input::AXIS_LX: case input::AXIS_LY: return LAXIS_DEADZONE(profile);
@@ -176,12 +178,40 @@ void InputManager::update () {
             assert(naxes + 2 >= input::NUM_GAMEPAD_AXES);
             
             // Update axes
+            float rawAxes [naxes];
             for (auto k = naxes; k --> 0; ) {
                 auto axis = gamepad_profiles::axes(state.profile)[k];
-                state.lastAxesState[axis] =
-                    (axes[k] > gamepad_profiles::DEADZONE_FOR_AXIS(state.profile, axis)) ?
-                    axes[axis] : 0.0;
+                rawAxes[axis] = axes[k];
             }
+            auto setAxis = [&](GamepadAxis axis, float value) {
+                state.lastAxesState[axis] =
+                    fabs(value) > gamepad_profiles::DEADZONE_FOR_AXIS(state.profile, axis) ?
+                    value : 0.0;
+            };
+            
+            // Set left + right stick inputs, flipping y-axes iff configured
+            setAxis(AXIS_LX, rawAxes[AXIS_LX]);
+            setAxis(AXIS_LY, gamepad_profiles::FLIP_LY(state.profile) ? -rawAxes[AXIS_LY] : rawAxes[AXIS_LY]);
+            setAxis(AXIS_RX, rawAxes[AXIS_RX]);
+            setAxis(AXIS_RY, gamepad_profiles::FLIP_RY(state.profile) ? -rawAxes[AXIS_RY] : rawAxes[AXIS_RY]);
+            
+            // Set left + right trigger inputs, converting from [-1,1] to [0,1] iff configured
+            setAxis(AXIS_LTRIGGER,
+                    gamepad_profiles::CLAMP_TRIGGERS_TO_0_1(state.profile) ?
+                        rawAxes[AXIS_LTRIGGER] * 0.5 + 0.5 :
+                        rawAxes[AXIS_LTRIGGER]);
+            setAxis(AXIS_RTRIGGER,
+                    gamepad_profiles::CLAMP_TRIGGERS_TO_0_1(state.profile) ?
+                        rawAxes[AXIS_RTRIGGER] * 0.5 + 0.5 :
+                        rawAxes[AXIS_RTRIGGER]);
+            
+            // Set dpad inputs as an extra 2d axis
+            setAxis(AXIS_DPAD_X,
+                    m_buttonPressState[BUTTON_DPAD_LEFT] ? -1.0 :
+                    m_buttonPressState[BUTTON_DPAD_RIGHT] ? 1.0 : 0.0);
+            setAxis(AXIS_DPAD_Y,
+                    m_buttonPressState[BUTTON_DPAD_DOWN] ? -1.0 :
+                    m_buttonPressState[BUTTON_DPAD_UP] ? 1.0 : 0.0);
             
             // Update trigger buttons (triggers axes masquerading as buttons)
             auto ltrigger_pressed = state.lastAxesState[AXIS_LTRIGGER] > gamepad_profiles::TRIGGER_DEADZONE(state.profile);
@@ -197,14 +227,6 @@ void InputManager::update () {
                     onGamepadButtonPressed.emit(BUTTON_RTRIGGER) :
                     onGamepadButtonReleased.emit(BUTTON_RTRIGGER);
             }
-            
-            // Set dpad axes from button states
-            state.lastAxesState[AXIS_DPAD_X] =
-                m_buttonPressState[BUTTON_DPAD_LEFT] ? -1.0 :
-                (m_buttonPressState[BUTTON_DPAD_RIGHT] ? 1.0 : 0.0);
-            state.lastAxesState[AXIS_DPAD_Y] =
-                m_buttonPressState[BUTTON_DPAD_DOWN] ? -1.0 :
-                (m_buttonPressState[BUTTON_DPAD_UP] ? 1.0 : 0.0);
             
             // Integrate axis values
             for (auto k = input::NUM_GAMEPAD_AXES; k --> 0; ) {
