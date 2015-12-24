@@ -185,6 +185,7 @@ void InputManager::update () {
     // used to integrate multiple gamepad axis values into m_combinedAxesState.
     // Gets set for an axis
     std::bitset<input::NUM_GAMEPAD_AXES> setAxes;
+    std::bitset<input::NUM_GAMEPAD_BUTTONS> currentButtonsPressed;
     
     for (auto i = 0; i < m_gamepadStates.size(); ++i) {
         auto present = glfwJoystickPresent(i);
@@ -215,16 +216,11 @@ void InputManager::update () {
             // trigger axes count as 2 extra buttons
             assert(nbuttons + 2 >= input::NUM_GAMEPAD_BUTTONS);
             
-            // Update buttons + fire events
-            // Note: this code will have _terrible_ cache performance, but... oh well >.>
+            // Update buttons
             for (auto k = nbuttons; k --> 0; ) {
                 auto button = gamepad_profiles::buttons(state.profile)[k];
-                auto pressed = buttons[k];
-                if (pressed != m_buttonPressState[button]) {
-                    (m_buttonPressState[button] = pressed) ?
-                        onGamepadButtonPressed.emit(button) :
-                        onGamepadButtonReleased.emit(button);
-                }
+                if (buttons[k])
+                    currentButtonsPressed[button] = true;
             }
             
             // dpad counts as 2 extra axes
@@ -267,19 +263,11 @@ void InputManager::update () {
                     m_buttonPressState[BUTTON_DPAD_UP] ? 1.0 : 0.0);
             
             // Update trigger buttons (triggers axes masquerading as buttons)
-            auto ltrigger_pressed = state.lastAxesState[AXIS_LTRIGGER] > gamepad_profiles::TRIGGER_DEADZONE(state.profile);
-            auto rtrigger_pressed = state.lastAxesState[AXIS_RTRIGGER] > gamepad_profiles::TRIGGER_DEADZONE(state.profile);
-            
-            if (ltrigger_pressed != m_buttonPressState[BUTTON_LTRIGGER]) {
-                (m_buttonPressState[BUTTON_LTRIGGER] = ltrigger_pressed) ?
-                    onGamepadButtonPressed.emit(BUTTON_LTRIGGER) :
-                    onGamepadButtonReleased.emit(BUTTON_LTRIGGER);
-            }
-            if (rtrigger_pressed != m_buttonPressState[BUTTON_RTRIGGER]) {
-                (m_buttonPressState[BUTTON_RTRIGGER] = rtrigger_pressed) ?
-                    onGamepadButtonPressed.emit(BUTTON_RTRIGGER) :
-                    onGamepadButtonReleased.emit(BUTTON_RTRIGGER);
-            }
+            auto triggerDeadzone = gamepad_profiles::TRIGGER_DEADZONE(state.profile);
+            if (state.lastAxesState[AXIS_LTRIGGER] > triggerDeadzone)
+                currentButtonsPressed[BUTTON_LTRIGGER] = true;
+            if (state.lastAxesState[AXIS_RTRIGGER] > triggerDeadzone)
+                currentButtonsPressed[BUTTON_RTRIGGER] = true;
             
             // Integrate axis values
             for (auto k = input::NUM_GAMEPAD_AXES; k --> 0; ) {
@@ -293,65 +281,16 @@ void InputManager::update () {
         }
     } // for each state : m_gamepadStates
     
+    // Broadcast button events
+    for (auto i = NUM_GAMEPAD_BUTTONS; i --> 0; ) {
+        if (currentButtonsPressed[i] != m_buttonPressState[i]) {
+            (m_buttonPressState[i] = currentButtonsPressed[i]) ?
+                onGamepadButtonPressed.emit((GamepadButton)i) :
+                onGamepadButtonReleased.emit((GamepadButton)i);
+        }
+    }
     // Broadcast gamepad axis values
     onGamepadAxesUpdate.emit(&m_combinedAxesState[0]);
 }
-
-//void debugScanGamepadInput () {
-//    using namespace gamepad_profiles::xbox_controller;
-//    
-//    for (auto i = GLFW_JOYSTICK_1; i < GLFW_JOYSTICK_LAST; ++i) {
-//        if (glfwJoystickPresent(i)) {
-//            
-//            int naxes, nbuttons;
-//            auto axes = glfwGetJoystickAxes(i, &naxes);
-//            auto buttons = glfwGetJoystickButtons(i, &nbuttons);
-//            
-//            //            std::cout << glfwGetJoystickName(i) << std::endl;
-//            
-//            bool any = false;
-//            std::stringstream ss;
-//            
-//#define CHECK_BTN(x) if (x < nbuttons && buttons[x]) any = true, ss << #x " ";
-//            if (buttons) {
-//                CHECK_BTN(BUTTON_A)
-//                CHECK_BTN(BUTTON_B)
-//                CHECK_BTN(BUTTON_X)
-//                CHECK_BTN(BUTTON_Y)
-//                CHECK_BTN(BUTTON_DPAD_LEFT)
-//                CHECK_BTN(BUTTON_DPAD_RIGHT)
-//                CHECK_BTN(BUTTON_DPAD_UP)
-//                CHECK_BTN(BUTTON_DPAD_DOWN)
-//                CHECK_BTN(BUTTON_LT)
-//                CHECK_BTN(BUTTON_RT)
-//                CHECK_BTN(BUTTON_RB)
-//                CHECK_BTN(BUTTON_LB)
-//                CHECK_BTN(BUTTON_SELECT)
-//                CHECK_BTN(BUTTON_START)
-//                CHECK_BTN(BUTTON_HOME)
-//            }
-//#undef CHECK_BTN
-//            
-//#define CHECK_AXIS(x) if (x < naxes && (fabs(axes[x]) > THRESHOLD)) any = true, ss << #x " " << axes[x] << ' ';
-//#define CHECK_TRIGGER(x) if (x < naxes && (axes[x] > (-1 + THRESHOLD))) any = true, ss << #x " " << axes[x] << ' ';
-//            
-//            const static float THRESHOLD = 0.17;
-//            if (axes) {
-//                CHECK_AXIS(LX_AXIS);
-//                CHECK_AXIS(LY_AXIS);
-//                CHECK_AXIS(RX_AXIS);
-//                CHECK_AXIS(RY_AXIS);
-//                CHECK_TRIGGER(LT_AXIS);
-//                CHECK_TRIGGER(RT_AXIS);
-//            }
-//            if (any) {
-//                std::cout << "Joystick input: " << ss.str() << std::endl;
-//            }
-//            
-//#undef CHECK_AXIS
-//#undef CHECK_TRIGGER
-//        }
-//    }
-//}
 
 
