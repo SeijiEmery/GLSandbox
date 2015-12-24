@@ -14,19 +14,19 @@ using namespace gl_sandbox;
 using namespace gl_sandbox::modules;
 
 InputTestModule::InputTestModule () :
-m_deviceConnectedObserver(Application::g_inputManager->onDeviceConnected.connect([](auto deviceName, auto profile) {
+m_deviceConnectedObserver(input->onDeviceConnected.connect([](auto deviceName, auto profile) {
     std::cout << "Device connected: '" << deviceName << "' (profile '" << input::gamepadProfileToString(profile) << "')\n";
 })),
-m_deviceDisconnectedObserver(Application::g_inputManager->onDeviceDisconnected.connect([](auto deviceName, auto profile) {
+m_deviceDisconnectedObserver(input->onDeviceDisconnected.connect([](auto deviceName, auto profile) {
     std::cout << "Device disconnected: '" << deviceName << "' (profile '" << input::gamepadProfileToString(profile) << "')\n";
 })),
-m_gamepadButtonPressedObserver(Application::g_inputManager->onGamepadButtonPressed.connect([](auto button) {
+m_gamepadButtonPressedObserver(input->onGamepadButtonPressed.connect([](auto button) {
     std::cout << "Gamepad button pressed: '" << input::gamepadButtonToString(button) << "'\n";
 })),
-m_gamepadButtonReleasedObserver(Application::g_inputManager->onGamepadButtonReleased.connect([](auto button) {
+m_gamepadButtonReleasedObserver(input->onGamepadButtonReleased.connect([](auto button) {
     std::cout << "Gamepad button released: '" << input::gamepadButtonToString(button) << "'\n";
 })),
-m_gamepadAxesObserver(Application::g_inputManager->onGamepadAxesUpdate.connect([](auto axes) {
+m_gamepadAxesObserver(input->onGamepadAxesUpdate.connect([](auto axes) {
     auto i = 0;
     for (; i < input::NUM_GAMEPAD_AXES; ++i) {
         if (axes[i] != 0)

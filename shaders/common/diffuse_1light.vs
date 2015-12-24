@@ -20,7 +20,7 @@ void main ()
     vec4 eyeCoords = ModelViewMatrix * vec4(VertexPosition, 1.0);
     vec3 s = normalize(vec3(LightPosition - eyeCoords));
     
-    LightIntensity = Ld * Kd * max(dot(s, tnorm), 0.0);
+    LightIntensity = Ld * Kd * max(dot(s, tnorm), 0.3);
     
     gl_Position = MVP * vec4(VertexPosition, 1.0);
 }

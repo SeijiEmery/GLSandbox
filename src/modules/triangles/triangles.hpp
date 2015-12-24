@@ -28,7 +28,7 @@ private:
     gl::VAO    m_vao;
     gl::VBO    m_buffers [2];
     double     m_startTime;
-    GLint      m_uniform_rotationMatrix;
+    GLint      m_uniform_mvp_matrix;
     
     static constexpr double ROTATION_PERIOD = 2.5;
     

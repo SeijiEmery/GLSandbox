@@ -89,6 +89,8 @@
 		81AB41841C2A967800151156 /* input.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 81AB41821C2A967800151156 /* input.cpp */; settings = {ASSET_TAGS = (); }; };
 		81AB41881C2ABE8200151156 /* input_test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 81AB41861C2ABE8200151156 /* input_test.cpp */; settings = {ASSET_TAGS = (); }; };
 		81AB41971C2B4AD400151156 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 81AB41951C2B4AD400151156 /* main.cpp */; settings = {ASSET_TAGS = (); }; };
+		81AB419A1C2B916600151156 /* module_events.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 81AB41981C2B916600151156 /* module_events.cpp */; settings = {ASSET_TAGS = (); }; };
+		81AB419F1C2BEEF500151156 /* flycam.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 81AB419D1C2BEEF500151156 /* flycam.cpp */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -232,6 +234,10 @@
 		81AB41871C2ABE8200151156 /* input_test.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = input_test.hpp; path = src/modules/input_test/input_test.hpp; sourceTree = SOURCE_ROOT; };
 		81AB418D1C2B4A8F00151156 /* raii-signals-test */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "raii-signals-test"; sourceTree = BUILT_PRODUCTS_DIR; };
 		81AB41951C2B4AD400151156 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = "tests/raii-signals-test/main.cpp"; sourceTree = SOURCE_ROOT; };
+		81AB41981C2B916600151156 /* module_events.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = module_events.cpp; path = src/common/module_events.cpp; sourceTree = SOURCE_ROOT; };
+		81AB41991C2B916600151156 /* module_events.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = module_events.hpp; path = src/common/module_events.hpp; sourceTree = SOURCE_ROOT; };
+		81AB419D1C2BEEF500151156 /* flycam.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = flycam.cpp; path = src/modules/camera/flycam.cpp; sourceTree = SOURCE_ROOT; };
+		81AB419E1C2BEEF500151156 /* flycam.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = flycam.hpp; path = src/modules/camera/flycam.hpp; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -413,6 +419,8 @@
 				81AB41801C29093500151156 /* raii_signal.hpp */,
 				81AB41821C2A967800151156 /* input.cpp */,
 				81AB41831C2A967800151156 /* input.hpp */,
+				81AB41981C2B916600151156 /* module_events.cpp */,
+				81AB41991C2B916600151156 /* module_events.hpp */,
 			);
 			name = common;
 			sourceTree = "<group>";
@@ -420,6 +428,7 @@
 		815D62031C1F66B3005DB2A8 /* modules */ = {
 			isa = PBXGroup;
 			children = (
+				81AB419C1C2BEECF00151156 /* camera */,
 				81AB41851C2ABE5800151156 /* input_test */,
 				81AB41051C27CEC100151156 /* obj_viewer */,
 				81176DAD1C229E240025EB6C /* ubo_test */,
@@ -606,6 +615,15 @@
 			name = tests;
 			sourceTree = "<group>";
 		};
+		81AB419C1C2BEECF00151156 /* camera */ = {
+			isa = PBXGroup;
+			children = (
+				81AB419D1C2BEEF500151156 /* flycam.cpp */,
+				81AB419E1C2BEEF500151156 /* flycam.hpp */,
+			);
+			name = camera;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -782,6 +800,8 @@
 				81AB410B1C27CF1A00151156 /* obj_viewer.cpp in Sources */,
 				81176DAC1C22325E0025EB6C /* gl_wrapper.cpp in Sources */,
 				81AB41881C2ABE8200151156 /* input_test.cpp in Sources */,
+				81AB419F1C2BEEF500151156 /* flycam.cpp in Sources */,
+				81AB419A1C2B916600151156 /* module_events.cpp in Sources */,
 				815D61F41C1F6574005DB2A8 /* main.cpp in Sources */,
 				81AB417B1C28B4E500151156 /* camera.cpp in Sources */,
 				81176DB01C229E3E0025EB6C /* ubo_test.cpp in Sources */,

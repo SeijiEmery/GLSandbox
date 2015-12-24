@@ -34,11 +34,12 @@ extern "C" {
 
 InputManager * Application::g_inputManager = nullptr;
 Application * Application::g_applicationInstance = nullptr;
+AppEvents   * Application::g_appEvents = nullptr;
 
 // Initialize glfw, create window, etc.
 // Throws a std::runtime_error on failure to init.
 Application::Application (const char * baseResourcePath)
-    : m_modules(), m_cameraController(&m_mainCamera)
+    : m_modules()
 {
     ResourceLoader::g_baseResourcePath = baseResourcePath;
     
@@ -79,14 +80,18 @@ Application::Application (const char * baseResourcePath)
     
 //    CHECK_GL_ERRORS();
     
+    glEnable(GL_DEPTH_TEST);
+    
     std::cout << "GL Sandbox\n";
     std::cout << "Renderer: " << glGetString(GL_RENDERER) << '\n';
     std::cout << "Opengl version: " << glGetString(GL_VERSION) << std::endl;
     
     Application::g_applicationInstance = this;
     Application::g_inputManager = &m_inputManager;
+    Application::g_appEvents    = &m_appEvents;
     
     m_modules.loadModule("module-input-logger");
+    m_modules.loadModule("module-flycam");
 }
 
 Application::~Application () {
@@ -160,16 +165,21 @@ void Application::run () {
         counter.onFrameBegin();
         
         m_inputManager.update();
-        m_cameraController.update();
         
         float ratio;
         int width, height;
         glfwGetFramebufferSize(m_mainWindow, &width, &height);
         ratio = width / (float) height;
         glViewport(0, 0, width, height);  CHECK_GL_ERRORS();
-        glClear(GL_COLOR_BUFFER_BIT);     CHECK_GL_ERRORS();
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);     CHECK_GL_ERRORS();
         
         m_modules.runModules();
+        
+//        for (const auto & camera : m_viewportCameras) {
+//            glViewport(camera->viewport.x, camera.viewport.y, camera.viewport.width, camera.viewport.height);
+//            glScissor(camera->viewport.x, camera.viewport.y, camera.viewport.width, camera.viewport.height);
+//            m_modules.drawModules(*camera);
+//        }
         
         glfwSwapBuffers(m_mainWindow);    CHECK_GL_ERRORS();
         glfwPollEvents();

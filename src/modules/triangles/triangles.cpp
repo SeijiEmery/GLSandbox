@@ -8,6 +8,7 @@
 
 #include "triangles.hpp"
 #include "../../common/gl/gl_error.hpp"
+#include "../../common/app.hpp"
 
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
@@ -87,7 +88,7 @@ TriangleModule::TriangleModule() {
     glBindBuffer(GL_ARRAY_BUFFER, colorBuffer.handle); CHECK_GL_ERRORS();
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, NULL); CHECK_GL_ERRORS();
     
-    m_uniform_rotationMatrix = m_shader.getUniformLocation("RotationMatrix");
+    m_uniform_mvp_matrix = m_shader.getUniformLocation("MVP");
     m_startTime = glfwGetTime();
 }
 TriangleModule::~TriangleModule() {
@@ -104,8 +105,32 @@ void TriangleModule::drawFrame() {
         float angle = (float)fmod((elapsedTime * (TWO_PI / ROTATION_PERIOD)), TWO_PI);
         mat4 rotationMatrix = glm::rotate(mat4(1.0f), angle, vec3(1.0f, 0.0f, 0.0f));
         
-        m_shader.setUniform(m_uniform_rotationMatrix, rotationMatrix);
-        glDrawArrays(GL_TRIANGLES, 0, 3); CHECK_GL_ERRORS();
+        
+        mat4 model          = glm::translate(rotationMatrix, vec3(0, 0, -1));
+        mat4 view           = Application::mainCamera()->view;
+        mat4 proj           = glm::perspective(45.0f, 1.7f, 0.01f, 1e3f);
+        
+//        m_shader.setUniform(m_uniform_mvp_matrix, proj * view * model);
+//        glDrawArrays(GL_TRIANGLES, 0, 3); CHECK_GL_ERRORS();
+        
+        auto pv = proj * view;
+        mat4 identity (1.0f);
+        auto axis = vec3(0.0f, 1.0f, 0.0f);
+        
+        for (int i = 0; i < 20; ++i) {
+            for (int j = 0; j < 20; ++j) {
+                for (int k = 0; k < 20; ++k) {
+                    
+                    auto pos = glm::vec3 { (i - 10), (j - 10), (k - 10) } * 5.0f;
+                    auto model = glm::rotate(glm::translate(identity, pos), angle, axis);
+                    
+                    m_shader.setUniform(m_uniform_mvp_matrix, pv * model);
+                    glDrawArrays(GL_TRIANGLES, 0, 3); CHECK_GL_ERRORS();
+                }
+            }
+        }
+        
+        
     }
 }
 

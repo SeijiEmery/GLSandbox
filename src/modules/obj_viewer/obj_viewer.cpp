@@ -12,6 +12,7 @@
 #include <future>
 
 #include "obj_viewer.hpp"
+#include "../../common/app.hpp"
 
 using namespace gl_sandbox;
 using namespace gl_sandbox::modules;
@@ -127,14 +128,14 @@ void ObjViewer::ModelInstance::draw () {
     SET_UNIFORM(Kd, glm::vec3(0.5)); CHECK_GL_ERRORS();
     SET_UNIFORM(Ld, glm::vec3(1.0)); CHECK_GL_ERRORS();
     
-    auto model = glm::translate(glm::mat4x4(1.0), glm::vec3(0, 0, -2.0));
-//    auto model = glm::mat4x4(1.0);
-    auto view  = glm::mat4x4(1.0);
-    glm::mat4x4 proj = glm::perspective(75.0f, 1.7f, 0.1f, 300.0f);
+//    auto model = glm::translate(glm::mat4x4(1.0), glm::vec3(0, 0, -2.0));
+    auto model = glm::mat4x4(1.0);
+    auto const & view = Application::mainCamera()->view;
+    glm::mat4x4 proj = glm::perspective(45.0f, 1.7f, 0.1f, 300.0f);
     
-    SET_UNIFORM(ModelViewMatrix, model * view); CHECK_GL_ERRORS();
+    SET_UNIFORM(ModelViewMatrix, view * model); CHECK_GL_ERRORS();
     SET_UNIFORM(NormalMatrix, glm::mat3x3(1.0f)); CHECK_GL_ERRORS();
-    SET_UNIFORM(MVP, model * view * proj); CHECK_GL_ERRORS();
+    SET_UNIFORM(MVP, proj * view * model); CHECK_GL_ERRORS();
     
 #undef SET_UNIFORM
     
@@ -171,8 +172,8 @@ ObjViewer::ObjViewer ()
 {
     std::cout << "Initializing model viewer\n";
     
-//    loadModelAsync("dragon.obj");
-    loadModelAsync("cube.obj");
+    loadModelAsync("dragon.obj");
+//    loadModelAsync("cube.obj");
 //    loadModelAsync("sibenik.obj");
 }
 

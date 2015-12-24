@@ -10,6 +10,7 @@
 #include "ubo_test/ubo_test.hpp"
 #include "obj_viewer/obj_viewer.hpp"
 #include "input_test/input_test.hpp"
+#include "camera/flycam.hpp"
 
 #include "modules.hpp"
 #include "app.hpp"
@@ -34,6 +35,7 @@ ModuleInterface::ModuleInterface () :
         ADD_MODULE(UboStaticModule),
         ADD_MODULE(ObjViewer),
         ADD_MODULE(InputTestModule),
+        ADD_MODULE(CameraModule),
     }
 {
     // Do other initialization...
@@ -75,6 +77,7 @@ void ModuleInterface::loadModule(const std::string & moduleName) {
         auto & constructor = x->second;
         auto newModule = constructor();
         m_runningModules.emplace_back(newModule);
+        Application::appEvents()->onModuleLoaded.emit(*m_runningModules.back());
         return;
     }
     std::cerr << "Cannot load module -- no module registered as '" << moduleName << "'\n";
@@ -93,6 +96,7 @@ void ModuleInterface::unloadModule (const std::string & moduleName) {
             deinitModule(m_runningModules[i-1].get());
             if (i != m_runningModules.size())                 // <- this branch can/should be moved outside when the comipler loop unrolls
                 m_runningModules[i-1] = std::move(m_runningModules.back());
+            Application::appEvents()->onModuleUnloaded.emit(*m_runningModules[i-1]);
             m_runningModules.pop_back();
             return;
         }

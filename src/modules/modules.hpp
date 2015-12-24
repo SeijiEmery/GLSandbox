@@ -18,6 +18,7 @@
 
 namespace gl_sandbox {
     
+//class Camera;
 class ModuleInterface {
 public:
     ModuleInterface ();
@@ -26,6 +27,7 @@ public:
     void loadModule (const std::string & moduleName);
     void unloadModule (const std::string & moduleName);
     void runModules ();
+//    void drawModules (const Camera &);
     
     // Clears m_runningModules list (triggering dtors); called at app termination.
     void killAllModules ();

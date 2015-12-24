@@ -9,6 +9,7 @@
 #ifndef module_h
 #define module_h
 
+#include "../common/module_events.hpp"
 #include "../common/resources.hpp"
 #include <string>
 
@@ -24,14 +25,15 @@ protected:
 };
 
 template <typename T>
-struct Module : public IModule {
+struct Module : public IModule, public ModuleExposedEvents {
 protected:
-    Module () : IModule(T::MODULE_NAME) {}
+    Module () :
+        IModule(T::MODULE_NAME)
+    {}
 public:
     static Module * construct () {
         return static_cast<Module*>(new T());
     }
-    
     // Utility methods, etc
 //    std::shared_ptr<gl::Shader> loadShader (const std::string & shaderName, std::function<void(gl::Shader&)> doLink) const {
 //        auto shader = std::make_shared<gl::Shader>(shaderName);

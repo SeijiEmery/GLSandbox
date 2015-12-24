@@ -9,7 +9,6 @@
 #ifndef camera_hpp
 #define camera_hpp
 
-#include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 
 namespace gl_sandbox {
@@ -17,20 +16,13 @@ namespace gl_sandbox {
 struct Camera {
     glm::mat4x4 proj;
     glm::mat4x4 view;
+
+    struct Viewport {
+        int x, y, width, height;
+    } viewport;
+    float aspect_ratio;
 };
 
-struct CameraController {
-    CameraController ();
-    CameraController (Camera * camera);
-    CameraController (const CameraController &) = delete;
-    CameraController (CameraController &&) = default;
-    
-    void update ();
-private:
-    Camera * m_camera = nullptr;
-    double   m_lastUpdate;
-};
-    
 }; // namespace gl_sandbox
 
 #endif /* camera_hpp */
