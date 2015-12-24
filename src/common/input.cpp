@@ -98,8 +98,8 @@ namespace gamepad_profiles {
             input::AXIS_RTRIGGER
         };
         constexpr unsigned NUM_AXES = 6;
-        constexpr double   LAXIS_DEADZONE = 0.17;
-        constexpr double   RAXIS_DEADZONE = 0.17;
+        constexpr double   LAXIS_DEADZONE = 0.19;
+        constexpr double   RAXIS_DEADZONE = 0.19;
         constexpr double   TRIGGER_DEADZONE = 0.1;
         constexpr bool     FLIP_LY = false;
         constexpr bool     FLIP_RY = false;
@@ -190,7 +190,7 @@ void InputManager::update () {
         auto present = glfwJoystickPresent(i);
         auto & state = m_gamepadStates[i];
         
-        if (present != state.active || state.name != glfwGetJoystickName(i)) {
+        if (present != state.active) {
             state.active = present;
             if (present) {
                 state.name = glfwGetJoystickName(i);

@@ -90,6 +90,9 @@ Application::Application (const char * baseResourcePath)
 }
 
 Application::~Application () {
+    
+    m_modules.killAllModules();
+    
     g_activeApplication = nullptr; // disables application-specific error handling -- after this glfw errors are just directed to stderr (as opposed to log files, visual warnings, etc)
     if (m_mainWindow) {
         glfwDestroyWindow(m_mainWindow);
@@ -119,16 +122,27 @@ struct FPSWindowCounter {
             updateWindow(window);
         }
     }
+    void onFrameBegin () {
+        frameStart = glfwGetTime();
+    }
+    void onFrameEnd () {
+        realAppRunTime += glfwGetTime() - frameStart;
+        ++appRunTimeSamples;
+    }
 protected:
     void updateWindow (GLFWwindow * window) {
         static char windowTitleBuffer [256];
-        snprintf(windowTitleBuffer, sizeof(windowTitleBuffer), "GL sandbox -- %0.2fms (%0.2f fps)", currentDtAvg * 1000, currentFpsAvg);
+        snprintf(windowTitleBuffer, sizeof(windowTitleBuffer), "GL sandbox -- %0.2fms (%0.2f fps)", realAppRunTime / (double)appRunTimeSamples, currentFpsAvg);
         glfwSetWindowTitle(window, windowTitleBuffer);
     }
 protected:
     double lastTime;
     uint16_t samples = 0;
     static constexpr double UPDATE_FREQUENCY = 0.15; // Re-upate fps every 150 ms
+    
+    double realAppRunTime = 0;
+    double frameStart = 0;
+    uint16_t appRunTimeSamples = 0;
 public:
     double currentFpsAvg = 0.0;
     double currentDtAvg  = 0.0;
@@ -143,6 +157,7 @@ void Application::run () {
     while (!glfwWindowShouldClose(m_mainWindow))
     {
         counter.update(m_mainWindow);
+        counter.onFrameBegin();
         
         m_inputManager.update();
         m_cameraController.update();
@@ -158,6 +173,8 @@ void Application::run () {
         
         glfwSwapBuffers(m_mainWindow);    CHECK_GL_ERRORS();
         glfwPollEvents();
+        
+        counter.onFrameEnd();
     }
 }
 
