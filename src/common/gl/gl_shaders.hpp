@@ -33,6 +33,11 @@ class Shader {
 public:
     Shader (const char * name) : name(name) {}
     Shader (const std::string & name) : name(name) {}
+    Shader (Shader &&) = default;
+    Shader (const Shader &) = delete;
+    
+    Shader & operator= (Shader &&) = default;
+    Shader & operator= (const Shader &) = delete;
 protected:
     gl::ShaderProgram  _program;
     gl::FragmentShader _fs;
@@ -58,29 +63,31 @@ public:
         assert(program_linked ? fragment_compiled && vertex_compiled : true); // sanity check state flags
         return program_linked;
     }
-    GLint getUniformLocation (const char * name) {
-        auto loc = glGetUniformLocation(handle(), name);
+    GLint getUniformLocation (const char * name) const {
+        if (!loaded())
+            return std::cerr << "Error: can't get uniform from null shader ('" << this->name << "')\n", -1;
+        auto loc = glGetUniformLocation(handle(), name); CHECK_GL_ERRORS();
         if (loc < 0)
             std::cerr << "Error: No uniform '" << name << "' in shader '" << this->name << "'\n";
         return loc;
     }
-    void setUniform (GLint location, const glm::mat4x4 & m) {
+    void setUniform (GLint location, const glm::mat4x4 & m) const {
         glUniformMatrix4fv(location, 1, GL_FALSE, &m[0][0]);
     }
-    void setUniform (GLint location, const glm::vec3 & v) {
+    void setUniform (GLint location, const glm::vec3 & v) const {
         glUniform3fv(location, 1, &v[0]);
     }
-    void setUniform (GLint location, const glm::vec4 & v) {
+    void setUniform (GLint location, const glm::vec4 & v) const {
         glUniform4fv(location, 1, &v[0]);
     }
-    void setUniform (GLint location, float s) {
+    void setUniform (GLint location, float s) const {
         glUniform1f(location, s);
     }
-    void setUniform (GLint location, const glm::mat3x3 & m) {
+    void setUniform (GLint location, const glm::mat3x3 & m) const {
         glUniformMatrix3fv(location, 1, GL_FALSE, &m[0][0]);
     }
-    template <typename T>
-    void setUniform (const char * name, const T & v) { setUniform(getUniformLocation(name), v); }
+//    template <typename T>
+//    void setUniform (const char * name, const T & v) { setUniform(getUniformLocation(name), v); }
     
 protected:
     // Default impl for the optional onError parameter on compileFragment, etc;

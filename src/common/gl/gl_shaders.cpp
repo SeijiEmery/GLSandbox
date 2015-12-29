@@ -93,7 +93,7 @@ bool Shader::compileVertex (const char * src, std::function<void(const ShaderLoa
     }
     return vertex_compiled = compileShader(_vs, src, [&onError,this](const char *errorLog) {
         onError(ShaderLoadError {
-            (format("Error compiling vertex shader (%s.fs):\n%s") % name % errorLog).str()
+            (format("Error compiling vertex shader (%s.vs):\n%s") % name % errorLog).str()
         });
     });
 }

@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		81043F881C30876A00CEB09C /* instanced_array.fs in Resources */ = {isa = PBXBuildFile; fileRef = 81043F871C30876A00CEB09C /* instanced_array.fs */; settings = {ASSET_TAGS = (); }; };
+		81043F8A1C30877900CEB09C /* instanced_array.vs in Resources */ = {isa = PBXBuildFile; fileRef = 81043F891C30877900CEB09C /* instanced_array.vs */; settings = {ASSET_TAGS = (); }; };
 		81176D851C1FC90D0025EB6C /* basic_shader.fs in Resources */ = {isa = PBXBuildFile; fileRef = 81176D841C1FC90D0025EB6C /* basic_shader.fs */; settings = {ASSET_TAGS = (); }; };
 		81176D871C1FC9230025EB6C /* basic_shader.vs in Resources */ = {isa = PBXBuildFile; fileRef = 81176D861C1FC9230025EB6C /* basic_shader.vs */; settings = {ASSET_TAGS = (); }; };
 		81176D8A1C1FC9640025EB6C /* gl_shaders.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 81176D881C1FC9640025EB6C /* gl_shaders.cpp */; settings = {ASSET_TAGS = (); }; };
@@ -115,6 +117,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		81043F871C30876A00CEB09C /* instanced_array.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = instanced_array.fs; path = shaders/modules/triangles/instanced_array.fs; sourceTree = SOURCE_ROOT; };
+		81043F891C30877900CEB09C /* instanced_array.vs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = instanced_array.vs; path = shaders/modules/triangles/instanced_array.vs; sourceTree = SOURCE_ROOT; };
 		81176D841C1FC90D0025EB6C /* basic_shader.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = basic_shader.fs; path = shaders/modules/triangles/basic_shader.fs; sourceTree = SOURCE_ROOT; };
 		81176D861C1FC9230025EB6C /* basic_shader.vs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = basic_shader.vs; path = shaders/modules/triangles/basic_shader.vs; sourceTree = SOURCE_ROOT; };
 		81176D881C1FC9640025EB6C /* gl_shaders.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = gl_shaders.cpp; path = src/common/gl/gl_shaders.cpp; sourceTree = SOURCE_ROOT; };
@@ -282,6 +286,8 @@
 			children = (
 				81176D841C1FC90D0025EB6C /* basic_shader.fs */,
 				81176D861C1FC9230025EB6C /* basic_shader.vs */,
+				81043F871C30876A00CEB09C /* instanced_array.fs */,
+				81043F891C30877900CEB09C /* instanced_array.vs */,
 			);
 			name = triangles;
 			sourceTree = "<group>";
@@ -744,6 +750,7 @@
 				81AB41541C27D66F00151156 /* reljef-bump.jpg in Resources */,
 				81AB41611C27D66F00151156 /* lost_empire-Alpha.png in Resources */,
 				81AB41581C27D66F00151156 /* sponza.max in Resources */,
+				81043F8A1C30877900CEB09C /* instanced_array.vs in Resources */,
 				81AB41641C27D66F00151156 /* lost_empire.jpg in Resources */,
 				81AB41441C27D66F00151156 /* cube.obj in Resources */,
 				81AB41461C27D66F00151156 /* default.png in Resources */,
@@ -771,6 +778,7 @@
 				81AB41651C27D66F00151156 /* lost_empire.mtl in Resources */,
 				81AB416A1C27D66F00151156 /* kamen.png in Resources */,
 				81AB41041C260CC800151156 /* ubo_test.vs in Resources */,
+				81043F881C30876A00CEB09C /* instanced_array.fs in Resources */,
 				81AB41631C27D66F00151156 /* lost_empire-RGBA.png in Resources */,
 				81AB41701C27D66F00151156 /* copyright.txt in Resources */,
 				81AB41451C27D66F00151156 /* default.mtl in Resources */,
@@ -1011,6 +1019,7 @@
 				81AB41931C2B4A8F00151156 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

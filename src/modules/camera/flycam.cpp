@@ -56,7 +56,7 @@ void CameraModule::onGamepadUpdate (const float * axes) {
     m_cameraPos -= fwd   * axes[input::AXIS_LX] * dt * CAMERA_SPEED;
     m_cameraPos += up    * (axes[input::AXIS_RTRIGGER] - axes[input::AXIS_LTRIGGER]) * dt * CAMERA_SPEED;
     
-    std::cout << "cameraPos: " << m_cameraPos.x << ", " << m_cameraPos.y << ", " << m_cameraPos.z << "\n";
+//    std::cout << "cameraPos: " << m_cameraPos.x << ", " << m_cameraPos.y << ", " << m_cameraPos.z << "\n";
 
     
 //    m_camera->view = glm::lookAt(m_cameraPos, glm::vec3(0, 0, 0), up);

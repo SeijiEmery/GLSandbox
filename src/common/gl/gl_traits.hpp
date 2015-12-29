@@ -27,22 +27,22 @@ namespace traits {
 struct Fragment {
     typedef GLuint value_type;
     static value_type create () { return_withCheck(glCreateShader(GL_FRAGMENT_SHADER)); }
-    static void destroy (value_type v) { glDeleteShader(v); CHECK_GL_ERRORS(); }
+    static void destroy (value_type v) { if (v) glDeleteShader(v), CHECK_GL_ERRORS(); }
 };
 struct Vertex {
     typedef GLuint value_type;
     static value_type create () { return_withCheck(glCreateShader(GL_VERTEX_SHADER)); }
-    static void destroy (value_type v) { glDeleteShader(v); CHECK_GL_ERRORS(); }
+    static void destroy (value_type v) { if (v) glDeleteShader(v), CHECK_GL_ERRORS(); }
 };
 struct Program {
     typedef GLuint value_type;
     static value_type create () { return_withCheck(glCreateProgram()); }
-    static void destroy (value_type v) { glDeleteProgram(v); CHECK_GL_ERRORS(); }
+    static void destroy (value_type v) { if (v) glDeleteProgram(v), CHECK_GL_ERRORS(); }
 };
 struct VAO {
     typedef GLuint value_type;
     static value_type create () { value_type v = 0; glGenVertexArrays(1, &v); CHECK_GL_ERRORS(); return v; }
-    static void destroy (value_type v) { glDeleteVertexArrays(1, &v); CHECK_GL_ERRORS(); }
+    static void destroy (value_type v) { if (v) glDeleteVertexArrays(1, &v), CHECK_GL_ERRORS(); }
 };
 struct VBO {
     typedef GLuint value_type;
