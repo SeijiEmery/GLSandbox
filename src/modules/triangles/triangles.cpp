@@ -136,6 +136,16 @@ TriangleModule::TriangleModule() {
     m_uniform_vp_matrix = m_shader.getUniformLocation ("ViewProjMatrix");
     m_uniform_rot_matrix = m_shader.getUniformLocation("RotationMatrix");
     m_startTime = glfwGetTime();
+    
+    m_btnObserver = input->onGamepadButtonPressed.connect([this](auto button) {
+        if (button == input::GamepadButton::BUTTON_LBUMPER && m_cameraFov > m_cameraMinFov) {
+            m_cameraFov -= m_cameraFovIncrement;
+            std::cout << "Set triangles fov to " << m_cameraFov << '\n';
+        } else if (button == input::GamepadButton::BUTTON_RBUMPER && m_cameraFov < m_cameraMaxFov) {
+            m_cameraFov += m_cameraFovIncrement;
+            std::cout << "Set triangles fov to " << m_cameraFov << '\n';
+        }
+    });
 }
 TriangleModule::~TriangleModule() {
     std::cout << "Killing triangle module" << std::endl;
@@ -151,7 +161,7 @@ void TriangleModule::drawFrame() {
     mat4 rotationMatrix = glm::rotate(mat4(1.0f), angle, vec3(0.0f, 1.0f, 0.0f));
         
     mat4 view           = Application::mainCamera()->view;
-    mat4 proj           = glm::perspective(90.0f, 1.7f, 0.01f, 1e3f);
+    mat4 proj           = glm::perspective(m_cameraFov, 1.7f, 0.01f, 1e3f);
     
     m_shader.setUniform(m_uniform_vp_matrix, proj * view);
     m_shader.setUniform(m_uniform_rot_matrix, rotationMatrix);

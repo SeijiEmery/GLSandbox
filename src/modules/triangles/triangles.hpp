@@ -11,6 +11,7 @@
 
 #include "../module.hpp"
 #include "../../common/gl/gl_wrapper.hpp"
+#include "../../common/input.hpp"
 
 namespace gl_sandbox {
     
@@ -39,6 +40,12 @@ private:
     static constexpr unsigned
         INSTANCE_ARRAY_SIZE = INSTANCE_ARRAY_WIDTH
         * INSTANCE_ARRAY_HEIGHT * INSTANCE_ARRAY_DEPTH;
+    
+    float m_cameraFov = 90.0;
+    float m_cameraMinFov = -180.0;
+    float m_cameraMaxFov = 360.0;
+    float m_cameraFovIncrement = 5.0;
+    InputManager::GamepadButtonObserver m_btnObserver;
 };
     
 }; // namespace gl_sandbox
