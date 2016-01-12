@@ -28,7 +28,7 @@ inline void check_gl_errors (const char * file, int line) {
 #ifdef DEBUG
 #define CHECK_GL_ERRORS() check_gl_errors(__FILE__, __LINE__)
 #else
-#define CHECK_GL_ERRORS()
+#define CHECK_GL_ERRORS() 0
 #endif
 
 

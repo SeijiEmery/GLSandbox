@@ -90,8 +90,8 @@ namespace gamepad_profiles {
         };
         constexpr unsigned NUM_BUTTONS = 15;
         constexpr input::GamepadAxis axes[] = {
-            input::AXIS_LY,
             input::AXIS_LX,
+            input::AXIS_LY,
             input::AXIS_RX,
             input::AXIS_RY,
             input::AXIS_LTRIGGER,
@@ -128,8 +128,8 @@ namespace gamepad_profiles {
         };
         constexpr unsigned NUM_BUTTONS = 15;
         constexpr input::GamepadAxis axes[] = {
-            input::AXIS_LY,
             input::AXIS_LX,
+            input::AXIS_LY,
             input::AXIS_RX,
             input::AXIS_RY,
             input::AXIS_LTRIGGER,

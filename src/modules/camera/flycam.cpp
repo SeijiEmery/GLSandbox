@@ -52,8 +52,8 @@ void CameraModule::onGamepadUpdate (const float * axes) {
     auto right = glm::cross(fwd, { 0, 1, 0 });
     auto up    = glm::cross(fwd, right);
     
-    m_cameraPos -= right * axes[input::AXIS_LY] * dt * CAMERA_SPEED;
-    m_cameraPos -= fwd   * axes[input::AXIS_LX] * dt * CAMERA_SPEED;
+    m_cameraPos -= right * axes[input::AXIS_LX] * dt * CAMERA_SPEED;
+    m_cameraPos -= fwd   * axes[input::AXIS_LY] * dt * CAMERA_SPEED;
     m_cameraPos += up    * (axes[input::AXIS_RTRIGGER] - axes[input::AXIS_LTRIGGER]) * dt * CAMERA_SPEED;
     
 //    m_camera->view = glm::lookAt(m_cameraPos, glm::vec3(0, 0, 0), up);
