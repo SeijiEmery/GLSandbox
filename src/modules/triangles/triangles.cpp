@@ -135,16 +135,23 @@ TriangleModule::TriangleModule() {
     
     m_uniform_vp_matrix = m_shader.getUniformLocation ("ViewProjMatrix");
     m_uniform_rot_matrix = m_shader.getUniformLocation("RotationMatrix");
-    m_startTime = glfwGetTime();
     
-    m_btnObserver = input->onGamepadButtonPressed.connect([this](auto button) {
-        if (button == input::GamepadButton::BUTTON_LBUMPER && m_cameraFov > m_cameraMinFov) {
-            m_cameraFov -= m_cameraFovIncrement;
-            std::cout << "Set triangles fov to " << m_cameraFov << '\n';
-        } else if (button == input::GamepadButton::BUTTON_RBUMPER && m_cameraFov < m_cameraMaxFov) {
-            m_cameraFov += m_cameraFovIncrement;
-            std::cout << "Set triangles fov to " << m_cameraFov << '\n';
-        }
+    m_startTime = m_lastTime = glfwGetTime();
+    m_lastFovNotify = m_startTime - m_fovNotifyDelay;
+    
+    m_buttonObservers[0] = input->onGamepadButtonPressed.connect([this](auto button) {
+        if (button == input::GamepadButton::BUTTON_LBUMPER)
+            m_lbPressed = true;
+        if (button == input::GamepadButton::BUTTON_RBUMPER)
+            m_rbPressed = true;
+        m_fovDir = (m_lbPressed ? -1.0 : 0.0) + (m_rbPressed ? 1.0 : 0.0);
+    });
+    m_buttonObservers[1] = input->onGamepadButtonReleased.connect([this](auto button) {
+        if (button == input::GamepadButton::BUTTON_LBUMPER)
+            m_lbPressed = false;
+        if (button == input::GamepadButton::BUTTON_RBUMPER)
+            m_rbPressed = false;
+        m_fovDir = (m_lbPressed ? -1.0 : 0.0) + (m_rbPressed ? 1.0 : 0.0);
     });
 }
 TriangleModule::~TriangleModule() {
@@ -153,13 +160,25 @@ TriangleModule::~TriangleModule() {
 void TriangleModule::drawFrame() {
     glUseProgram(m_shader.handle());
     glBindVertexArray(m_vao.handle); CHECK_GL_ERRORS();
-        
-    double elapsedTime = m_startTime - glfwGetTime();
+    
+    double curTime     = glfwGetTime();
+    double elapsedTime = m_startTime - curTime;
+    double dt          = m_lastTime  - curTime;
+    m_lastTime = curTime;
+
     constexpr double TWO_PI  = boost::math::constants::pi<double>() * 2.0;
         
     float angle = (float)fmod((elapsedTime * (TWO_PI / ROTATION_PERIOD)), TWO_PI);
     mat4 rotationMatrix = glm::rotate(mat4(1.0f), angle, vec3(0.0f, 1.0f, 0.0f));
-        
+    
+    auto fov = std::min(m_cameraMaxFov, std::max(m_cameraMinFov,
+        m_cameraFov + m_fovIncrement * m_fovDir * (float)dt));
+    if (fov != m_cameraFov && curTime > m_lastFovNotify + m_fovNotifyDelay) {
+        m_lastFovNotify = curTime;
+        std::cout << "Set triangles fov to " << fov << '\n';
+    }
+    m_cameraFov = fov;
+    
     mat4 view           = Application::mainCamera()->view;
     mat4 proj           = glm::perspective(m_cameraFov, 1.7f, 0.01f, 1e3f);
     

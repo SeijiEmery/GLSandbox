@@ -28,7 +28,7 @@ private:
     gl::Shader m_shader { "basic_shader" };
     gl::VAO    m_vao;
     gl::VBO    m_buffers [3];
-    double     m_startTime;
+    double     m_startTime, m_lastTime;
     GLint      m_uniform_vp_matrix;
     GLint      m_uniform_rot_matrix;
     
@@ -42,10 +42,16 @@ private:
         * INSTANCE_ARRAY_HEIGHT * INSTANCE_ARRAY_DEPTH;
     
     float m_cameraFov = 90.0;
-    float m_cameraMinFov = -180.0;
-    float m_cameraMaxFov = 360.0;
-    float m_cameraFovIncrement = 5.0;
-    InputManager::GamepadButtonObserver m_btnObserver;
+    float m_cameraMinFov = 1.0;
+    float m_cameraMaxFov = 178.0;
+    float m_fovIncrement = 60.0;  // +60.0 deg / sec
+    float m_fovDir = 0.0;
+    bool  m_lbPressed = false;
+    bool  m_rbPressed = false;
+    InputManager::GamepadButtonObserver m_buttonObservers[2];
+    
+    double m_lastFovNotify = 0.0;
+    double m_fovNotifyDelay = 0.5;
 };
     
 }; // namespace gl_sandbox
