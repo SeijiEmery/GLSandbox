@@ -23,6 +23,7 @@
 		81176DB01C229E3E0025EB6C /* ubo_test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 81176DAE1C229E3D0025EB6C /* ubo_test.cpp */; settings = {ASSET_TAGS = (); }; };
 		81176DFD1C24D5580025EB6C /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = 81176DEA1C24D5580025EB6C /* README.md */; settings = {ASSET_TAGS = (); }; };
 		81176DFE1C24D5580025EB6C /* stb_vorbis.c in Sources */ = {isa = PBXBuildFile; fileRef = 81176DF91C24D5580025EB6C /* stb_vorbis.c */; settings = {ASSET_TAGS = (); }; };
+		811D7C951C4372AD00668735 /* gamepad_text_input.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 811D7C931C4372AD00668735 /* gamepad_text_input.cpp */; settings = {ASSET_TAGS = (); }; };
 		815D61F41C1F6574005DB2A8 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 815D61F31C1F6574005DB2A8 /* main.cpp */; settings = {ASSET_TAGS = (); }; };
 		815D61F61C1F65B0005DB2A8 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 815D61F51C1F65B0005DB2A8 /* OpenGL.framework */; };
 		815D61F81C1F65B9005DB2A8 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 815D61F71C1F65B9005DB2A8 /* CoreVideo.framework */; };
@@ -158,6 +159,9 @@
 		81176DFA1C24D5580025EB6C /* stb_voxel_render.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = stb_voxel_render.h; path = stb/stb_voxel_render.h; sourceTree = "<group>"; };
 		81176DFB1C24D5580025EB6C /* stb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = stb.h; path = stb/stb.h; sourceTree = "<group>"; };
 		81176DFC1C24D5580025EB6C /* stretchy_buffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = stretchy_buffer.h; path = stb/stretchy_buffer.h; sourceTree = "<group>"; };
+		811D7C911C40CC9C00668735 /* tasks.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = tasks.hpp; path = tests/tasks.hpp; sourceTree = SOURCE_ROOT; };
+		811D7C931C4372AD00668735 /* gamepad_text_input.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = gamepad_text_input.cpp; path = src/modules/gamepad_input/gamepad_text_input.cpp; sourceTree = SOURCE_ROOT; };
+		811D7C941C4372AD00668735 /* gamepad_text_input.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = gamepad_text_input.hpp; path = src/modules/gamepad_input/gamepad_text_input.hpp; sourceTree = SOURCE_ROOT; };
 		815D61DF1C1F652A005DB2A8 /* GLSandbox.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GLSandbox.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		815D61ED1C1F652B005DB2A8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = GLSandbox/Info.plist; sourceTree = "<group>"; };
 		815D61F31C1F6574005DB2A8 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = src/main.cpp; sourceTree = SOURCE_ROOT; };
@@ -366,6 +370,15 @@
 			name = stb;
 			sourceTree = "<group>";
 		};
+		811D7C921C43728700668735 /* gamepadtextinput */ = {
+			isa = PBXGroup;
+			children = (
+				811D7C931C4372AD00668735 /* gamepad_text_input.cpp */,
+				811D7C941C4372AD00668735 /* gamepad_text_input.hpp */,
+			);
+			name = gamepadtextinput;
+			sourceTree = "<group>";
+		};
 		815D61D61C1F652A005DB2A8 = {
 			isa = PBXGroup;
 			children = (
@@ -404,6 +417,7 @@
 		815D62011C1F667F005DB2A8 /* src */ = {
 			isa = PBXGroup;
 			children = (
+				811D7C911C40CC9C00668735 /* tasks.hpp */,
 				815D62031C1F66B3005DB2A8 /* modules */,
 				815D62021C1F669E005DB2A8 /* common */,
 				815D61F31C1F6574005DB2A8 /* main.cpp */,
@@ -434,6 +448,7 @@
 		815D62031C1F66B3005DB2A8 /* modules */ = {
 			isa = PBXGroup;
 			children = (
+				811D7C921C43728700668735 /* gamepadtextinput */,
 				81AB419C1C2BEECF00151156 /* camera */,
 				81AB41851C2ABE5800151156 /* input_test */,
 				81AB41051C27CEC100151156 /* obj_viewer */,
@@ -804,6 +819,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				81AB41841C2A967800151156 /* input.cpp in Sources */,
+				811D7C951C4372AD00668735 /* gamepad_text_input.cpp in Sources */,
 				81176DFE1C24D5580025EB6C /* stb_vorbis.c in Sources */,
 				81AB410B1C27CF1A00151156 /* obj_viewer.cpp in Sources */,
 				81176DAC1C22325E0025EB6C /* gl_wrapper.cpp in Sources */,

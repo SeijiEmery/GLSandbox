@@ -92,6 +92,7 @@ Application::Application (const char * baseResourcePath)
     
     m_modules.loadModule("module-input-logger");
     m_modules.loadModule("module-flycam");
+    m_modules.loadModule("gamepad-input-test");
 }
 
 Application::~Application () {
