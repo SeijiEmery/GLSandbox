@@ -68,7 +68,7 @@ ObjViewer::ModelInstance::ModelInstance (const ResourceLoader::ObjData & data, S
     const auto & indices = data.shapes[0].mesh.indices;
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffers[0].handle); CHECK_GL_ERRORS();
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
-    numIndices = indices.size();
+    numIndices = (unsigned)indices.size();
     
     const auto & positions = data.shapes[0].mesh.positions;
     const auto & normals   = data.shapes[0].mesh.normals;

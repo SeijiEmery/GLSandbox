@@ -4410,7 +4410,7 @@ int stb_vorbis_decode_frame_pushdata(
          while (get8_packet(f) != EOP)
             if (f->eof) break;
          *samples = 0;
-         return f->stream - data;
+         return (int)(f->stream - data);
       }
       if (error == VORBIS_continued_packet_flag_invalid) {
          if (f->previous_length == 0) {
@@ -4420,7 +4420,7 @@ int stb_vorbis_decode_frame_pushdata(
             while (get8_packet(f) != EOP)
                if (f->eof) break;
             *samples = 0;
-            return f->stream - data;
+            return (int)(f->stream - data);
          }
       }
       // if we get an error while parsing, what to do?
@@ -4440,7 +4440,7 @@ int stb_vorbis_decode_frame_pushdata(
    if (channels) *channels = f->channels;
    *samples = len;
    *output = f->outputs;
-   return f->stream - data;
+   return (int)(f->stream - data);
 }
 
 stb_vorbis *stb_vorbis_open_pushdata(
@@ -4463,7 +4463,7 @@ stb_vorbis *stb_vorbis_open_pushdata(
    f = vorbis_alloc(&p);
    if (f) {
       *f = p;
-      *data_used = f->stream - data;
+      *data_used = (int)(f->stream - data);
       *error = 0;
       return f;
    } else {
@@ -4478,9 +4478,9 @@ unsigned int stb_vorbis_get_file_offset(stb_vorbis *f)
    #ifndef STB_VORBIS_NO_PUSHDATA_API
    if (f->push_mode) return 0;
    #endif
-   if (USE_MEMORY(f)) return f->stream - f->stream_start;
+   if (USE_MEMORY(f)) return (int)(f->stream - f->stream_start);
    #ifndef STB_VORBIS_NO_STDIO
-   return ftell(f->f) - f->f_start;
+   return (int)(ftell(f->f) - f->f_start);
    #endif
 }
 
@@ -4633,7 +4633,7 @@ static int seek_to_sample_coarse(stb_vorbis *f, uint32 sample_number)
    ProbedPage left, right, mid;
    int i, start_seg_with_known_loc, end_pos, page_start;
    uint32 delta, stream_length, padding;
-   double offset, bytes_per_sample;
+   double offset = 0.0, bytes_per_sample = 0.0;
    int probe = 0;
 
    // find the last page and validate the target sample
@@ -4976,7 +4976,7 @@ stb_vorbis * stb_vorbis_open_file_section(FILE *file, int close_on_free, int *er
    stb_vorbis *f, p;
    vorbis_init(&p, alloc);
    p.f = file;
-   p.f_start = ftell(file);
+   p.f_start = (int)ftell(file);
    p.stream_len   = length;
    p.close_on_free = close_on_free;
    if (start_decoder(&p)) {
@@ -4995,9 +4995,9 @@ stb_vorbis * stb_vorbis_open_file_section(FILE *file, int close_on_free, int *er
 stb_vorbis * stb_vorbis_open_file(FILE *file, int close_on_free, int *error, stb_vorbis_alloc *alloc)
 {
    unsigned int len, start;
-   start = ftell(file);
+   start = (int)ftell(file);
    fseek(file, 0, SEEK_END);
-   len = ftell(file) - start;
+   len = (int)ftell(file) - start;
    fseek(file, start, SEEK_SET);
    return stb_vorbis_open_file_section(file, close_on_free, error, alloc, len);
 }

@@ -22,10 +22,10 @@ m_onGamepadAxesUpdate(input->onGamepadAxesUpdate.connect([this](auto axes) {
     auto left  = glm::vec2(axes[input::AXIS_LX], axes[input::AXIS_LY]);
     auto right = glm::vec2(axes[input::AXIS_RX], axes[input::AXIS_RY]);
     
-    auto ltheta = glm::atan(left.y, left.x);
-    auto rtheta = glm::atan(right.y, right.x);
-    auto lr     = glm::length(left);
-    auto rr     = glm::length(right);
+//    auto ltheta = glm::atan(left.y, left.x);
+//    auto rtheta = glm::atan(right.y, right.x);
+//    auto lr     = glm::length(left);
+//    auto rr     = glm::length(right);
     
     auto constexpr LOGGING = false;
     
