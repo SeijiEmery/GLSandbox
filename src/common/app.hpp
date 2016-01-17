@@ -20,6 +20,8 @@
 #include "resources.hpp"
 #include "../modules/modules.hpp"
 
+#include "js/JSInstance.hpp"
+
 #include <stdexcept>
 
 namespace gl_sandbox {
@@ -41,7 +43,7 @@ struct AppEvents {
     typedef raii::Observer<>               AppTerminationObserver;
 };
 
-class Application {
+class Application : public JSSingleEngineInstance {
 public:
     Application (const char * baseResourcePath);
     ~Application ();

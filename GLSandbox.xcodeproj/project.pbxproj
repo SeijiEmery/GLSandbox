@@ -29,11 +29,13 @@
 		815D61F81C1F65B9005DB2A8 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 815D61F71C1F65B9005DB2A8 /* CoreVideo.framework */; };
 		815D61FA1C1F65BE005DB2A8 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 815D61F91C1F65BE005DB2A8 /* IOKit.framework */; };
 		815D61FC1C1F65C2005DB2A8 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 815D61FB1C1F65C2005DB2A8 /* Cocoa.framework */; };
-		815D61FF1C1F65E7005DB2A8 /* libGLEW.1.12.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 815D61FD1C1F65E7005DB2A8 /* libGLEW.1.12.0.dylib */; };
 		815D62001C1F65E7005DB2A8 /* libglfw3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 815D61FE1C1F65E7005DB2A8 /* libglfw3.a */; };
 		815D62091C1F670F005DB2A8 /* app.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 815D62071C1F670F005DB2A8 /* app.cpp */; settings = {ASSET_TAGS = (); }; };
 		815D620E1C1F7D9F005DB2A8 /* triangles.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 815D620C1C1F7D9F005DB2A8 /* triangles.cpp */; settings = {ASSET_TAGS = (); }; };
 		815D62111C1F7E42005DB2A8 /* modules.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 815D620F1C1F7E42005DB2A8 /* modules.cpp */; settings = {ASSET_TAGS = (); }; };
+		81A01BCD1C4B026E00E00897 /* libGLEW.1.13.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 81A01BCC1C4B026E00E00897 /* libGLEW.1.13.0.dylib */; };
+		81A01BCF1C4B02BF00E00897 /* libmozjs-.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 81A01BCE1C4B02BF00E00897 /* libmozjs-.dylib */; };
+		81A01BD31C4B02FF00E00897 /* JSInstance.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 81A01BD11C4B02FF00E00897 /* JSInstance.cpp */; settings = {ASSET_TAGS = (); }; };
 		81AB41021C260CAA00151156 /* ubo_test.fs in Resources */ = {isa = PBXBuildFile; fileRef = 81AB41011C260CAA00151156 /* ubo_test.fs */; settings = {ASSET_TAGS = (); }; };
 		81AB41041C260CC800151156 /* ubo_test.vs in Resources */ = {isa = PBXBuildFile; fileRef = 81AB41031C260CC800151156 /* ubo_test.vs */; settings = {ASSET_TAGS = (); }; };
 		81AB410B1C27CF1A00151156 /* obj_viewer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 81AB41091C27CF1A00151156 /* obj_viewer.cpp */; settings = {ASSET_TAGS = (); }; };
@@ -159,7 +161,6 @@
 		81176DFA1C24D5580025EB6C /* stb_voxel_render.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = stb_voxel_render.h; path = stb/stb_voxel_render.h; sourceTree = "<group>"; };
 		81176DFB1C24D5580025EB6C /* stb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = stb.h; path = stb/stb.h; sourceTree = "<group>"; };
 		81176DFC1C24D5580025EB6C /* stretchy_buffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = stretchy_buffer.h; path = stb/stretchy_buffer.h; sourceTree = "<group>"; };
-		811D7C911C40CC9C00668735 /* tasks.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = tasks.hpp; path = tests/tasks.hpp; sourceTree = SOURCE_ROOT; };
 		811D7C931C4372AD00668735 /* gamepad_text_input.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = gamepad_text_input.cpp; path = src/modules/gamepad_input/gamepad_text_input.cpp; sourceTree = SOURCE_ROOT; };
 		811D7C941C4372AD00668735 /* gamepad_text_input.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = gamepad_text_input.hpp; path = src/modules/gamepad_input/gamepad_text_input.hpp; sourceTree = SOURCE_ROOT; };
 		815D61DF1C1F652A005DB2A8 /* GLSandbox.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GLSandbox.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -178,6 +179,10 @@
 		815D620D1C1F7D9F005DB2A8 /* triangles.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = triangles.hpp; path = src/modules/triangles/triangles.hpp; sourceTree = SOURCE_ROOT; };
 		815D620F1C1F7E42005DB2A8 /* modules.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = modules.cpp; path = src/modules/modules.cpp; sourceTree = SOURCE_ROOT; };
 		815D62101C1F7E42005DB2A8 /* modules.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = modules.hpp; path = src/modules/modules.hpp; sourceTree = SOURCE_ROOT; };
+		81A01BCC1C4B026E00E00897 /* libGLEW.1.13.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libGLEW.1.13.0.dylib; path = ../../../../usr/local/Cellar/glew/1.13.0/lib/libGLEW.1.13.0.dylib; sourceTree = "<group>"; };
+		81A01BCE1C4B02BF00E00897 /* libmozjs-.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libmozjs-.dylib"; path = "../../../../usr/local/lib/libmozjs-.dylib"; sourceTree = "<group>"; };
+		81A01BD11C4B02FF00E00897 /* JSInstance.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = JSInstance.cpp; path = src/common/js/JSInstance.cpp; sourceTree = SOURCE_ROOT; };
+		81A01BD21C4B02FF00E00897 /* JSInstance.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = JSInstance.hpp; path = src/common/js/JSInstance.hpp; sourceTree = SOURCE_ROOT; };
 		81AB41011C260CAA00151156 /* ubo_test.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = ubo_test.fs; path = shaders/modules/ubo_test/ubo_test.fs; sourceTree = SOURCE_ROOT; };
 		81AB41031C260CC800151156 /* ubo_test.vs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = ubo_test.vs; path = shaders/modules/ubo_test/ubo_test.vs; sourceTree = SOURCE_ROOT; };
 		81AB41091C27CF1A00151156 /* obj_viewer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = obj_viewer.cpp; path = src/modules/obj_viewer/obj_viewer.cpp; sourceTree = SOURCE_ROOT; };
@@ -260,13 +265,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				81A01BCF1C4B02BF00E00897 /* libmozjs-.dylib in Frameworks */,
+				81A01BCD1C4B026E00E00897 /* libGLEW.1.13.0.dylib in Frameworks */,
 				81176D981C1FE4B80025EB6C /* libboost_filesystem.dylib in Frameworks */,
 				81176D991C1FE4B80025EB6C /* libboost_iostreams.a in Frameworks */,
 				81176D9A1C1FE4B80025EB6C /* libboost_iostreams.dylib in Frameworks */,
 				81176D9B1C1FE4B80025EB6C /* libboost_system.a in Frameworks */,
 				81176D9C1C1FE4B80025EB6C /* libboost_system.dylib in Frameworks */,
 				81176D921C1FE43D0025EB6C /* libboost_filesystem.a in Frameworks */,
-				815D61FF1C1F65E7005DB2A8 /* libGLEW.1.12.0.dylib in Frameworks */,
 				815D62001C1F65E7005DB2A8 /* libglfw3.a in Frameworks */,
 				815D61FC1C1F65C2005DB2A8 /* Cocoa.framework in Frameworks */,
 				815D61FA1C1F65BE005DB2A8 /* IOKit.framework in Frameworks */,
@@ -382,6 +388,8 @@
 		815D61D61C1F652A005DB2A8 = {
 			isa = PBXGroup;
 			children = (
+				81A01BCE1C4B02BF00E00897 /* libmozjs-.dylib */,
+				81A01BCC1C4B026E00E00897 /* libGLEW.1.13.0.dylib */,
 				81176D931C1FE4B80025EB6C /* libboost_filesystem.dylib */,
 				81176D941C1FE4B80025EB6C /* libboost_iostreams.a */,
 				81176D951C1FE4B80025EB6C /* libboost_iostreams.dylib */,
@@ -417,7 +425,6 @@
 		815D62011C1F667F005DB2A8 /* src */ = {
 			isa = PBXGroup;
 			children = (
-				811D7C911C40CC9C00668735 /* tasks.hpp */,
 				815D62031C1F66B3005DB2A8 /* modules */,
 				815D62021C1F669E005DB2A8 /* common */,
 				815D61F31C1F6574005DB2A8 /* main.cpp */,
@@ -429,6 +436,7 @@
 		815D62021C1F669E005DB2A8 /* common */ = {
 			isa = PBXGroup;
 			children = (
+				81A01BD01C4B02DA00E00897 /* js */,
 				81176D8D1C1FC9850025EB6C /* gl */,
 				815D62071C1F670F005DB2A8 /* app.cpp */,
 				815D62081C1F670F005DB2A8 /* app.hpp */,
@@ -496,6 +504,15 @@
 				815D620C1C1F7D9F005DB2A8 /* triangles.cpp */,
 			);
 			name = triangles;
+			sourceTree = "<group>";
+		};
+		81A01BD01C4B02DA00E00897 /* js */ = {
+			isa = PBXGroup;
+			children = (
+				81A01BD11C4B02FF00E00897 /* JSInstance.cpp */,
+				81A01BD21C4B02FF00E00897 /* JSInstance.hpp */,
+			);
+			name = js;
 			sourceTree = "<group>";
 		};
 		81AB41051C27CEC100151156 /* obj_viewer */ = {
@@ -835,6 +852,7 @@
 				81176DFD1C24D5580025EB6C /* README.md in Sources */,
 				815D62091C1F670F005DB2A8 /* app.cpp in Sources */,
 				81176D901C1FCBEF0025EB6C /* resources.cpp in Sources */,
+				81A01BD31C4B02FF00E00897 /* JSInstance.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -950,13 +968,17 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_ENABLE_CPP_RTTI = NO;
 				GCC_THREADSAFE_STATICS = YES;
-				HEADER_SEARCH_PATHS = /usr/local/include;
+				HEADER_SEARCH_PATHS = (
+					/usr/local/include,
+					"/usr/local/include/mozjs-",
+				);
 				INFOPLIST_FILE = GLSandbox/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					/usr/local/lib,
 					/usr/local/Cellar/boost/1.58.0/lib,
+					/usr/local/Cellar/glew/1.13.0/lib,
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "n-a.GLSandbox";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -971,13 +993,17 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_ENABLE_CPP_RTTI = NO;
 				GCC_THREADSAFE_STATICS = YES;
-				HEADER_SEARCH_PATHS = /usr/local/include;
+				HEADER_SEARCH_PATHS = (
+					/usr/local/include,
+					"/usr/local/include/mozjs-",
+				);
 				INFOPLIST_FILE = GLSandbox/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					/usr/local/lib,
 					/usr/local/Cellar/boost/1.58.0/lib,
+					/usr/local/Cellar/glew/1.13.0/lib,
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "n-a.GLSandbox";
 				PRODUCT_NAME = "$(TARGET_NAME)";
