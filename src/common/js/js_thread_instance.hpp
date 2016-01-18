@@ -24,8 +24,9 @@ using namespace JS;
 
 namespace gl_sandbox {
     
-namespace scratch2 {
-    
+
+// Provides an event loop, and one-directional dispatch system to run arbitrary callbacks on
+// a target worker thread. Used to implement multithreaded scripts.
 template <typename T>
 struct ThreadedDispatchQueue {
 protected:
@@ -81,118 +82,7 @@ public:
         return m_isRunning;
     }
 };
-    
-    
-}; // namespace scratch2
-    
-    
-    
-    
-    
-namespace scratch1 {
-    
-//template <typename T>
-//struct ThreadSafeQueue {
-//protected:
-//    std::queue<T> m_queue;
-//    mutable std::mutex m_mutex;
-//    std::condition_variable m_cv;
-//    
-//public:
-//    void enqueue (T v) {
-//        std::lock_guard<std::mutex> lock (m_mutex);
-//        m_queue.push(v);
-//        m_cv.notify_one();
-//    }
-//    T dequeue () {
-//        std::unique_lock<std::mutex> lock (m_mutex);
-//        while (m_queue.empty()) {
-//            m_cv.wait(lock);
-//        }
-//        auto v = m_queue.front();
-//        m_queue.pop();
-//        return v;
-//    }
-//};
-//
-    
-// Provides an event loop, and one-directional dispatch system to run arbitrary callbacks on
-// a target worker thread. Used to implement multithreaded scripts.
-template <typename T>
-struct ThreadedDispatchQueue {
-protected:
-    T* m_target = nullptr;
-    std::queue<std::function<void(T&)>> m_queue;
-    
-    std::mutex m_queueMutex;
-    std::mutex m_notifyMutex;
-    std::condition_variable m_cv;
-    bool m_isPaused  = false;
-    std::atomic<bool> m_isRunning { false };
-    
-public:
-    // Call from worker thread
-    void setDispatchTarget (T* target) {
-        m_target = target;
-    }
-    
-    // Call from worker thread. Does not terminate until kill() is called.
-    void run () {
-        assert(!m_isRunning);
-        
-        m_queueMutex.lock();
-        m_isRunning = true;
-        m_queue.clear();
-        
-        assert(m_target != nullptr);
-        
-        do {
-            while (!m_queue.empty() && m_isRunning) {
-                auto next = m_queue.front(); m_queue.pop();
-                m_queueMutex.unlock();
-                
-                next(*m_target);
-                m_queueMutex.lock();
-            }
-            if (m_isRunning) {
-                m_isPaused = true;
-                m_queueMutex.unlock();
-                
-                std::unique_lock<std::mutex> lock (m_notifyMutex);
-                m_cv.wait(lock);
-                
-                m_queueMutex.lock();
-                m_isPaused = false;
-            }
-        } while (m_isRunning);
-        m_queueMutex.unlock();
-    }
-    
-    // Call from main thread
-    void call (std::function<void(T&)> fcn) {
-        m_queueMutex.lock();
-        m_queue.push(fcn);
-        m_queueMutex.unlock();
-        if (m_isPaused)
-            m_cv.notify_all();
-    }
-    
-    // Call from main thread
-    void kill () {
-        m_queueMutex.lock();
-        m_isRunning = false;
-        m_queueMutex.unlock();
-        if (m_isPaused)
-            m_cv.notify_all();
-    }
-    bool isRunning () const {
-        return m_isRunning;
-    }
-    
-    ~ThreadedDispatchQueue () {
-        kill();
-    }
-};
+
 
 // Simple wrapper class that is responsible for initializing, managing, and interacting with a
 // JSRuntime + JSContext instance (mozjs/spidermonkey). Does not know / care about threads;
@@ -233,8 +123,16 @@ public:
             throw new std::runtime_error("js instance failed to create global object");
     }
     
+    JSPlatform (const JSPlatform &) = delete;
+    JSPlatform & operator= (const JSPlatform &) = delete;
+    
+    ~JSPlatform () {
+        JS_DestroyContext(m_context);
+        JS_DestroyRuntime(m_runtime);
+    }
+    
     void eval (const std::string & contents) {
-        
+        std::cout << "Called eval on \"" << contents << "\"\n";
     }
 };
     
@@ -280,47 +178,6 @@ public:
         m_dispatchQueue.kill();
     }
 };
-    
-}; // namespace scratch1
-    
-    
-    
-struct JSThreadWorker : public ThreadWorker<JSThreadWorker> {
-    JSThreadWorker () : m_global(JS::NullHandleValue) {}
-    ~JSThreadWorker () {}
-    
-    JSThreadWorker (const JSThreadWorker &) = delete;
-    JSThreadWorker (JSThreadWorker &&) = default;
-    JSThreadWorker & operator= (const JSThreadWorker &) = delete;
-    JSThreadWorker & operator= (JSThreadWorker &&) = default;
-    
-    void onThreadBegin ();
-    void onThreadExit  ();
-    void onThreadException (const std::runtime_error & e);
-    
-    void eval (const std::string & contents);
-protected:
-    JSRuntime * m_runtime = nullptr;
-    JSContext * m_context = nullptr;
-    RootedObject m_global;
-};
-
-struct JSThreadInstance {
-    JSThreadInstance ()
-        : m_thread([&](){ m_worker(); }) {}
-    ~JSThreadInstance () {
-        m_worker.kill();
-    }
-    void doEval (const std::string & contents) {
-        m_worker.eval(contents);
-    }
-protected:
-    JSThreadWorker m_worker;
-    std::thread    m_thread;
-};
-    
-    
-    
     
 }; // namespace gl_sandbox
 

@@ -13,7 +13,7 @@ using namespace gl_sandbox;
 JSTestModule::JSTestModule () {
     std::cout << "loading jstest module\n";
     
-    m_jsInstance.doEval("print();print(2+2==5)");
+    m_jsInstance.eval("print();print(2+2==5)");
 }
 JSTestModule::~JSTestModule () {
     std::cout << "killing jstest module\n";

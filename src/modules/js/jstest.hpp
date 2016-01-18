@@ -25,7 +25,7 @@ public:
     
     void drawFrame () {}
 protected:
-    JSThreadInstance m_jsInstance;
+    JSThreadedInstance m_jsInstance;
 };
 
 }; // namespace gl_sandbox
