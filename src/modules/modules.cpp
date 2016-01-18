@@ -12,6 +12,7 @@
 #include "input_test/input_test.hpp"
 #include "camera/flycam.hpp"
 #include "gamepad_input/gamepad_text_input.hpp"
+#include "js/jstest.hpp"
 
 #include "modules.hpp"
 #include "app.hpp"
@@ -38,6 +39,7 @@ ModuleInterface::ModuleInterface () :
         ADD_MODULE(InputTestModule),
         ADD_MODULE(CameraModule),
         ADD_MODULE(GamepadTextInputModule),
+        ADD_MODULE(JSTestModule),
     }
 {
     // Do other initialization...

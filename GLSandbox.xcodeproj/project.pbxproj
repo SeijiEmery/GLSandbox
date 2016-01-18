@@ -21,7 +21,6 @@
 		81176D9C1C1FE4B80025EB6C /* libboost_system.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 81176D971C1FE4B80025EB6C /* libboost_system.dylib */; };
 		81176DAC1C22325E0025EB6C /* gl_wrapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 81176DAA1C22325E0025EB6C /* gl_wrapper.cpp */; settings = {ASSET_TAGS = (); }; };
 		81176DB01C229E3E0025EB6C /* ubo_test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 81176DAE1C229E3D0025EB6C /* ubo_test.cpp */; settings = {ASSET_TAGS = (); }; };
-		81176DFD1C24D5580025EB6C /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = 81176DEA1C24D5580025EB6C /* README.md */; settings = {ASSET_TAGS = (); }; };
 		81176DFE1C24D5580025EB6C /* stb_vorbis.c in Sources */ = {isa = PBXBuildFile; fileRef = 81176DF91C24D5580025EB6C /* stb_vorbis.c */; settings = {ASSET_TAGS = (); }; };
 		811D7C951C4372AD00668735 /* gamepad_text_input.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 811D7C931C4372AD00668735 /* gamepad_text_input.cpp */; settings = {ASSET_TAGS = (); }; };
 		815D61F41C1F6574005DB2A8 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 815D61F31C1F6574005DB2A8 /* main.cpp */; settings = {ASSET_TAGS = (); }; };
@@ -36,6 +35,9 @@
 		81A01BCD1C4B026E00E00897 /* libGLEW.1.13.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 81A01BCC1C4B026E00E00897 /* libGLEW.1.13.0.dylib */; };
 		81A01BCF1C4B02BF00E00897 /* libmozjs-.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 81A01BCE1C4B02BF00E00897 /* libmozjs-.dylib */; };
 		81A01BD31C4B02FF00E00897 /* JSInstance.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 81A01BD11C4B02FF00E00897 /* JSInstance.cpp */; settings = {ASSET_TAGS = (); }; };
+		81A01BD61C4B190100E00897 /* thread_worker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 81A01BD41C4B190100E00897 /* thread_worker.cpp */; settings = {ASSET_TAGS = (); }; };
+		81A01BD91C4B2A9E00E00897 /* js_thread_instance.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 81A01BD71C4B2A9E00E00897 /* js_thread_instance.cpp */; settings = {ASSET_TAGS = (); }; };
+		81A01BDD1C4B993D00E00897 /* jstest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 81A01BDB1C4B993D00E00897 /* jstest.cpp */; settings = {ASSET_TAGS = (); }; };
 		81AB41021C260CAA00151156 /* ubo_test.fs in Resources */ = {isa = PBXBuildFile; fileRef = 81AB41011C260CAA00151156 /* ubo_test.fs */; settings = {ASSET_TAGS = (); }; };
 		81AB41041C260CC800151156 /* ubo_test.vs in Resources */ = {isa = PBXBuildFile; fileRef = 81AB41031C260CC800151156 /* ubo_test.vs */; settings = {ASSET_TAGS = (); }; };
 		81AB410B1C27CF1A00151156 /* obj_viewer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 81AB41091C27CF1A00151156 /* obj_viewer.cpp */; settings = {ASSET_TAGS = (); }; };
@@ -183,6 +185,12 @@
 		81A01BCE1C4B02BF00E00897 /* libmozjs-.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libmozjs-.dylib"; path = "../../../../usr/local/lib/libmozjs-.dylib"; sourceTree = "<group>"; };
 		81A01BD11C4B02FF00E00897 /* JSInstance.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = JSInstance.cpp; path = src/common/js/JSInstance.cpp; sourceTree = SOURCE_ROOT; };
 		81A01BD21C4B02FF00E00897 /* JSInstance.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = JSInstance.hpp; path = src/common/js/JSInstance.hpp; sourceTree = SOURCE_ROOT; };
+		81A01BD41C4B190100E00897 /* thread_worker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = thread_worker.cpp; path = src/common/thread_worker.cpp; sourceTree = SOURCE_ROOT; };
+		81A01BD51C4B190100E00897 /* thread_worker.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = thread_worker.hpp; path = src/common/thread_worker.hpp; sourceTree = SOURCE_ROOT; };
+		81A01BD71C4B2A9E00E00897 /* js_thread_instance.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = js_thread_instance.cpp; path = src/common/js/js_thread_instance.cpp; sourceTree = SOURCE_ROOT; };
+		81A01BD81C4B2A9E00E00897 /* js_thread_instance.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = js_thread_instance.hpp; path = src/common/js/js_thread_instance.hpp; sourceTree = SOURCE_ROOT; };
+		81A01BDB1C4B993D00E00897 /* jstest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = jstest.cpp; path = src/modules/js/jstest.cpp; sourceTree = SOURCE_ROOT; };
+		81A01BDC1C4B993D00E00897 /* jstest.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = jstest.hpp; path = src/modules/js/jstest.hpp; sourceTree = SOURCE_ROOT; };
 		81AB41011C260CAA00151156 /* ubo_test.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = ubo_test.fs; path = shaders/modules/ubo_test/ubo_test.fs; sourceTree = SOURCE_ROOT; };
 		81AB41031C260CC800151156 /* ubo_test.vs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = ubo_test.vs; path = shaders/modules/ubo_test/ubo_test.vs; sourceTree = SOURCE_ROOT; };
 		81AB41091C27CF1A00151156 /* obj_viewer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = obj_viewer.cpp; path = src/modules/obj_viewer/obj_viewer.cpp; sourceTree = SOURCE_ROOT; };
@@ -449,6 +457,8 @@
 				81AB41831C2A967800151156 /* input.hpp */,
 				81AB41981C2B916600151156 /* module_events.cpp */,
 				81AB41991C2B916600151156 /* module_events.hpp */,
+				81A01BD41C4B190100E00897 /* thread_worker.cpp */,
+				81A01BD51C4B190100E00897 /* thread_worker.hpp */,
 			);
 			name = common;
 			sourceTree = "<group>";
@@ -456,6 +466,7 @@
 		815D62031C1F66B3005DB2A8 /* modules */ = {
 			isa = PBXGroup;
 			children = (
+				81A01BDA1C4B992400E00897 /* js */,
 				811D7C921C43728700668735 /* gamepadtextinput */,
 				81AB419C1C2BEECF00151156 /* camera */,
 				81AB41851C2ABE5800151156 /* input_test */,
@@ -511,6 +522,17 @@
 			children = (
 				81A01BD11C4B02FF00E00897 /* JSInstance.cpp */,
 				81A01BD21C4B02FF00E00897 /* JSInstance.hpp */,
+				81A01BD71C4B2A9E00E00897 /* js_thread_instance.cpp */,
+				81A01BD81C4B2A9E00E00897 /* js_thread_instance.hpp */,
+			);
+			name = js;
+			sourceTree = "<group>";
+		};
+		81A01BDA1C4B992400E00897 /* js */ = {
+			isa = PBXGroup;
+			children = (
+				81A01BDB1C4B993D00E00897 /* jstest.cpp */,
+				81A01BDC1C4B993D00E00897 /* jstest.hpp */,
 			);
 			name = js;
 			sourceTree = "<group>";
@@ -835,24 +857,26 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				81AB41841C2A967800151156 /* input.cpp in Sources */,
-				811D7C951C4372AD00668735 /* gamepad_text_input.cpp in Sources */,
-				81176DFE1C24D5580025EB6C /* stb_vorbis.c in Sources */,
-				81AB410B1C27CF1A00151156 /* obj_viewer.cpp in Sources */,
 				81176DAC1C22325E0025EB6C /* gl_wrapper.cpp in Sources */,
+				81176D8A1C1FC9640025EB6C /* gl_shaders.cpp in Sources */,
+				81AB417B1C28B4E500151156 /* camera.cpp in Sources */,
+				81A01BD61C4B190100E00897 /* thread_worker.cpp in Sources */,
+				81AB41841C2A967800151156 /* input.cpp in Sources */,
+				81AB419A1C2B916600151156 /* module_events.cpp in Sources */,
+				81176DFE1C24D5580025EB6C /* stb_vorbis.c in Sources */,
+				811D7C951C4372AD00668735 /* gamepad_text_input.cpp in Sources */,
+				81AB410B1C27CF1A00151156 /* obj_viewer.cpp in Sources */,
 				81AB41881C2ABE8200151156 /* input_test.cpp in Sources */,
 				81AB419F1C2BEEF500151156 /* flycam.cpp in Sources */,
-				81AB419A1C2B916600151156 /* module_events.cpp in Sources */,
-				815D61F41C1F6574005DB2A8 /* main.cpp in Sources */,
-				81AB417B1C28B4E500151156 /* camera.cpp in Sources */,
 				81176DB01C229E3E0025EB6C /* ubo_test.cpp in Sources */,
-				815D62111C1F7E42005DB2A8 /* modules.cpp in Sources */,
-				81176D8A1C1FC9640025EB6C /* gl_shaders.cpp in Sources */,
 				815D620E1C1F7D9F005DB2A8 /* triangles.cpp in Sources */,
-				81176DFD1C24D5580025EB6C /* README.md in Sources */,
+				815D62111C1F7E42005DB2A8 /* modules.cpp in Sources */,
 				815D62091C1F670F005DB2A8 /* app.cpp in Sources */,
+				815D61F41C1F6574005DB2A8 /* main.cpp in Sources */,
 				81176D901C1FCBEF0025EB6C /* resources.cpp in Sources */,
 				81A01BD31C4B02FF00E00897 /* JSInstance.cpp in Sources */,
+				81A01BD91C4B2A9E00E00897 /* js_thread_instance.cpp in Sources */,
+				81A01BDD1C4B993D00E00897 /* jstest.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

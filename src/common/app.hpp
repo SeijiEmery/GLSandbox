@@ -20,6 +20,8 @@
 #include "resources.hpp"
 #include "../modules/modules.hpp"
 
+#include "thread_worker.hpp"
+#include "js/js_thread_instance.hpp"
 #include "js/JSInstance.hpp"
 
 #include <stdexcept>
