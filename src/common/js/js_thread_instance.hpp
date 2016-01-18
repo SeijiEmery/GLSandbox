@@ -18,12 +18,103 @@
 #include <iostream>
 #include <cassert>
 
+#include <boost/lockfree/queue.hpp>
+
 using namespace JS;
 
 namespace gl_sandbox {
     
+namespace scratch2 {
+    
+template <typename T>
+struct ThreadedDispatchQueue {
+protected:
+    typedef std::function<void(T&)> message_type;
+    typedef boost::lockfree::queue<message_type> message_queue;
+    
+    T * m_target = nullptr;
+    message_queue m_queue;
+    
+    std::condition_variable m_cv;
+    std::mutex m_mutex;
+    std::atomic<bool> m_isRunning { false };
+    std::atomic<bool> m_isPaused  { false };
+    
+public:
+    ThreadedDispatchQueue () {}
+    ~ThreadedDispatchQueue () { kill(); }
+    
+    ThreadedDispatchQueue (const ThreadedDispatchQueue &) = delete;
+    ThreadedDispatchQueue & operator= (const ThreadedDispatchQueue &) = delete;
+    
+    void setDispatchTarget (T * target) {
+        m_target = target;
+    }
+    void run () {
+        assert(!m_isRunning);
+        m_isRunning = true;
+        m_queue.consume_all([](T &) {}); // clear queue
+        do {
+            while (m_isRunning && !m_queue.empty()) {
+                m_queue.consume_one([=](T & task) {
+                    task(*m_target);
+                });
+            }
+            std::unique_lock<std::mutex> lock (m_mutex);
+            m_isPaused = true;
+            while (m_isRunning && m_queue.empty())
+                m_cv.wait(lock);
+            m_isPaused = false;
+        } while (m_isRunning);
+    }
+    void kill () {
+        m_isRunning = false;
+        if (m_isPaused)
+            m_cv.notify_one();
+    }
+    void call (message_type fcn) {
+        m_queue.push(fcn);
+        if (m_isPaused)
+            m_cv.notify_one();
+    }
+    bool isRunning () const {
+        return m_isRunning;
+    }
+};
+    
+    
+}; // namespace scratch2
+    
+    
+    
+    
+    
 namespace scratch1 {
     
+//template <typename T>
+//struct ThreadSafeQueue {
+//protected:
+//    std::queue<T> m_queue;
+//    mutable std::mutex m_mutex;
+//    std::condition_variable m_cv;
+//    
+//public:
+//    void enqueue (T v) {
+//        std::lock_guard<std::mutex> lock (m_mutex);
+//        m_queue.push(v);
+//        m_cv.notify_one();
+//    }
+//    T dequeue () {
+//        std::unique_lock<std::mutex> lock (m_mutex);
+//        while (m_queue.empty()) {
+//            m_cv.wait(lock);
+//        }
+//        auto v = m_queue.front();
+//        m_queue.pop();
+//        return v;
+//    }
+//};
+//
     
 // Provides an event loop, and one-directional dispatch system to run arbitrary callbacks on
 // a target worker thread. Used to implement multithreaded scripts.
@@ -32,6 +123,7 @@ struct ThreadedDispatchQueue {
 protected:
     T* m_target = nullptr;
     std::queue<std::function<void(T&)>> m_queue;
+    
     std::mutex m_queueMutex;
     std::mutex m_notifyMutex;
     std::condition_variable m_cv;
@@ -67,7 +159,7 @@ public:
                 m_queueMutex.unlock();
                 
                 std::unique_lock<std::mutex> lock (m_notifyMutex);
-                m_cv.wait(m_notifyMutex, lock);
+                m_cv.wait(lock);
                 
                 m_queueMutex.lock();
                 m_isPaused = false;
@@ -92,6 +184,9 @@ public:
         m_queueMutex.unlock();
         if (m_isPaused)
             m_cv.notify_all();
+    }
+    bool isRunning () const {
+        return m_isRunning;
     }
     
     ~ThreadedDispatchQueue () {
@@ -147,7 +242,7 @@ public:
 // with it using a dispatch queue and callback objects.
 struct JSThreadedInstance {
 protected:
-    ThreadedDispatchQueue<JSPlatform> m_queue;
+    ThreadedDispatchQueue<JSPlatform> m_dispatchQueue;
     std::thread m_thread;
     
 public:
@@ -159,21 +254,30 @@ public:
         return [=] () {
             try {
                 JSPlatform platform;
-                m_queue.setDispatchTarget(&platform);
-                m_queue.run();
+                m_dispatchQueue.setDispatchTarget(&platform);
+                m_dispatchQueue.run();
             } catch (const std::runtime_error & e) {
-                std:cout << "JS worker thread failed with exception:\n\t" << e.what() << std::endl;
+                std::cout << "JS worker thread failed with exception:\n\t" << e.what() << std::endl;
             }
         };
     }
+#define RUN_ON_WORKER_THREAD m_dispatchQueue.call([=](JSPlatform &platform)
     
     void eval (const std::string & contents) {
-        m_queue.call([=](JSPlatform & platform) {
+        RUN_ON_WORKER_THREAD {
             platform.eval(contents);
         });
     }
+    
+#undef RUN_ON_WORKER_THREAD
+    
+//    void eval (const std::string & contents) {
+//        m_queue.call([=](JSPlatform & platform) {
+//            platform.eval(contents);
+//        });
+//    }
     void kill () {
-        m_queue.kill();
+        m_dispatchQueue.kill();
     }
 };
     
