@@ -31,7 +31,7 @@ template <typename T>
 struct ThreadedDispatchQueue {
 protected:
     typedef std::function<void(T&)> message_type;
-    typedef boost::lockfree::queue<message_type> message_queue;
+    typedef boost::lockfree::queue<message_type*> message_queue;
     
     T * m_target = nullptr;
     message_queue m_queue;
@@ -54,12 +54,16 @@ public:
     void run () {
         assert(!m_isRunning);
         m_isRunning = true;
-        m_queue.consume_all([](T &) {}); // clear queue
+        m_queue.consume_all([](message_type * task) { delete task; }); // clear queue
         do {
             while (m_isRunning && !m_queue.empty()) {
-                m_queue.consume_one([=](T & task) {
-                    task(*m_target);
-                });
+                message_type * task;
+                m_queue.pop(task);
+                (*task)(*m_target);
+                delete task;
+//                m_queue.consume_one([=](T & task) {
+//                    task(*m_target);
+//                });
             }
             std::unique_lock<std::mutex> lock (m_mutex);
             m_isPaused = true;
@@ -74,7 +78,7 @@ public:
             m_cv.notify_one();
     }
     void call (message_type fcn) {
-        m_queue.push(fcn);
+        m_queue.push(new message_type(fcn));
         if (m_isPaused)
             m_cv.notify_one();
     }
@@ -102,11 +106,6 @@ private:
         return cx;
     }
     
-    static const constexpr JSClass g_globalClass = {
-        "global",
-        JSCLASS_GLOBAL_FLAGS
-    };
-    
 protected:
     JSRuntime * m_runtime;
     JSContext * m_context;
@@ -118,7 +117,12 @@ public:
         m_context(createContextOrThrow(m_runtime, "Failed to create js context")),
         m_global(m_context)
     {
-        m_global = JS_NewGlobalObject(m_context, &g_globalClass, nullptr, JS::DontFireOnNewGlobalHook);
+        static const JSClass globalClass = {
+            "global",
+            JSCLASS_GLOBAL_FLAGS
+        };
+        
+        m_global = JS_NewGlobalObject(m_context, &globalClass, nullptr, JS::DontFireOnNewGlobalHook);
         if (!m_global)
             throw new std::runtime_error("js instance failed to create global object");
     }
