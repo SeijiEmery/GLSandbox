@@ -1,0 +1,12 @@
+
+
+define('utils.Class', [], function () {
+	
+	
+
+
+
+})
+
+
+
