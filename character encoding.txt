@@ -1,0 +1,156 @@
+Character encoding
+
+Problem:
+- Unicode support essential (and will be displaying text via gl using utf8 + fonts), but also problematic
+- unicode is terrible for string algorithms (variable-length encoding), unless using utf32
+- we need super-efficient string algorithms to implement stuff like fuzzy search, etc
+- and won't be using utf32 b/c size
+
+Solution:
+- Create our own encoding!
+- Namely, a fixed size 8 or 16 bit character encoding that stores _unique_ packed unicode characters 
+- '\0', '\n', '\t', and ascii letters, digits, and symbols packed into first 98 values
+- we don't care about other ascii control codes, so we ignore them and assign them to a special unknown value (0x1)
+- remaining values store unicode code points, with a lookup table to decode them back
+
+Where this gets complicated:
+- We want our own string implementation, b/c reasons (multiple encodings, lots of cached stuff, etc)
+- Thankfully, implementing that should be pretty straightforward in lua (operator overloading ^^)
+- Taking a string and displaying it on screen will nevertheless be quite complicated (from lua)
+- For example, suppose we want to display a filterable list of string entries on screen:
+	- The string list needs to be converted to our FixedSizedString impl, from whatever they
+	  were encoded as. Ideally they should share the same string buffer.
+	- The query string needs to be converted
+	- We call / request a fuzzy match operation on the list + querry string, which should give us
+	  a list of matched string indices
+	- We create a text renderer object (or multiple objects?), and tell it to render the strings
+	  from the list that have been matched.
+	- In the background, this means we:
+		- convert the matched strings to utf8 (in another buffer)
+		- create quads / geometry buffers to draw the strings, maybe culling non-visible
+		- draw the buffers to the ui fbo each repaint
+		- blit the ui each frame to display the text
+	- Additionally, we probably want something like a scrolling list view, a text search box, etc.,
+	  which means creating more ui stuff and controls.
+	- When the user types in the search box + changes the query string:
+		- update the search box (assuming text is already utf8, re-render buffers + repaint)
+		- re-request the fuzzy match operation
+		- re-encode the matched text to utf8
+		- re-render the utf8 buffers to geometry, and re-cull if necessary
+		- repaint the new buffers (probably using gl scissor)
+	- When the user scrolls up / down (assuming more results than visible in the display pane)
+		- update scroll position
+		- cull text, possibly rebuilding / updating the geometry buffers
+		- repaint
+		- and since we want smooth scrolling we'll probably be doing this a lot
+		  (though most ops are cached -- smooth scrolling might mean repaint every frame, but it
+		   should only rebuild / update geometry every n frames)
+- On the plus side, the heavy amount of caching + lazy evaluation should mean that we'll have a pretty
+  efficient ui implementation, and super-fast string operations (with maybe a few frames of latency)
+
+==========================================
+   IMPL
+==========================================
+
+Fixed-size string
+    Fixed size wstring encoding that re-encodes cached unicode strings for fast string operations
+    - Ascii chars are packed into 0x00-0x62
+    - All other unicode chars are stored in a hashtable and dynamically given an encoding
+      when encountered
+retain:
+	0x00 '\0'  => 0x00
+	UNKNOWN    => 0x01
+	0x?? '\n'  => 0x02
+	0x11 '\t'  => 0x03
+	0x20 ' '   => 0x04
+	0x20 - 0x7E  =>  0x04 - 0x62
+
+	0x64-0xFF  => other unicode encoded characters (procedural)
+
+decode:
+	decoded = encoded >= 4 ?
+				(encoded > 98 ?
+					encoding_tbl[encoded - 98] : // (variable length)
+					encoded + 16) :
+				(encoded < 2 ?
+					(encoded == 0 ? '\0' : ...?) :
+					(encoded == 2 ? '\n' : '\t')
+
+encode:
+	if codepoint > U+00007f
+		if not encoding[codepoint]
+			encoding[codepoint] = encoding->next++
+		return encoding[codepoint]
+	if codepoint >= U+000020 && codepoint < U+00007f
+		return (uint8_t)codepoint - 16
+	switch ((uint8_t)codepoint) {
+		case '\0': return 0;
+		case '\n': return 2;
+		case '\t': return 3;
+		default:   return 1;
+	}
+
+
+struct StringBuffer {
+	std::vector<uint8_t> data;
+//	const char * data;
+//	size_t length;
+};
+
+enum class CharacterEncoding {
+	ASCII,
+	UTF8,
+	UTF16,
+	UTF8Ext,
+	WTF8,
+	FIXED_SIZE_DYNAMIC_8,
+	FIXED_SIZE_DYNAMIC_16
+};
+
+struct StringRef {
+	std::shared_ptr<StringBuffer> buffer;
+	unsigned offset, length;
+	CharacterEncoding encoding;
+	const uint32_t * encoding_tbl = nullptr;   // use iff encoding == CharacterEncoding::FIXED_SIZE_DYNAMIC_8 or FIXED_SIZE_DYNAMIC_16
+};
+
+StringRef to_utf8 (const StringRef & sr) {
+	switch (sr.encoding) {
+		case CharacterEncoding::ASCII: return StringRef { sr, CharacterEncoding::UTF8 };
+		case CharacterEncoding::UTF8:  return sr;
+		case CharacterEncoding::UFT16: return utf16_to_utf8(sr);
+		case CharacterEncoding::UTF8Ext: return utf8ext_to_utf8(sr);
+		case CharacterEncoding::WTF8: return wtf8_to_utf8(sr);
+		case CharacterEncoding::FIXED_SIZE_DYNAMIC_8: return decode_to_utf8<uint8_t>(sr);
+		case CharacterEncoding::FIXED_SIZE_DYNAMIC_16: return decode_to_utf8<uint16_t>(sr);
+	}
+}
+
+template <typename char_t = uint8_t>
+StringRef decode_to_utf8 (const StringRef & sr) {
+	assert(sr.encoding == CharacterEncoding::FIXED_SIZE_DYNAMIC_8 || sr.encoding == CharacterEncoding::FIXED_SIZE_DYNAMIC_16);
+
+	UTF8Builder sb;
+
+	auto i = sr.offset, len = sr.length;
+	assert(i + len <= sr.buffer.size());
+	for (; i < len; ++i) {
+		uint8_t chr = sr.buffer[i];
+		if (chr >= 98) {
+			sb.putChar(sr.encoding[chr-98]);
+		} else if (chr >= 4) {
+			sb.putChar(chr + 16);
+		} else {
+			switch (chr) {
+				case 0: sb.putChar('\0'); break;
+				case 1: sb.putChar(<unknown>); break;
+				case 2: sb.putChar('\n'); break;
+				case 3: sb.putChar('\t'); break;
+			}
+		}
+	}
+    assert(sb.length() == len);
+
+	return StringRef { sb };
+}
+
