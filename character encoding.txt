@@ -132,10 +132,9 @@ StringRef decode_to_utf8 (const StringRef & sr) {
 
 	UTF8Builder sb;
 
-	auto i = sr.offset, len = sr.length;
-	assert(i + len <= sr.buffer.size());
-	for (; i < len; ++i) {
-		uint8_t chr = sr.buffer[i];
+	assert(sr.offset + sr.length * sizeof(char_t) < sr.buffer.size());
+	for (unsigned i = 0; i < sr.length; ++i) {
+		char_t chr = sr.buffer.get<char_t>(i * sizeof(char_t) + sr.offset);
 		if (chr >= 98) {
 			sb.putChar(sr.encoding[chr-98]);
 		} else if (chr >= 4) {
