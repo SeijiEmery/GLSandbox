@@ -33,15 +33,19 @@ public:
     // Run script / expr
     void run (const char * buffer, size_t len, const char * fname);
     
-    // Run expr and store result in v
+    // Run expr (to fetch value) and store result in v.
+    // Does not modify stack depth; may throw exceptions.
     void getVal (const char * expr, int & v);
     void getVal (const char * expr, unsigned & v);
     void getVal (const char * expr, std::string & v);
     void getVal (const char * expr, bool & v);
     void getVal (const char * expr, boost::filesystem::path & v, bool must_be_valid_path = false);
     
-    // table operations
+    // Create a new table and push it to the stack
     void newtable () { lua_newtable(L); }
+    
+    // Create / set a field (table[k] = v), with table at table_index (default -1, or TOS).
+    // Note: using positive indexing will break things...
     void setfield (const char * k, lua_CFunction v, int table_index = -1) {
         lua_pushstring(L, k);
         lua_pushcfunction(L, v);
@@ -61,12 +65,12 @@ public:
         setfield(k, v.string(), table_index);
     }
     
+    // Assign a global variable, popping it from the stack.
     void setglobal (const char * name) {
         lua_setglobal(L, name);
     }
     
-    
-    // Hack to get state to implement other ops
+    // Hack to get raw lua state
     lua_State * getState () { return L; }
     
 protected:
