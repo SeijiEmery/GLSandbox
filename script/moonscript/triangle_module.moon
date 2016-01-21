@@ -51,7 +51,7 @@ create_module "triangles", =>
             0.0, 1.0, 0.0,
             0.0, 0.0, 1.0
         },
-        instance_positions: @generate_array "vec3f" (elems) ->
+        instance_positions: @generate_array "vec3f" () ->
             for i = 1, INSTANCE_ARRAY_DIMENSIONS.x
                 for j = 1, INSTANCE_ARRAY_DIMENSIONS.y
                     for k = 1, INSTANCE_ARRAY_DIMENSIONS.z
@@ -83,7 +83,7 @@ create_module "triangles", =>
     rotation_speed = two_pi / ROTATION_PERIOD
 
     @on_load =>
-        console.log("Loaded lua triangles module")
+        @console.log("Loaded lua triangles module")
         timer\start()
 
     @gl_draw =>
@@ -100,5 +100,5 @@ create_module "triangles", =>
 
     @persist_state =>
         @use_gkey @MODULE_NAME .. '/persistent_data/'
-        @store_load timer 'timing_info' PERSIST_THROUGH_RELOADS_YES PERSIST_THOUGH_APP_LAUNCHES_NO
+        @store_load timer 'time' PERSIST_THROUGH_RELOADS_YES PERSIST_THOUGH_APP_LAUNCHES_NO
 

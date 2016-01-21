@@ -38,7 +38,33 @@ public:
     void getVal (const char * expr, unsigned & v);
     void getVal (const char * expr, std::string & v);
     void getVal (const char * expr, bool & v);
-    void getVal (const char * expr, boost::filesystem::path & v, bool must_be_valid_path = true);
+    void getVal (const char * expr, boost::filesystem::path & v, bool must_be_valid_path = false);
+    
+    // table operations
+    void newtable () { lua_newtable(L); }
+    void setfield (const char * k, lua_CFunction v, int table_index = -1) {
+        lua_pushstring(L, k);
+        lua_pushcfunction(L, v);
+        lua_rawset(L, table_index - 2);
+    }
+    void setfield (const char * k, int v, int table_index = -1) {
+        lua_pushstring(L, k);
+        lua_pushnumber(L, (double)v);
+        lua_rawset(L, table_index -2);
+    }
+    void setfield (const char * k, const std::string & v, int table_index = -1) {
+        lua_pushstring(L, k);
+        lua_pushlstring(L, v.c_str(), v.size());
+        lua_rawset(L, table_index -2);
+    }
+    void setfield (const char * k, const boost::filesystem::path & v, int table_index = -1) {
+        setfield(k, v.string(), table_index);
+    }
+    
+    void setglobal (const char * name) {
+        lua_setglobal(L, name);
+    }
+    
     
     // Hack to get state to implement other ops
     lua_State * getState () { return L; }

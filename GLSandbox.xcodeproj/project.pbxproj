@@ -38,6 +38,9 @@
 		81A01BD61C4B190100E00897 /* thread_worker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 81A01BD41C4B190100E00897 /* thread_worker.cpp */; settings = {ASSET_TAGS = (); }; };
 		81A01BD91C4B2A9E00E00897 /* js_thread_instance.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 81A01BD71C4B2A9E00E00897 /* js_thread_instance.cpp */; settings = {ASSET_TAGS = (); }; };
 		81A01BDD1C4B993D00E00897 /* jstest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 81A01BDB1C4B993D00E00897 /* jstest.cpp */; settings = {ASSET_TAGS = (); }; };
+		81A01BE11C4F34B300E00897 /* script_api.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 81A01BDF1C4F34B300E00897 /* script_api.cpp */; settings = {ASSET_TAGS = (); }; };
+		81A01BE71C4F353000E00897 /* lua_instance.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 81A01BE51C4F353000E00897 /* lua_instance.cpp */; settings = {ASSET_TAGS = (); }; };
+		81A01BEB1C5096B000E00897 /* liblua.5.2.4.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 81A01BEA1C5096B000E00897 /* liblua.5.2.4.dylib */; };
 		81AB41021C260CAA00151156 /* ubo_test.fs in Resources */ = {isa = PBXBuildFile; fileRef = 81AB41011C260CAA00151156 /* ubo_test.fs */; settings = {ASSET_TAGS = (); }; };
 		81AB41041C260CC800151156 /* ubo_test.vs in Resources */ = {isa = PBXBuildFile; fileRef = 81AB41031C260CC800151156 /* ubo_test.vs */; settings = {ASSET_TAGS = (); }; };
 		81AB410B1C27CF1A00151156 /* obj_viewer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 81AB41091C27CF1A00151156 /* obj_viewer.cpp */; settings = {ASSET_TAGS = (); }; };
@@ -191,6 +194,12 @@
 		81A01BD81C4B2A9E00E00897 /* js_thread_instance.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = js_thread_instance.hpp; path = src/common/js/js_thread_instance.hpp; sourceTree = SOURCE_ROOT; };
 		81A01BDB1C4B993D00E00897 /* jstest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = jstest.cpp; path = src/modules/js/jstest.cpp; sourceTree = SOURCE_ROOT; };
 		81A01BDC1C4B993D00E00897 /* jstest.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = jstest.hpp; path = src/modules/js/jstest.hpp; sourceTree = SOURCE_ROOT; };
+		81A01BDF1C4F34B300E00897 /* script_api.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = script_api.cpp; path = src/script/script_api.cpp; sourceTree = SOURCE_ROOT; };
+		81A01BE01C4F34B300E00897 /* script_api.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = script_api.hpp; path = src/script/script_api.hpp; sourceTree = SOURCE_ROOT; };
+		81A01BE51C4F353000E00897 /* lua_instance.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = lua_instance.cpp; path = src/common/script/lua_instance.cpp; sourceTree = SOURCE_ROOT; };
+		81A01BE61C4F353000E00897 /* lua_instance.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = lua_instance.hpp; path = src/common/script/lua_instance.hpp; sourceTree = SOURCE_ROOT; };
+		81A01BE81C4F359F00E00897 /* libluajit-5.1.2.0.4.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libluajit-5.1.2.0.4.dylib"; path = "../../../../usr/local/lib/libluajit-5.1.2.0.4.dylib"; sourceTree = "<group>"; };
+		81A01BEA1C5096B000E00897 /* liblua.5.2.4.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = liblua.5.2.4.dylib; path = ../../../../usr/local/Cellar/lua/5.2.4_2/lib/liblua.5.2.4.dylib; sourceTree = "<group>"; };
 		81AB41011C260CAA00151156 /* ubo_test.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = ubo_test.fs; path = shaders/modules/ubo_test/ubo_test.fs; sourceTree = SOURCE_ROOT; };
 		81AB41031C260CC800151156 /* ubo_test.vs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = ubo_test.vs; path = shaders/modules/ubo_test/ubo_test.vs; sourceTree = SOURCE_ROOT; };
 		81AB41091C27CF1A00151156 /* obj_viewer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = obj_viewer.cpp; path = src/modules/obj_viewer/obj_viewer.cpp; sourceTree = SOURCE_ROOT; };
@@ -273,6 +282,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				81A01BEB1C5096B000E00897 /* liblua.5.2.4.dylib in Frameworks */,
 				81A01BCF1C4B02BF00E00897 /* libmozjs-.dylib in Frameworks */,
 				81A01BCD1C4B026E00E00897 /* libGLEW.1.13.0.dylib in Frameworks */,
 				81176D981C1FE4B80025EB6C /* libboost_filesystem.dylib in Frameworks */,
@@ -396,6 +406,8 @@
 		815D61D61C1F652A005DB2A8 = {
 			isa = PBXGroup;
 			children = (
+				81A01BEA1C5096B000E00897 /* liblua.5.2.4.dylib */,
+				81A01BE81C4F359F00E00897 /* libluajit-5.1.2.0.4.dylib */,
 				81A01BCE1C4B02BF00E00897 /* libmozjs-.dylib */,
 				81A01BCC1C4B026E00E00897 /* libGLEW.1.13.0.dylib */,
 				81176D931C1FE4B80025EB6C /* libboost_filesystem.dylib */,
@@ -444,6 +456,7 @@
 		815D62021C1F669E005DB2A8 /* common */ = {
 			isa = PBXGroup;
 			children = (
+				81A01BDE1C4F348F00E00897 /* script */,
 				81A01BD01C4B02DA00E00897 /* js */,
 				81176D8D1C1FC9850025EB6C /* gl */,
 				815D62071C1F670F005DB2A8 /* app.cpp */,
@@ -535,6 +548,17 @@
 				81A01BDC1C4B993D00E00897 /* jstest.hpp */,
 			);
 			name = js;
+			sourceTree = "<group>";
+		};
+		81A01BDE1C4F348F00E00897 /* script */ = {
+			isa = PBXGroup;
+			children = (
+				81A01BDF1C4F34B300E00897 /* script_api.cpp */,
+				81A01BE01C4F34B300E00897 /* script_api.hpp */,
+				81A01BE51C4F353000E00897 /* lua_instance.cpp */,
+				81A01BE61C4F353000E00897 /* lua_instance.hpp */,
+			);
+			name = script;
 			sourceTree = "<group>";
 		};
 		81AB41051C27CEC100151156 /* obj_viewer */ = {
@@ -858,6 +882,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				81176DAC1C22325E0025EB6C /* gl_wrapper.cpp in Sources */,
+				81A01BE71C4F353000E00897 /* lua_instance.cpp in Sources */,
 				81176D8A1C1FC9640025EB6C /* gl_shaders.cpp in Sources */,
 				81AB417B1C28B4E500151156 /* camera.cpp in Sources */,
 				81A01BD61C4B190100E00897 /* thread_worker.cpp in Sources */,
@@ -868,6 +893,7 @@
 				81AB410B1C27CF1A00151156 /* obj_viewer.cpp in Sources */,
 				81AB41881C2ABE8200151156 /* input_test.cpp in Sources */,
 				81AB419F1C2BEEF500151156 /* flycam.cpp in Sources */,
+				81A01BE11C4F34B300E00897 /* script_api.cpp in Sources */,
 				81176DB01C229E3E0025EB6C /* ubo_test.cpp in Sources */,
 				815D620E1C1F7D9F005DB2A8 /* triangles.cpp in Sources */,
 				815D62111C1F7E42005DB2A8 /* modules.cpp in Sources */,
@@ -995,6 +1021,7 @@
 				HEADER_SEARCH_PATHS = (
 					/usr/local/include,
 					"/usr/local/include/mozjs-",
+					"/usr/local/include/luajit-2.0",
 				);
 				INFOPLIST_FILE = GLSandbox/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
@@ -1003,6 +1030,13 @@
 					/usr/local/lib,
 					/usr/local/Cellar/boost/1.58.0/lib,
 					/usr/local/Cellar/glew/1.13.0/lib,
+					/usr/local/Cellar/lua/5.2.4_2/lib,
+				);
+				OTHER_LDFLAGS = (
+					"-pagezero_size",
+					10000,
+					"-image_base",
+					100000000,
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "n-a.GLSandbox";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1020,6 +1054,7 @@
 				HEADER_SEARCH_PATHS = (
 					/usr/local/include,
 					"/usr/local/include/mozjs-",
+					"/usr/local/include/luajit-2.0",
 				);
 				INFOPLIST_FILE = GLSandbox/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
@@ -1028,6 +1063,13 @@
 					/usr/local/lib,
 					/usr/local/Cellar/boost/1.58.0/lib,
 					/usr/local/Cellar/glew/1.13.0/lib,
+					/usr/local/Cellar/lua/5.2.4_2/lib,
+				);
+				OTHER_LDFLAGS = (
+					"-pagezero_size",
+					10000,
+					"-image_base",
+					100000000,
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "n-a.GLSandbox";
 				PRODUCT_NAME = "$(TARGET_NAME)";

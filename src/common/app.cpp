@@ -125,17 +125,14 @@ void Application::loadConfig() {
     buffer[size] = 0;
     f.close();
     
-    LuaInstance luaconf ("config loader", false);
+    LuaInstance lua ("config loader", false);
     
     // Setup API
-    auto L = luaconf.getState();
     
     // Set logging function
-    lua_newtable(L);
-    lua_pushliteral(L, "log");
-    lua_pushcfunction(L, &lua_conf_api::print);
-    lua_rawset(L, -3);
-    lua_setglobal(L, "console");
+    lua.newtable();
+    lua.setfield("log", &lua_conf_api::print);
+    lua.setglobal("console");
     
     // Get screen size
     int nmonitors;
@@ -149,26 +146,20 @@ void Application::loadConfig() {
         }
     }
     // Set screen table
-    lua_newtable(L);
-    lua_pushliteral(L, "width");
-    lua_pushnumber (L, screen_width);
-    lua_rawset(L, -3);
-    lua_pushliteral(L, "height");
-    lua_pushnumber(L, screen_height);
-    lua_rawset(L, -3);
-    lua_setglobal(L, "screen");
+    lua.newtable();
+    lua.setfield("width", screen_width);
+    lua.setfield("height", screen_height);
+    lua.setglobal("screen");
     
     // Set path table
-    lua_newtable(L);
-    lua_pushliteral(L, "concat");
-    lua_pushcfunction(L, &lua_conf_api::join_paths);
-    lua_rawset(L, -3);
-    lua_setglobal(L, "path");
+    lua.newtable();
+    lua.setfield("concat", &lua_conf_api::join_paths);
+    lua.setglobal("path");
     
-    luaconf.run(buffer, size, m_appConfig.lua_conf_path.string().c_str());
+    lua.run(buffer, size, m_appConfig.lua_conf_path.string().c_str());
     delete[] buffer;
     
-    m_appConfig.loadConfig(luaconf);
+    m_appConfig.loadConfig(lua);
 }
 
 std::string lua_type_to_string (lua_State * L, int i) {
@@ -282,8 +273,8 @@ void app_config::Resources::loadConfig(gl_sandbox::LuaInstance & lua) {
     lua.getVal("resources.script_dirs.lib_compiled",        script_lib_compiled_dir);
     lua.getVal("resources.script_dirs.ui_src",              script_ui_src_dir);
     lua.getVal("resources.script_dirs.ui_compiled",         script_ui_compiled_dir);
-    lua.getVal("resources.script_dirs.module_src",          script_modules_src_dir);
-    lua.getVal("resources.script_dirs.module_compiled",     script_modules_compiled_dir);
+    lua.getVal("resources.script_dirs.modules_src",          script_modules_src_dir);
+    lua.getVal("resources.script_dirs.modules_compiled",     script_modules_compiled_dir);
     
     lua.getVal("resources.log_dir", log_dir);
     lua.getVal("resources.backup_logs.dir", log_backup_dir);

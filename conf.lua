@@ -45,7 +45,7 @@ resources.script_dirs = {
 
 	lib_src = path.concat(resources.project_dir, 'script/lib/'),
 	ui_src  = path.concat(resources.project_dir, 'script/ui/'),
-	module_src = path.concat(resources.project_dir, 'script/modules/')
+	modules_src = path.concat(resources.project_dir, 'script/modules/')
 }
 resources.log_dir = '~/Library/Application Support/GLSandbox/last_run/logs/'
 resources.backup_logs = {
