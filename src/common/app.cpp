@@ -14,12 +14,15 @@
 
 using namespace gl_sandbox;
 
-// GLFW C Callbacks
-static Application * g_activeApplication = nullptr; // hack
+InputManager * Application::g_inputManager = nullptr;
+Application  * Application::g_applicationInstance = nullptr;
+AppEvents    * Application::g_appEvents = nullptr;
+
+namespace glfw_callbacks {
 extern "C" {
     static void errorCallback (int error, const char * description) {
-        if (g_activeApplication) {
-            g_activeApplication->glfw_errorCallback(error, description);
+        if (Application::getInstance()) {
+            Application::getInstance()->glfw_errorCallback(error, description);
         } else {
             std::cerr << description << '\n';
         }
@@ -28,68 +31,321 @@ extern "C" {
         static_cast<Application*>(glfwGetWindowUserPointer(window))->glfw_keyCallback(window, key, scancode, action, mods);
     }
 }
-//
-// gl_sandbox::Application
-//
+}; // namespace glfw_callbacks
 
-InputManager * Application::g_inputManager = nullptr;
-Application * Application::g_applicationInstance = nullptr;
-AppEvents   * Application::g_appEvents = nullptr;
 
-// Initialize glfw, create window, etc.
-// Throws a std::runtime_error on failure to init.
-Application::Application (const char * baseResourcePath)
+namespace lua_conf_api {
+extern "C" {
+
+    static int join_paths (lua_State * L) {
+        int n = lua_gettop(L);
+        if (n != 2 || !lua_isstring(L, -1) || !lua_isstring(L, -2)) {
+            std::string msg = "invalid arguments to path.join(";
+            for (auto i = 1; i <= n; ++i) {
+                if (i != 1)
+                    msg += ", ";
+                switch (lua_type(L, lua_type(L, i))) {
+                    case LUA_TSTRING: msg += "string"; break;
+                    case LUA_TTABLE:  msg += "table"; break;
+                    case LUA_TTHREAD: msg += "thread"; break;
+                    case LUA_TUSERDATA: msg += "userdata"; break;
+                    case LUA_TNUMBER: msg += "number"; break;
+                    case LUA_TNIL: msg += "nil"; break;
+                    case LUA_TFUNCTION: msg += "function"; break;
+                    case LUA_TLIGHTUSERDATA: msg += "lightuserdata"; break;
+                    case LUA_TBOOLEAN: msg += "boolean"; break;
+                    case LUA_TNONE: msg += "none";
+                }
+            }
+            msg += ")";
+            lua_pushstring(L, msg.c_str());
+            lua_error(L);
+            return 1;
+        } else {
+            using boost::filesystem::path;
+            auto joined_path = path(lua_tostring(L, 1)) / path(lua_tostring(L, 2));
+            lua_pop(L, 2);
+            lua_pushstring(L, joined_path.string().c_str());
+            return 1;
+        }
+    }
+    static int print (lua_State * L) {
+        auto printv = [L](int i) {
+            switch (lua_type(L, i)) {
+                case LUA_TNUMBER:
+                case LUA_TSTRING: std::cout << lua_tostring(L, i); break;
+                case LUA_TTABLE: std::cout << "<table>"; break;
+                case LUA_TTHREAD: std::cout << "<thread>"; break;
+                case LUA_TUSERDATA: std::cout << "<userdata>"; break;
+                case LUA_TLIGHTUSERDATA: std::cout << "<lightuserdata>"; break;
+                case LUA_TFUNCTION: std::cout << "<function>"; break;
+                case LUA_TNIL: std::cout << "nil"; break;
+                case LUA_TBOOLEAN: std::cout << (lua_toboolean(L, i) ? "true" : "false"); break;
+            }
+        };
+        
+        int n = lua_gettop(L);
+        std::cout << "console.log: ";
+        for (auto i = 1; i < n; ++i) {
+            printv(i); std::cout << ", ";
+        }
+        if (n != 0) {
+            printv(n); std::cout << '\n';
+        }
+        return 0;
+    }
+};
+};
+
+struct config_error : public std::runtime_error {
+    config_error (std::string msg) : std::runtime_error(msg) {}
+};
+
+
+void Application::loadConfig() {
+    using namespace boost::filesystem;
+    if (!exists(m_appConfig.lua_conf_path)) {
+        std::string reason = "Failed to load config file (file does not exist) '" + m_appConfig.lua_conf_path.string() + "'";
+        throw InitializationError(reason);
+    }
+    boost::filesystem::ifstream f (m_appConfig.lua_conf_path);
+    if (!f) {
+        std::string reason = "Failed to load config file (failed to load file) '" + m_appConfig.lua_conf_path.string() + "'";
+        throw InitializationError(reason);
+    }
+    f.seekg(0, std::ios::end);
+    size_t size = f.tellg();
+    if (size == 0) {
+        std::string reason = "Failed to load config file (empty file) '" + m_appConfig.lua_conf_path.string() + "'";
+        throw InitializationError(reason);
+    }
+    f.seekg(0, std::ios::beg);
+    char * buffer = new char [size+1];
+    f.read(buffer, size);
+    buffer[size] = 0;
+    f.close();
+    
+    LuaInstance luaconf ("config loader", false);
+    
+    // Setup API
+    auto L = luaconf.getState();
+    
+    // Set logging function
+    lua_newtable(L);
+    lua_pushliteral(L, "log");
+    lua_pushcfunction(L, &lua_conf_api::print);
+    lua_rawset(L, -3);
+    lua_setglobal(L, "console");
+    
+    // Get screen size
+    int nmonitors;
+    auto monitors = glfwGetMonitors(&nmonitors);
+    int screen_width = 0, screen_height = 0;
+    for (auto i = 0; i < nmonitors; ++i) {
+        auto screen = glfwGetVideoMode(monitors[i]);
+        if (screen->width * screen->height > screen_width * screen_height) {
+            screen_width = screen->width;
+            screen_height = screen->height;
+        }
+    }
+    // Set screen table
+    lua_newtable(L);
+    lua_pushliteral(L, "width");
+    lua_pushnumber (L, screen_width);
+    lua_rawset(L, -3);
+    lua_pushliteral(L, "height");
+    lua_pushnumber(L, screen_height);
+    lua_rawset(L, -3);
+    lua_setglobal(L, "screen");
+    
+    // Set path table
+    lua_newtable(L);
+    lua_pushliteral(L, "concat");
+    lua_pushcfunction(L, &lua_conf_api::join_paths);
+    lua_rawset(L, -3);
+    lua_setglobal(L, "path");
+    
+    luaconf.run(buffer, size, m_appConfig.lua_conf_path.string().c_str());
+    delete[] buffer;
+    
+    m_appConfig.loadConfig(luaconf);
+}
+
+std::string lua_type_to_string (lua_State * L, int i) {
+    switch (lua_type(L, i)) {
+        case LUA_TSTRING: return "string";
+        case LUA_TNUMBER: return "number";
+        case LUA_TBOOLEAN: return "boolean";
+        case LUA_TFUNCTION: return "function";
+        case LUA_TTABLE: return "table";
+        case LUA_TTHREAD: return "thread";
+        case LUA_TUSERDATA: return "userdata";
+        case LUA_TLIGHTUSERDATA: return "lightuserdata";
+        case LUA_TNIL: return "nil";
+        case LUA_TNONE: return "none";
+    }
+    return "undefined_type";
+}
+
+void getField (lua_State * L, std::string var, const char * field, int & v, bool required = true, int i = -1) {
+    lua_getfield(L, i, field);
+    if (!lua_isnumber(L, -1)) {
+        if (!lua_isnil(L, -1))
+            std::cout << "warning: config field " << var << "." << field << " has unexpected type " << lua_type_to_string(L, -1) << '\n';
+        if (required)
+            throw config_error("missing field (number): " + var + "." + field);
+    }
+    v = (int)lua_tointeger(L, -1);
+    lua_pop(L, 1);
+}
+void getField (lua_State * L, std::string var, const char * field, std::string & v, bool required = true, int i = -1) {
+    lua_getfield(L, i, field);
+    if (!lua_isstring(L, -1)) {
+        if (!lua_isnil(L, -1))
+            std::cout << "warning: config field " << var << "." << field << " has unexpected type " << lua_type_to_string(L, -1) << '\n';
+        if (required)
+            throw config_error("missing field (string): " + var + "." + field);
+    }
+    auto s = lua_tostring(L, -1);
+    assert(s);
+    v = s;
+    lua_pop(L, 1);
+}
+void getField (lua_State * L, std::string var, const char * field, boost::filesystem::path & v, bool required = true, int i = -1) {
+    lua_getfield(L, i, field);
+    if (!lua_isstring(L, -1)) {
+        if (!lua_isnil(L, -1))
+            std::cout << "warning: config field " << var << "." << field << " has unexpected type " << lua_type_to_string(L, -1) << '\n';
+        if (required)
+            throw config_error("missing field (string): " + var + "." + field);
+    }
+    auto s = lua_tostring(L, -1);
+    assert(s);
+    v = boost::filesystem::path(s);
+    lua_pop(L, 1);
+}
+void getField (lua_State * L, std::string var, const char * field, bool & v, bool required = true, int i = -1) {
+    lua_getfield(L, i, field);
+    if (!lua_isboolean(L, -1)) {
+        if (!lua_isnil(L, -1))
+            std::cout << "warning: config field " << var << "." << field << " has unexpected type " << lua_type_to_string(L, -1) << '\n';
+        if (required)
+            throw config_error("missing field (boolean): " + var + "." + field);
+    }
+    v = lua_toboolean(L, -1);
+    lua_pop(L, 1);
+}
+
+void app_config::AppConfig::loadConfig(gl_sandbox::LuaInstance & lua) {
+    try {
+        window.loadConfig(lua);
+        resources.loadConfig(lua);
+    } catch (std::runtime_error e) {
+        std::cerr << e.what() << '\n';
+        throw config_error(e.what());
+    }
+}
+void app_config::Window::loadConfig(gl_sandbox::LuaInstance & lua) {
+    auto L = lua.getState();
+    lua_getglobal(L, "window");
+    if (!lua_istable(L, -1))
+        throw config_error("missing global 'window'");
+    
+    lua.getVal("window.width", width);
+    lua.getVal("window.height", height);
+    lua.getVal("window.appname", app_name);
+    lua.getVal("window.display_fps", show_fps_counter);
+    
+//    getField(L, "window", "width", width, true);
+//    getField(L, "window", "height", height, true);
+//    auto err = luaL_loadstring(L, "return window.width") || lua_pcall(L, 0, 1, 0);
+//    if (err) {
+//        std::cerr << lua_tostring(L, -1) << std::endl;
+//        return;
+//    } else {
+//        width = lua_tointeger(L, -1);
+//    }
+//    lua_pop(L, 1);
+//    getField(L, "window", "app_name", app_name, false);
+//    getField(L, "window", "show_fps_counter", show_fps_counter, false);
+}
+void app_config::Resources::loadConfig(gl_sandbox::LuaInstance & lua) {
+    auto L = lua.getState();
+    lua_getglobal(L, "resources");
+    if (!lua_istable(L, -1))
+        throw config_error("missing global 'resources'");
+    
+    lua.getVal("resources.project_dir",                     project_dir);
+    lua.getVal("resources.asset_dirs.root",                 asset_dir);
+    lua.getVal("resources.asset_dirs.cached",               asset_cache_dir);
+    lua.getVal("resources.script_dirs.lib_src",             script_lib_src_dir);
+    lua.getVal("resources.script_dirs.lib_compiled",        script_lib_compiled_dir);
+    lua.getVal("resources.script_dirs.ui_src",              script_ui_src_dir);
+    lua.getVal("resources.script_dirs.ui_compiled",         script_ui_compiled_dir);
+    lua.getVal("resources.script_dirs.module_src",          script_modules_src_dir);
+    lua.getVal("resources.script_dirs.module_compiled",     script_modules_compiled_dir);
+    
+    lua.getVal("resources.log_dir", log_dir);
+    lua.getVal("resources.backup_logs.dir", log_backup_dir);
+    
+    lua.getVal("resources.storage.persistent_data_dir", persistent_data_dir);
+    lua.getVal("resources.storage.persistent_data_backup_dir", persistent_data_backup_dir);
+}
+
+
+Application::Application ()
     : m_modules()
 {
-    ResourceLoader::g_baseResourcePath = baseResourcePath;
+    Application::g_applicationInstance = this;
+    Application::g_inputManager = &m_inputManager;
+    Application::g_appEvents = &m_appEvents;
+
+    if (!glfwInit())
+        throw InitializationError("Failed to initialize glfw\n");
+    glfwSetErrorCallback(glfw_callbacks::errorCallback);
     
-    // Helper function
-    auto initFail = [] (const char * msg, bool terminateGLFW = true) {
-        g_activeApplication = nullptr;
-        throw InitializationError(msg);
-        return false;
-    };
+    loadConfig();
     
-    g_activeApplication = this;
-    
-    // Init glfw, render context(s), and create window
-    glfwInit() || initFail("Failed to initialize glfw\n", false);
-    glfwSetErrorCallback(errorCallback);
-    
+    // Create window
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     
-    m_mainWindow = glfwCreateWindow(640, 480, "Hello world", NULL, NULL);
-    m_mainWindow || initFail("Failed to create window\n");
+    m_mainWindow = glfwCreateWindow(
+            m_appConfig.window.width,
+            m_appConfig.window.height,
+            m_appConfig.window.app_name.c_str(),
+            nullptr, nullptr);
+    if (!m_mainWindow)
+        throw InitializationError("Failed to create glfw window\n");
     glfwSetWindowUserPointer(m_mainWindow, this);
-    glfwSetKeyCallback(m_mainWindow, &keyCallback);
+    glfwSetKeyCallback(m_mainWindow, &glfw_callbacks::keyCallback);
     
     glfwMakeContextCurrent(m_mainWindow);
     glfwSwapInterval(1);
     
+    initGL();
+    initDefaultModules();
+}
+
+void Application::initGL() {
     CHECK_GL_ERRORS();
-    
     glewExperimental = true;
-    glewInit();// || initFail("Failed to initialize glew\n");
+    glewInit();
     
     // glewInit() seems to always raise an error... which seems to be invalid (just a bug I guess?), so we'll ignore it
-    while (glGetError()) {}
     // https://stackoverflow.com/questions/10857335/opengl-glgeterror-returns-invalid-enum-after-call-to-glewinit
-    
-//    CHECK_GL_ERRORS();
+    while (glGetError()) {}
     
     glEnable(GL_DEPTH_TEST);
     
     std::cout << "GL Sandbox\n";
     std::cout << "Renderer: " << glGetString(GL_RENDERER) << '\n';
     std::cout << "Opengl version: " << glGetString(GL_VERSION) << std::endl;
-    
-    Application::g_applicationInstance = this;
-    Application::g_inputManager = &m_inputManager;
-    Application::g_appEvents    = &m_appEvents;
-    
+}
+
+void Application::initDefaultModules () {
     m_modules.loadModule("module-input-logger");
     m_modules.loadModule("module-flycam");
     m_modules.loadModule("gamepad-input-test");
@@ -98,8 +354,6 @@ Application::Application (const char * baseResourcePath)
 Application::~Application () {
     
     m_modules.killAllModules();
-    
-    g_activeApplication = nullptr; // disables application-specific error handling -- after this glfw errors are just directed to stderr (as opposed to log files, visual warnings, etc)
     if (m_mainWindow) {
         glfwDestroyWindow(m_mainWindow);
     }

@@ -13,7 +13,7 @@
 using namespace gl_sandbox;
 
 ModuleExposedEvents::ModuleExposedEvents () :
-    input(Application::inputManager()),
-    app(Application::appEvents())
+    input(Application::getInputManager()),
+    app(Application::getAppEvents())
 {}
 
