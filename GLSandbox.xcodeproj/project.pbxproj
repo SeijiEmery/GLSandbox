@@ -48,6 +48,8 @@
 		81A01C021C522A6E00E00897 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 81A01BFE1C52271600E00897 /* CoreServices.framework */; };
 		81A01C031C522A7B00E00897 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 81A01C001C522A4D00E00897 /* CoreFoundation.framework */; };
 		81A01C041C522A7F00E00897 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 81A01BFE1C52271600E00897 /* CoreServices.framework */; };
+		81A01C0C1C543BEF00E00897 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 81A01C0B1C543BEF00E00897 /* main.cpp */; };
+		81A01C131C543CA100E00897 /* resource_layer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 81A01C111C543CA100E00897 /* resource_layer.cpp */; settings = {ASSET_TAGS = (); }; };
 		81AB41021C260CAA00151156 /* ubo_test.fs in Resources */ = {isa = PBXBuildFile; fileRef = 81AB41011C260CAA00151156 /* ubo_test.fs */; settings = {ASSET_TAGS = (); }; };
 		81AB41041C260CC800151156 /* ubo_test.vs in Resources */ = {isa = PBXBuildFile; fileRef = 81AB41031C260CC800151156 /* ubo_test.vs */; settings = {ASSET_TAGS = (); }; };
 		81AB410B1C27CF1A00151156 /* obj_viewer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 81AB41091C27CF1A00151156 /* obj_viewer.cpp */; settings = {ASSET_TAGS = (); }; };
@@ -121,6 +123,15 @@
 			runOnlyForDeploymentPostprocessing = 1;
 		};
 		81A01BF51C51CEE600E00897 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+		81A01C071C543BEF00E00897 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = /usr/share/man/man1/;
@@ -224,6 +235,10 @@
 		81A01BF91C51CEE600E00897 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		81A01BFE1C52271600E00897 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = System/Library/Frameworks/CoreServices.framework; sourceTree = SDKROOT; };
 		81A01C001C522A4D00E00897 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
+		81A01C091C543BEF00E00897 /* resourcelayer-test */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "resourcelayer-test"; sourceTree = BUILT_PRODUCTS_DIR; };
+		81A01C0B1C543BEF00E00897 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		81A01C111C543CA100E00897 /* resource_layer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = resource_layer.cpp; path = src/common/resourcelayer/resource_layer.cpp; sourceTree = SOURCE_ROOT; };
+		81A01C121C543CA100E00897 /* resource_layer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = resource_layer.hpp; path = src/common/resourcelayer/resource_layer.hpp; sourceTree = SOURCE_ROOT; };
 		81AB41011C260CAA00151156 /* ubo_test.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = ubo_test.fs; path = shaders/modules/ubo_test/ubo_test.fs; sourceTree = SOURCE_ROOT; };
 		81AB41031C260CC800151156 /* ubo_test.vs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = ubo_test.vs; path = shaders/modules/ubo_test/ubo_test.vs; sourceTree = SOURCE_ROOT; };
 		81AB41091C27CF1A00151156 /* obj_viewer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = obj_viewer.cpp; path = src/modules/obj_viewer/obj_viewer.cpp; sourceTree = SOURCE_ROOT; };
@@ -331,6 +346,13 @@
 			files = (
 				81A01C041C522A7F00E00897 /* CoreServices.framework in Frameworks */,
 				81A01C031C522A7B00E00897 /* CoreFoundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		81A01C061C543BEF00E00897 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -464,6 +486,7 @@
 				81176DBB1C24C6ED0025EB6C /* libs */,
 				81AB41941C2B4A9F00151156 /* tests */,
 				81A01BF81C51CEE600E00897 /* fsevents-test */,
+				81A01C0A1C543BEF00E00897 /* resourcelayer-test */,
 				815D61E01C1F652A005DB2A8 /* Products */,
 				815D61ED1C1F652B005DB2A8 /* Info.plist */,
 				81AB410C1C27D66F00151156 /* assets */,
@@ -477,6 +500,7 @@
 				81176DA11C21F5160025EB6C /* ThreadingTest */,
 				81AB418D1C2B4A8F00151156 /* raii-signals-test */,
 				81A01BF71C51CEE600E00897 /* fsevents-test */,
+				81A01C091C543BEF00E00897 /* resourcelayer-test */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -495,6 +519,7 @@
 		815D62021C1F669E005DB2A8 /* common */ = {
 			isa = PBXGroup;
 			children = (
+				81A01C101C543C7A00E00897 /* resourcelayer */,
 				81A01BEF1C51C88700E00897 /* fswatcher */,
 				81A01BDE1C4F348F00E00897 /* script */,
 				81A01BD01C4B02DA00E00897 /* js */,
@@ -618,6 +643,23 @@
 				81A01BF91C51CEE600E00897 /* main.cpp */,
 			);
 			path = "fsevents-test";
+			sourceTree = "<group>";
+		};
+		81A01C0A1C543BEF00E00897 /* resourcelayer-test */ = {
+			isa = PBXGroup;
+			children = (
+				81A01C0B1C543BEF00E00897 /* main.cpp */,
+			);
+			path = "resourcelayer-test";
+			sourceTree = "<group>";
+		};
+		81A01C101C543C7A00E00897 /* resourcelayer */ = {
+			isa = PBXGroup;
+			children = (
+				81A01C111C543CA100E00897 /* resource_layer.cpp */,
+				81A01C121C543CA100E00897 /* resource_layer.hpp */,
+			);
+			name = resourcelayer;
 			sourceTree = "<group>";
 		};
 		81AB41051C27CEC100151156 /* obj_viewer */ = {
@@ -821,6 +863,23 @@
 			productReference = 81A01BF71C51CEE600E00897 /* fsevents-test */;
 			productType = "com.apple.product-type.tool";
 		};
+		81A01C081C543BEF00E00897 /* resourcelayer-test */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 81A01C0D1C543BEF00E00897 /* Build configuration list for PBXNativeTarget "resourcelayer-test" */;
+			buildPhases = (
+				81A01C051C543BEF00E00897 /* Sources */,
+				81A01C061C543BEF00E00897 /* Frameworks */,
+				81A01C071C543BEF00E00897 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "resourcelayer-test";
+			productName = "resourcelayer-test";
+			productReference = 81A01C091C543BEF00E00897 /* resourcelayer-test */;
+			productType = "com.apple.product-type.tool";
+		};
 		81AB418C1C2B4A8F00151156 /* raii-signals-test */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 81AB41911C2B4A8F00151156 /* Build configuration list for PBXNativeTarget "raii-signals-test" */;
@@ -856,6 +915,9 @@
 					81A01BF61C51CEE600E00897 = {
 						CreatedOnToolsVersion = 7.0;
 					};
+					81A01C081C543BEF00E00897 = {
+						CreatedOnToolsVersion = 7.0;
+					};
 					81AB418C1C2B4A8F00151156 = {
 						CreatedOnToolsVersion = 7.0;
 					};
@@ -878,6 +940,7 @@
 				81176DA01C21F5160025EB6C /* ThreadingTest */,
 				81AB418C1C2B4A8F00151156 /* raii-signals-test */,
 				81A01BF61C51CEE600E00897 /* fsevents-test */,
+				81A01C081C543BEF00E00897 /* resourcelayer-test */,
 			);
 		};
 /* End PBXProject section */
@@ -980,6 +1043,7 @@
 				815D62111C1F7E42005DB2A8 /* modules.cpp in Sources */,
 				815D62091C1F670F005DB2A8 /* app.cpp in Sources */,
 				81A01BF21C51C8B300E00897 /* fswatcher_osx.cpp in Sources */,
+				81A01C131C543CA100E00897 /* resource_layer.cpp in Sources */,
 				815D61F41C1F6574005DB2A8 /* main.cpp in Sources */,
 				81176D901C1FCBEF0025EB6C /* resources.cpp in Sources */,
 				81A01BD31C4B02FF00E00897 /* JSInstance.cpp in Sources */,
@@ -993,6 +1057,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				81A01BFA1C51CEE600E00897 /* main.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		81A01C051C543BEF00E00897 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				81A01C0C1C543BEF00E00897 /* main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1169,6 +1241,7 @@
 		81A01BFC1C51CEE600E00897 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -1176,6 +1249,23 @@
 		81A01BFD1C51CEE600E00897 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		81A01C0E1C543BEF00E00897 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		81A01C0F1C543BEF00E00897 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -1229,6 +1319,14 @@
 			buildConfigurations = (
 				81A01BFC1C51CEE600E00897 /* Debug */,
 				81A01BFD1C51CEE600E00897 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		81A01C0D1C543BEF00E00897 /* Build configuration list for PBXNativeTarget "resourcelayer-test" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				81A01C0E1C543BEF00E00897 /* Debug */,
+				81A01C0F1C543BEF00E00897 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 		};
