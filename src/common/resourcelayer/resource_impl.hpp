@@ -10,6 +10,7 @@
 #define resource_impl_hpp
 
 #include <functional>
+#include <stdexcept>
 #include <vector>
 #include <string>
 
@@ -18,7 +19,7 @@ namespace gl_sandbox {
 struct ThreadTarget {
     void enqueue (std::function<void()> closure);
 };
-    
+
 template <typename T>
 struct ThreadCallable {
 protected:
@@ -42,6 +43,21 @@ public:
 
 
 namespace gl_sandbox {
+    
+template <typename... Args>
+const char * fmtArgs (const char * fmt, Args... args) {
+    char sbuf [512];
+    snprintf(sbuf, sizeof(sbuf), fmt, args...);
+    return sbuf;
+}
+
+struct ResourceError : public std::runtime_error {
+    template <typename... Args>
+    ResourceError (const char * fmt, Args... args) :
+        std::runtime_error(fmtArgs(fmt, args...)) {}
+};
+    
+    
 namespace resource_impl {
     
 typedef std::string FilePath;
@@ -63,9 +79,15 @@ public:
         release(*this);
     }
 };
+typedef std::shared_ptr<FileBuffer> FileBufferRef;
     
 namespace utils {
     FilePath joinPath (const FilePath & first, const FilePath & rest);
+    
+    FilePath & subst (FilePath & path,
+                      const std::string & pattern,
+                      const std::string repl);
+    
     FilePath & resolveUserDirectory (FilePath & path);
     FilePath & resolvePath (FilePath & path);
 
@@ -77,8 +99,8 @@ namespace utils {
     //
     // Returns true if succeeded, or false for a handled error (unhandled throws an exception).
     // Sets path to real path iff succeeded.
-    bool tryGetRealPath (FilePath & path,
-        std::initializer_list<std::function<bool(int)>> errorHandlers);
+    bool getRealPath (FilePath & path,
+        std::initializer_list<std::function<bool(errno_t)>> errorHandlers);
 };
 namespace filehash {
     // Calculate file hash using XYZ. Can pass in filesize if already known, or can calculate using fseek.
@@ -111,26 +133,43 @@ namespace filehash {
     
 // Cross-thread file loading
 namespace async {
-    typedef ThreadCallable<void(const FileBuffer&)>     FileBufferCallback;
+    typedef ThreadCallable<void(const FileBufferRef&)>     FileBufferCallback;
     typedef ThreadCallable<void(const std::ifstream&)>  IFStreamCallback;
     typedef ThreadCallable<void(const FILE *)>          CFileCallback;
-    typedef ThreadCallable<void(const FilePath &)>      FilePathCallback;
-        
-    void loadFileAsync (const FilePath & path, const FileBufferCallback & onLoad, const FilePathCallback & onFail);
-    void loadFileAsync (const FilePath & path, const IFStreamCallback & onLoad, const FilePathCallback & onFail);
-    void loadFileAsync (const FilePath & path, const CFileCallback & onLoad, const FilePathCallback & onFail);
+    typedef ThreadCallable<void(const FilePath&)>      FilePathCallback;
+    typedef ThreadCallable<void(const FilePath&, errno_t)> CFileErrorCallback;
+    
+    // Load
+    void loadFileAsync (const FilePath & path,
+                        const FileBufferCallback & onLoad,
+                        const FilePathCallback & onFail);
+    void loadFileAsync (const FilePath & path,
+                        const IFStreamCallback & onLoad,
+                        const FilePathCallback & onFail);
+    void loadFileAsync (const FilePath & path,
+                        const char * mode,
+                        const CFileCallback & onLoad,
+                        const CFileErrorCallback & onFail);
 };
     
 // Immediate (non-threaded) file loading
 namespace immediate {
-    typedef std::function<void(const FileBuffer&)> FileBufferCallback;
+    typedef std::function<void(const FileBufferRef&)> FileBufferCallback;
     typedef std::function<void(const std::ifstream &)> IFStreamCallback;
     typedef std::function<void(const FILE*)> CFileCallback;
     typedef std::function<void(const FilePath&)> FilePathCallback;
+    typedef std::function<void(const FilePath&, errno_t)> CFileErrorCallback;
     
-    void loadFileImmediate (const FilePath & path, const FileBufferCallback & onLoad, const FilePathCallback & onFail);
-    void loadFileImmediate (const FilePath & path, const IFStreamCallback & onLoad, const FilePathCallback & onFail);
-    void loadFileImmediate (const FilePath & path, const CFileCallback & onLoad, const FilePathCallback & onFail);
+    bool loadFileImmediate (const FilePath & path,
+                            const FileBufferCallback & onLoad,
+                            const FilePathCallback & onFail);
+    bool loadFileImmediate (const FilePath & path,
+                            const IFStreamCallback & onLoad,
+                            const FilePathCallback & onFail);
+    bool loadFileImmediate (const FilePath & path,
+                            const char * mode,
+                            const CFileCallback & onLoad,
+                            const CFileErrorCallback & onFail);
 };
     
 }; // namespace resource_impl
