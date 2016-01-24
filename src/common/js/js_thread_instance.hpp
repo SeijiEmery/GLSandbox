@@ -10,6 +10,14 @@
 #define js_thread_instance_hpp
 
 #include "jsapi.h"
+#include "js/Conversions.h"
+//#include "jsarray.h"
+//#include "jsfun.h"
+//#include "jsobj.h"
+//#include "jsscript.h"
+//#include "jsutil.h"
+
+
 #include "../thread_worker.hpp"
 #include <string>
 #include <queue>
@@ -118,38 +126,116 @@ private:
             throw new std::runtime_error(msg);
         return cx;
     }
+    static JSObject * createGlobalObject (JSContext * cx) {
+        static const JSClass globalClass = {
+            "global",
+            JSCLASS_GLOBAL_FLAGS
+        };
+        auto object = JS_NewGlobalObject(cx, &globalClass, nullptr, JS::DontFireOnNewGlobalHook);
+        if (!object)
+            throw std::runtime_error("Failed to create global object");
+        return object;
+    }
+    
+    
+    static void reportError (JSContext * cx, const char * message, JSErrorReport * report) {
+        fprintf(stderr, "JS ERROR: %s:%u:%s\n",
+                report->filename ? report->filename : "[no filename]",
+                (unsigned int) report->lineno,
+                message);
+    }
+    static bool js_print (JSContext * cx, unsigned argc, JS::Value* vp) {
+        CallArgs args = CallArgsFromVp(argc, vp);
+        for (unsigned i = 0; i < args.length(); ++i) {
+            RootedString str (cx, JS::ToString(cx, args[i]));
+            if (!str)
+                return false;
+            char * bytes = JS_EncodeStringToUTF8(cx, str);
+            if (!bytes)
+                return false;
+            std::cout << (i ? " " : "") << bytes;
+        }
+        std::cout << '\n';
+        args.rval().setUndefined();
+        return true;
+    }
     
 protected:
-    JSRuntime * m_runtime;
-    JSContext * m_context;
+    JSRuntime * const m_runtime;
+    JSContext * const m_context;
     RootedObject m_global;
+    JSAutoCompartment m_compartment;
 
 public:
     JSPlatform () :
         m_runtime(createRuntimeOrThrow("Failed to create js runtime")),
         m_context(createContextOrThrow(m_runtime, "Failed to create js context")),
-        m_global(m_context)
+        m_global(m_context, createGlobalObject(m_context)),
+        m_compartment(m_context, m_global)
     {
-        static const JSClass globalClass = {
-            "global",
-            JSCLASS_GLOBAL_FLAGS
-        };
+        JS_SetErrorReporter(m_runtime, reportError);
         
-        m_global = JS_NewGlobalObject(m_context, &globalClass, nullptr, JS::DontFireOnNewGlobalHook);
-        if (!m_global)
-            throw new std::runtime_error("js instance failed to create global object");
+//        RootedObject global (m_context);
+//        m_global = JS_NewGlobalObject(m_context, &globalClass, nullptr, JS::DontFireOnNewGlobalHook);
+//        if (!m_global)
+//            throw new std::runtime_error("js instance failed to create global object");
+        
+//        JSAutoCompartment ac (m_context, global);
+//        m_compartment = JS_EnterCompartment(m_context, m_global);
+        if (!JS_InitStandardClasses(m_context, m_global))
+            throw new std::runtime_error("js instance failed to initialize global object");
+        
+        static JSFunctionSpec jsGlobalFunctions[] = {
+            JS_FS("print", js_print, 1, 0),
+        };
+    
+        if (!JS_DefineFunctions(m_context, m_global, jsGlobalFunctions))
+            throw new std::runtime_error("js instance failed to set global functions");
     }
     
     JSPlatform (const JSPlatform &) = delete;
     JSPlatform & operator= (const JSPlatform &) = delete;
     
     ~JSPlatform () {
+//        JS_LeaveCompartment(m_context, m_compartment);
         JS_DestroyContext(m_context);
         JS_DestroyRuntime(m_runtime);
     }
     
     void eval (const std::string & contents) {
+        
+        assert(m_context && m_runtime);
+        
+        JSAutoRequest ar (m_context);
+        
         std::cout << "Called eval on \"" << contents << "\"\n";
+        
+        JS::CompileOptions options(m_context);
+                
+        RootedScript script (m_context);
+        if (!JS::Compile(m_context, m_global, options, contents.c_str(), contents.length(), &script)) {
+            std::cout << "Failed to compile '" << contents << "'\n";
+            return;
+        }
+        JSAutoCompartment ac (m_context, script);
+        
+        RootedValue result (m_context);
+        if (!JS_ExecuteScript(m_context, m_global, script, &result)) {
+            std::cout << "Failed to run '" << contents << "'\n";
+            return;
+        }
+        
+        if (!result.isUndefined()) {
+            RootedString str(m_context);
+            str = JS_ValueToSource(m_context, result);
+            if (!str)
+                return;
+            char * utf8chars = JS_EncodeStringToUTF8(m_context, str);
+            if (!utf8chars)
+                return;
+            std::cout << utf8chars << '\n';
+            JS_free(m_context, utf8chars);
+        }
     }
 };
     

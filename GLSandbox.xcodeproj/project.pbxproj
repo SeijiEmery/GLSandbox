@@ -41,8 +41,6 @@
 		81A01BE11C4F34B300E00897 /* script_api.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 81A01BDF1C4F34B300E00897 /* script_api.cpp */; settings = {ASSET_TAGS = (); }; };
 		81A01BE71C4F353000E00897 /* lua_instance.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 81A01BE51C4F353000E00897 /* lua_instance.cpp */; settings = {ASSET_TAGS = (); }; };
 		81A01BEB1C5096B000E00897 /* liblua.5.2.4.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 81A01BEA1C5096B000E00897 /* liblua.5.2.4.dylib */; };
-		81A01BEE1C51C88100E00897 /* fswatcher.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 81A01BEC1C51C88100E00897 /* fswatcher.cpp */; settings = {ASSET_TAGS = (); }; };
-		81A01BF21C51C8B300E00897 /* fswatcher_osx.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 81A01BF01C51C8B300E00897 /* fswatcher_osx.cpp */; settings = {ASSET_TAGS = (); }; };
 		81A01BFA1C51CEE600E00897 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 81A01BF91C51CEE600E00897 /* main.cpp */; };
 		81A01C011C522A4D00E00897 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 81A01C001C522A4D00E00897 /* CoreFoundation.framework */; };
 		81A01C021C522A6E00E00897 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 81A01BFE1C52271600E00897 /* CoreServices.framework */; };
@@ -50,6 +48,8 @@
 		81A01C041C522A7F00E00897 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 81A01BFE1C52271600E00897 /* CoreServices.framework */; };
 		81A01C0C1C543BEF00E00897 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 81A01C0B1C543BEF00E00897 /* main.cpp */; };
 		81A01C131C543CA100E00897 /* resource_layer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 81A01C111C543CA100E00897 /* resource_layer.cpp */; settings = {ASSET_TAGS = (); }; };
+		81A01C161C55562500E00897 /* resource_impl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 81A01C141C55562500E00897 /* resource_impl.cpp */; settings = {ASSET_TAGS = (); }; };
+		81A01C171C55562500E00897 /* resource_impl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 81A01C141C55562500E00897 /* resource_impl.cpp */; settings = {ASSET_TAGS = (); }; };
 		81AB41021C260CAA00151156 /* ubo_test.fs in Resources */ = {isa = PBXBuildFile; fileRef = 81AB41011C260CAA00151156 /* ubo_test.fs */; settings = {ASSET_TAGS = (); }; };
 		81AB41041C260CC800151156 /* ubo_test.vs in Resources */ = {isa = PBXBuildFile; fileRef = 81AB41031C260CC800151156 /* ubo_test.vs */; settings = {ASSET_TAGS = (); }; };
 		81AB410B1C27CF1A00151156 /* obj_viewer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 81AB41091C27CF1A00151156 /* obj_viewer.cpp */; settings = {ASSET_TAGS = (); }; };
@@ -227,10 +227,6 @@
 		81A01BE61C4F353000E00897 /* lua_instance.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = lua_instance.hpp; path = src/common/script/lua_instance.hpp; sourceTree = SOURCE_ROOT; };
 		81A01BE81C4F359F00E00897 /* libluajit-5.1.2.0.4.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libluajit-5.1.2.0.4.dylib"; path = "../../../../usr/local/lib/libluajit-5.1.2.0.4.dylib"; sourceTree = "<group>"; };
 		81A01BEA1C5096B000E00897 /* liblua.5.2.4.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = liblua.5.2.4.dylib; path = ../../../../usr/local/Cellar/lua/5.2.4_2/lib/liblua.5.2.4.dylib; sourceTree = "<group>"; };
-		81A01BEC1C51C88100E00897 /* fswatcher.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = fswatcher.cpp; path = src/common/fswatcher/fswatcher.cpp; sourceTree = SOURCE_ROOT; };
-		81A01BED1C51C88100E00897 /* fswatcher.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = fswatcher.hpp; path = src/common/fswatcher/fswatcher.hpp; sourceTree = SOURCE_ROOT; };
-		81A01BF01C51C8B300E00897 /* fswatcher_osx.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = fswatcher_osx.cpp; path = src/common/fswatcher/fswatcher_osx.cpp; sourceTree = SOURCE_ROOT; };
-		81A01BF11C51C8B300E00897 /* fswatcher_osx.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = fswatcher_osx.hpp; path = src/common/fswatcher/fswatcher_osx.hpp; sourceTree = SOURCE_ROOT; };
 		81A01BF71C51CEE600E00897 /* fsevents-test */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "fsevents-test"; sourceTree = BUILT_PRODUCTS_DIR; };
 		81A01BF91C51CEE600E00897 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		81A01BFE1C52271600E00897 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = System/Library/Frameworks/CoreServices.framework; sourceTree = SDKROOT; };
@@ -239,6 +235,8 @@
 		81A01C0B1C543BEF00E00897 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		81A01C111C543CA100E00897 /* resource_layer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = resource_layer.cpp; path = src/common/resourcelayer/resource_layer.cpp; sourceTree = SOURCE_ROOT; };
 		81A01C121C543CA100E00897 /* resource_layer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = resource_layer.hpp; path = src/common/resourcelayer/resource_layer.hpp; sourceTree = SOURCE_ROOT; };
+		81A01C141C55562500E00897 /* resource_impl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = resource_impl.cpp; path = src/common/resourcelayer/resource_impl.cpp; sourceTree = SOURCE_ROOT; };
+		81A01C151C55562500E00897 /* resource_impl.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = resource_impl.hpp; path = src/common/resourcelayer/resource_impl.hpp; sourceTree = SOURCE_ROOT; };
 		81AB41011C260CAA00151156 /* ubo_test.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = ubo_test.fs; path = shaders/modules/ubo_test/ubo_test.fs; sourceTree = SOURCE_ROOT; };
 		81AB41031C260CC800151156 /* ubo_test.vs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = ubo_test.vs; path = shaders/modules/ubo_test/ubo_test.vs; sourceTree = SOURCE_ROOT; };
 		81AB41091C27CF1A00151156 /* obj_viewer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = obj_viewer.cpp; path = src/modules/obj_viewer/obj_viewer.cpp; sourceTree = SOURCE_ROOT; };
@@ -520,7 +518,6 @@
 			isa = PBXGroup;
 			children = (
 				81A01C101C543C7A00E00897 /* resourcelayer */,
-				81A01BEF1C51C88700E00897 /* fswatcher */,
 				81A01BDE1C4F348F00E00897 /* script */,
 				81A01BD01C4B02DA00E00897 /* js */,
 				81176D8D1C1FC9850025EB6C /* gl */,
@@ -626,17 +623,6 @@
 			name = script;
 			sourceTree = "<group>";
 		};
-		81A01BEF1C51C88700E00897 /* fswatcher */ = {
-			isa = PBXGroup;
-			children = (
-				81A01BEC1C51C88100E00897 /* fswatcher.cpp */,
-				81A01BED1C51C88100E00897 /* fswatcher.hpp */,
-				81A01BF01C51C8B300E00897 /* fswatcher_osx.cpp */,
-				81A01BF11C51C8B300E00897 /* fswatcher_osx.hpp */,
-			);
-			name = fswatcher;
-			sourceTree = "<group>";
-		};
 		81A01BF81C51CEE600E00897 /* fsevents-test */ = {
 			isa = PBXGroup;
 			children = (
@@ -658,6 +644,8 @@
 			children = (
 				81A01C111C543CA100E00897 /* resource_layer.cpp */,
 				81A01C121C543CA100E00897 /* resource_layer.hpp */,
+				81A01C141C55562500E00897 /* resource_impl.cpp */,
+				81A01C151C55562500E00897 /* resource_impl.hpp */,
 			);
 			name = resourcelayer;
 			sourceTree = "<group>";
@@ -1024,7 +1012,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				81A01BEE1C51C88100E00897 /* fswatcher.cpp in Sources */,
 				81176DAC1C22325E0025EB6C /* gl_wrapper.cpp in Sources */,
 				81A01BE71C4F353000E00897 /* lua_instance.cpp in Sources */,
 				81176D8A1C1FC9640025EB6C /* gl_shaders.cpp in Sources */,
@@ -1042,9 +1029,9 @@
 				815D620E1C1F7D9F005DB2A8 /* triangles.cpp in Sources */,
 				815D62111C1F7E42005DB2A8 /* modules.cpp in Sources */,
 				815D62091C1F670F005DB2A8 /* app.cpp in Sources */,
-				81A01BF21C51C8B300E00897 /* fswatcher_osx.cpp in Sources */,
 				81A01C131C543CA100E00897 /* resource_layer.cpp in Sources */,
 				815D61F41C1F6574005DB2A8 /* main.cpp in Sources */,
+				81A01C161C55562500E00897 /* resource_impl.cpp in Sources */,
 				81176D901C1FCBEF0025EB6C /* resources.cpp in Sources */,
 				81A01BD31C4B02FF00E00897 /* JSInstance.cpp in Sources */,
 				81A01BD91C4B2A9E00E00897 /* js_thread_instance.cpp in Sources */,
@@ -1065,6 +1052,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				81A01C0C1C543BEF00E00897 /* main.cpp in Sources */,
+				81A01C171C55562500E00897 /* resource_impl.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

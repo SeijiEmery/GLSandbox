@@ -225,47 +225,9 @@ struct ResourceLayer {
     static auto doDirectFileLoadAsFILE (FilePath filename) -> DirectFileLoadRequest<FILE*> {
         return { filename };
     }
-
-protected:
-    IFilesystemCache    * fscache = nullptr;
-    IFileChangeNotifier * fileWatcher = nullptr;
-    IFileLoader         * fileLoader  = nullptr;
-    IThreadScheduler    * threadScheduler = nullptr;
-    static ResourceLayer  s_instance;
-    std::atomic<bool> __initialized { false };
-    
-protected:
-    ResourceLayer & getInstance () {
-        assert(s_instance.__initialized);
-        return s_instance;
-    }
-public:
-    static void configure (
-        decltype(fscache)     fscache,
-        decltype(fileWatcher) fileWatcher,
-        decltype(fileLoader)  fileLoader,
-        decltype(threadScheduler) threadScheduler
-    ) {
-        assert(s_instance.__initialized == false);
-        s_instance.fscache = fscache;
-        s_instance.fileWatcher = fileWatcher;
-        s_instance.fileLoader = fileLoader;
-        s_instance.threadScheduler = threadScheduler;
-    }
-    
-    // For internal use only...
-    void execute (std::function<void(IResourceExecutor&)> f) {
-        
-    }
-    void executeImmediate (std::function<void(IResourceExecutor&)> f) {
-        
-    }
 }; // class ResourceLayer
     
 }; // namespace resource
 }; // namespace gl_sandbox
-
-
-
 
 #endif /* resourcelayer_hpp */

@@ -145,11 +145,13 @@ protected:
     static Application  * g_applicationInstance;
     static InputManager * g_inputManager;
     static AppEvents    * g_appEvents;
+    static decltype(m_appConfig) * g_appConfig;
 public:
     static auto getInstance  () { return g_applicationInstance; }
     static auto getInputManager () { return g_inputManager; }
     static auto getAppEvents    () { return g_appEvents; }
     static Camera*  mainCamera () { return &(getInstance()->m_mainCamera); }
+    static const decltype(m_appConfig) getConfig () { return *g_appConfig; }
 };
 
 }; // namespace gl_sandbox

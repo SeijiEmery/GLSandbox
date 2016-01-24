@@ -17,6 +17,7 @@ using namespace gl_sandbox;
 InputManager * Application::g_inputManager = nullptr;
 Application  * Application::g_applicationInstance = nullptr;
 AppEvents    * Application::g_appEvents = nullptr;
+app_config::AppConfig * Application::g_appConfig = nullptr;
 
 namespace glfw_callbacks {
 extern "C" {
@@ -237,35 +238,16 @@ void app_config::AppConfig::loadConfig(gl_sandbox::LuaInstance & lua) {
     }
 }
 void app_config::Window::loadConfig(gl_sandbox::LuaInstance & lua) {
-    auto L = lua.getState();
-    lua_getglobal(L, "window");
-    if (!lua_istable(L, -1))
-        throw config_error("missing global 'window'");
     
+    lua.assertValueIsType("window", LUA_TTABLE);
     lua.getVal("window.width", width);
     lua.getVal("window.height", height);
     lua.getVal("window.appname", app_name);
     lua.getVal("window.display_fps", show_fps_counter);
-    
-//    getField(L, "window", "width", width, true);
-//    getField(L, "window", "height", height, true);
-//    auto err = luaL_loadstring(L, "return window.width") || lua_pcall(L, 0, 1, 0);
-//    if (err) {
-//        std::cerr << lua_tostring(L, -1) << std::endl;
-//        return;
-//    } else {
-//        width = lua_tointeger(L, -1);
-//    }
-//    lua_pop(L, 1);
-//    getField(L, "window", "app_name", app_name, false);
-//    getField(L, "window", "show_fps_counter", show_fps_counter, false);
 }
 void app_config::Resources::loadConfig(gl_sandbox::LuaInstance & lua) {
-    auto L = lua.getState();
-    lua_getglobal(L, "resources");
-    if (!lua_istable(L, -1))
-        throw config_error("missing global 'resources'");
     
+    lua.assertValueIsType("resources", LUA_TTABLE);
     lua.getVal("resources.project_dir",                     project_dir);
     lua.getVal("resources.asset_dirs.root",                 asset_dir);
     lua.getVal("resources.asset_dirs.cached",               asset_cache_dir);
@@ -280,7 +262,7 @@ void app_config::Resources::loadConfig(gl_sandbox::LuaInstance & lua) {
     lua.getVal("resources.backup_logs.dir", log_backup_dir);
     
     lua.getVal("resources.storage.persistent_data_dir", persistent_data_dir);
-    lua.getVal("resources.storage.persistent_data_backup_dir", persistent_data_backup_dir);
+    lua.getVal("resources.storage.persistent_data_backups.dir", persistent_data_backup_dir);
 }
 
 
@@ -290,6 +272,7 @@ Application::Application ()
     Application::g_applicationInstance = this;
     Application::g_inputManager = &m_inputManager;
     Application::g_appEvents = &m_appEvents;
+    Application::g_appConfig = &m_appConfig;
 
     if (!glfwInit())
         throw InitializationError("Failed to initialize glfw\n");
@@ -382,9 +365,17 @@ struct FPSWindowCounter {
     }
 protected:
     void updateWindow (GLFWwindow * window) {
-        static char windowTitleBuffer [256];
-        snprintf(windowTitleBuffer, sizeof(windowTitleBuffer), "GL sandbox -- %0.2fms (%0.2f fps)", realAppRunTime / (double)appRunTimeSamples, currentFpsAvg);
-        glfwSetWindowTitle(window, windowTitleBuffer);
+        if (Application::getConfig().window.show_fps_counter) {
+            static char windowTitleBuffer [256];
+            snprintf(windowTitleBuffer, sizeof(windowTitleBuffer),
+                     "%s %0.2fms (%0.2f fps)",
+                     Application::getConfig().window.app_name.c_str(),
+                     realAppRunTime / (double)appRunTimeSamples,
+                     currentFpsAvg);
+            glfwSetWindowTitle(window, windowTitleBuffer);
+        } else {
+            glfwSetWindowTitle(window, Application::getConfig().window.app_name.c_str());
+        }
     }
 protected:
     double lastTime;
@@ -420,12 +411,6 @@ void Application::run () {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);     CHECK_GL_ERRORS();
         
         m_modules.runModules();
-        
-//        for (const auto & camera : m_viewportCameras) {
-//            glViewport(camera->viewport.x, camera.viewport.y, camera.viewport.width, camera.viewport.height);
-//            glScissor(camera->viewport.x, camera.viewport.y, camera.viewport.width, camera.viewport.height);
-//            m_modules.drawModules(*camera);
-//        }
         
         glfwSwapBuffers(m_mainWindow);    CHECK_GL_ERRORS();
         glfwPollEvents();

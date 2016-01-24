@@ -24,7 +24,7 @@ console.log(path.concat)
 window = {}
 window.height = screen.height - 40
 window.width  = min(window.height * screen.width / screen.height, screen.width - 40)
-window.appname = "GL Sandbox"
+window.appname = "GLSandbox"
 window.display_fps = true
 
 modules = {}
