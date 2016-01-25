@@ -17,25 +17,39 @@
 namespace gl_sandbox {
 
 struct ThreadTarget {
-    void enqueue (std::function<void()> closure);
+    void enqueue (std::function<void()> closure) {}
 };
 
 template <typename T>
 struct ThreadCallable {
 protected:
     std::function<T> fcn;
-    ThreadTarget*    target;
+    ThreadTarget*    target = nullptr;
     
 public:
     ThreadCallable(decltype(target) target, decltype(fcn) fcn) :
         target(target), fcn(fcn) {}
+    ThreadCallable(decltype(fcn) fcn) : fcn(fcn) {}
+    ThreadCallable(std::nullptr_t _) : fcn(nullptr) {}
     
     template <typename... Args>
-    void operator () (Args... args) {
-        target->enqueue([=]() {
-            fcn.call(args...);
-        });
+    void operator () (Args... args) const {
+        if (fcn == nullptr)
+            return;
+        target ?
+            target->enqueue([=]() { fcn(args...); }) :
+            fcn(args...);
     }
+    
+    ThreadCallable (const ThreadCallable & other) = default;
+    ThreadCallable & operator= (const ThreadCallable &) = default;
+    
+    ThreadCallable (ThreadCallable &&) = default;
+    ThreadCallable & operator= (ThreadCallable &&) = default;
+    
+    operator bool () { return fcn != nullptr; }
+    bool operator == (std::nullptr_t _) { return fcn == nullptr; }
+    bool operator != (std::nullptr_t _) { return fcn != nullptr; }
 };
 
 }; // namespace gl_sandbox
@@ -89,8 +103,9 @@ namespace utils {
                       const std::string repl);
     
     FilePath & resolveUserDirectory (FilePath & path);
-    FilePath & resolvePath (FilePath & path);
-
+    FilePath & resolveExistingPath (FilePath & path);
+    FilePath resolvedPath (const FilePath & path);
+    
     // Use realpath to resolve / set path.
     // If realpath returns an error, uses errorHandlers (applied in order) to attempt to recover.
     //   errorhandler := (realpath error value) -> true iff handled | false
@@ -133,11 +148,11 @@ namespace filehash {
     
 // Cross-thread file loading
 namespace async {
-    typedef ThreadCallable<void(const FileBufferRef&)>     FileBufferCallback;
-    typedef ThreadCallable<void(const std::ifstream&)>  IFStreamCallback;
-    typedef ThreadCallable<void(const FILE *)>          CFileCallback;
-    typedef ThreadCallable<void(const FilePath&)>      FilePathCallback;
-    typedef ThreadCallable<void(const FilePath&, errno_t)> CFileErrorCallback;
+    typedef ThreadCallable<void(const FileBufferRef&)>      FileBufferCallback;
+    typedef ThreadCallable<void(const std::shared_ptr<std::ifstream> &)> IFStreamCallback;
+    typedef ThreadCallable<void(FILE *)>                    CFileCallback;
+    typedef ThreadCallable<void(const FilePath&)>           FilePathCallback;
+    typedef ThreadCallable<void(const FilePath&, errno_t)>  CFileErrorCallback;
     
     // Load
     void loadFileAsync (const FilePath & path,
@@ -154,11 +169,11 @@ namespace async {
     
 // Immediate (non-threaded) file loading
 namespace immediate {
-    typedef std::function<void(const FileBufferRef&)> FileBufferCallback;
-    typedef std::function<void(const std::ifstream &)> IFStreamCallback;
-    typedef std::function<void(const FILE*)> CFileCallback;
-    typedef std::function<void(const FilePath&)> FilePathCallback;
-    typedef std::function<void(const FilePath&, errno_t)> CFileErrorCallback;
+    typedef std::function<void(const FileBufferRef&)>       FileBufferCallback;
+    typedef std::function<void(const std::shared_ptr<std::ifstream> &)> IFStreamCallback;
+    typedef std::function<void(FILE*)>                      CFileCallback;
+    typedef std::function<void(const FilePath&)>            FilePathCallback;
+    typedef std::function<void(const FilePath&, errno_t)>   CFileErrorCallback;
     
     bool loadFileImmediate (const FilePath & path,
                             const FileBufferCallback & onLoad,

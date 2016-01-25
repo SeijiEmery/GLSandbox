@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		81043F881C30876A00CEB09C /* instanced_array.fs in Resources */ = {isa = PBXBuildFile; fileRef = 81043F871C30876A00CEB09C /* instanced_array.fs */; settings = {ASSET_TAGS = (); }; };
 		81043F8A1C30877900CEB09C /* instanced_array.vs in Resources */ = {isa = PBXBuildFile; fileRef = 81043F891C30877900CEB09C /* instanced_array.vs */; settings = {ASSET_TAGS = (); }; };
+		811195C71C559B1000980109 /* resource_layer_declarative.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 811195C51C559B1000980109 /* resource_layer_declarative.cpp */; settings = {ASSET_TAGS = (); }; };
+		811195C81C559B1000980109 /* resource_layer_declarative.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 811195C51C559B1000980109 /* resource_layer_declarative.cpp */; settings = {ASSET_TAGS = (); }; };
 		81176D851C1FC90D0025EB6C /* basic_shader.fs in Resources */ = {isa = PBXBuildFile; fileRef = 81176D841C1FC90D0025EB6C /* basic_shader.fs */; settings = {ASSET_TAGS = (); }; };
 		81176D871C1FC9230025EB6C /* basic_shader.vs in Resources */ = {isa = PBXBuildFile; fileRef = 81176D861C1FC9230025EB6C /* basic_shader.vs */; settings = {ASSET_TAGS = (); }; };
 		81176D8A1C1FC9640025EB6C /* gl_shaders.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 81176D881C1FC9640025EB6C /* gl_shaders.cpp */; settings = {ASSET_TAGS = (); }; };
@@ -154,6 +156,8 @@
 /* Begin PBXFileReference section */
 		81043F871C30876A00CEB09C /* instanced_array.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = instanced_array.fs; path = shaders/modules/triangles/instanced_array.fs; sourceTree = SOURCE_ROOT; };
 		81043F891C30877900CEB09C /* instanced_array.vs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = instanced_array.vs; path = shaders/modules/triangles/instanced_array.vs; sourceTree = SOURCE_ROOT; };
+		811195C51C559B1000980109 /* resource_layer_declarative.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = resource_layer_declarative.cpp; path = src/common/resourcelayer/resource_layer_declarative.cpp; sourceTree = SOURCE_ROOT; };
+		811195C61C559B1000980109 /* resource_layer_declarative.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = resource_layer_declarative.hpp; path = src/common/resourcelayer/resource_layer_declarative.hpp; sourceTree = SOURCE_ROOT; };
 		81176D841C1FC90D0025EB6C /* basic_shader.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = basic_shader.fs; path = shaders/modules/triangles/basic_shader.fs; sourceTree = SOURCE_ROOT; };
 		81176D861C1FC9230025EB6C /* basic_shader.vs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = basic_shader.vs; path = shaders/modules/triangles/basic_shader.vs; sourceTree = SOURCE_ROOT; };
 		81176D881C1FC9640025EB6C /* gl_shaders.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = gl_shaders.cpp; path = src/common/gl/gl_shaders.cpp; sourceTree = SOURCE_ROOT; };
@@ -646,6 +650,8 @@
 				81A01C121C543CA100E00897 /* resource_layer.hpp */,
 				81A01C141C55562500E00897 /* resource_impl.cpp */,
 				81A01C151C55562500E00897 /* resource_impl.hpp */,
+				811195C51C559B1000980109 /* resource_layer_declarative.cpp */,
+				811195C61C559B1000980109 /* resource_layer_declarative.hpp */,
 			);
 			name = resourcelayer;
 			sourceTree = "<group>";
@@ -1012,6 +1018,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				811195C71C559B1000980109 /* resource_layer_declarative.cpp in Sources */,
 				81176DAC1C22325E0025EB6C /* gl_wrapper.cpp in Sources */,
 				81A01BE71C4F353000E00897 /* lua_instance.cpp in Sources */,
 				81176D8A1C1FC9640025EB6C /* gl_shaders.cpp in Sources */,
@@ -1053,6 +1060,7 @@
 			files = (
 				81A01C0C1C543BEF00E00897 /* main.cpp in Sources */,
 				81A01C171C55562500E00897 /* resource_impl.cpp in Sources */,
+				811195C81C559B1000980109 /* resource_layer_declarative.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1309,6 +1317,7 @@
 				81A01BFD1C51CEE600E00897 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		81A01C0D1C543BEF00E00897 /* Build configuration list for PBXNativeTarget "resourcelayer-test" */ = {
 			isa = XCConfigurationList;
@@ -1317,6 +1326,7 @@
 				81A01C0F1C543BEF00E00897 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		81AB41911C2B4A8F00151156 /* Build configuration list for PBXNativeTarget "raii-signals-test" */ = {
 			isa = XCConfigurationList;

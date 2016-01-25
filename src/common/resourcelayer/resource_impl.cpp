@@ -50,11 +50,11 @@ namespace detail {
         const IFStreamCallback & onLoad,
         const FilePathCallback & onFail
     ) {
-        std::ifstream f (path);
-        if (f) {
+        auto f = std::make_shared<std::ifstream>(path);
+        if (*f) {
             return onLoad(f), true;
         } else {
-            return onFail(f), false;
+            return onFail(path), false;
         }
     }
 
@@ -89,7 +89,7 @@ namespace immediate {
         const IFStreamCallback & onLoad,
         const FilePathCallback & onFail
     ) {
-        return detail::loadFileAsBuffer(path, onLoad, onFail);
+        return detail::loadFileAsIFstream(path, onLoad, onFail);
     }
 
     bool loadFileImmediate (
@@ -115,7 +115,7 @@ namespace async {
         const IFStreamCallback & onLoad,
         const FilePathCallback & onFail
     ) {
-        detail::loadFileAsBuffer(path, onLoad, onFail);
+        detail::loadFileAsIFstream(path, onLoad, onFail);
     }
 
     void loadFileAsync (
@@ -166,9 +166,14 @@ namespace utils {
             return path.replace(0, 1, getenv("HOME")), path;
         return path;
     }
-    FilePath & resolvePath (FilePath & path) {
+    FilePath & resolveExistingPath (FilePath & path) {
         resolveUserDirectory(path);
         return path;
+    }
+    FilePath resolvedPath (const FilePath & path) {
+        FilePath newPath (path);
+        resolveExistingPath(newPath);
+        return newPath;
     }
     
     bool getRealPath (
@@ -187,15 +192,15 @@ namespace utils {
                 }
             }
             switch (errno) {
-                case EACCES: throw ResourceError("Unhandled realpath() error: EACCES (%s)", path);
-                case EINVAL: throw ResourceError("Unhandled realpath() error: EINVAL (%s)", path);
-                case EIO:    throw ResourceError("Unhandled realpath() error: EIO (%s)", path);
-                case ELOOP:  throw ResourceError("Unhandled realpath() error: ELOOP (%s)", path);
-                case ENAMETOOLONG: throw ResourceError("Unhandled realpath() error: ENAMETOOLONG (%s)", path);
-                case ENOMEM: throw ResourceError("Unhandled realpath() error: ENOMEM (%s)", path);
-                case ENOENT: throw ResourceError("Unhandled realpath() error: ENOENT (%s)", path);
-                case ENOTDIR: throw ResourceError("Unhandled realpath() error: ENOTDIR (%s)", path);
-                default: throw ResourceError("Unhandled realpath() error: %d (%s)", errno, path);
+                case EACCES: throw ResourceError("Unhandled realpath() error: EACCES (%s)", path.c_str());
+                case EINVAL: throw ResourceError("Unhandled realpath() error: EINVAL (%s)", path.c_str());
+                case EIO:    throw ResourceError("Unhandled realpath() error: EIO (%s)", path.c_str());
+                case ELOOP:  throw ResourceError("Unhandled realpath() error: ELOOP (%s)", path.c_str());
+                case ENAMETOOLONG: throw ResourceError("Unhandled realpath() error: ENAMETOOLONG (%s)", path.c_str());
+                case ENOMEM: throw ResourceError("Unhandled realpath() error: ENOMEM (%s)", path.c_str());
+                case ENOENT: throw ResourceError("Unhandled realpath() error: ENOENT (%s)", path.c_str());
+                case ENOTDIR: throw ResourceError("Unhandled realpath() error: ENOTDIR (%s)", path.c_str());
+                default: throw ResourceError("Unhandled realpath() error: %d (%s)", errno, path.c_str());
             }
         }
     }
