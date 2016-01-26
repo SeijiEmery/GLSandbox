@@ -145,16 +145,23 @@ void tryWatchingForFiles () {
     
     std::cout << "Creating file watcher\n";
     
-    watcher.watchForChanges("/", [](auto path) {
-        std::cout << "File maybe changed: " << path << "\n";
-    }, [](auto err) { std::cerr << err.what() << "\n"; }, false);
+    auto watchFile = [&](const FilePath & path) {
+        return watcher.watchForChanges(path, [](auto path){
+            std::cout << "File maybe changed in: " << path << "\n";
+        }, [](auto err) { std::cerr << err.what() << "\n"; }, false);
+    };
     
+    watchFile("/");
+    watchFile(resolvedPath("~/foo"))->detatch();
+    watchFile(resolvedPath("~/misc-projects"));
+    watchFile(resolvedPath("~/"));
+
     std::this_thread::sleep_for(std::chrono::nanoseconds((long)10e9));
 }
 
 int main(int argc, const char * argv[]) {
     
-    tryDirectLoad("~/Library/Application Support/GLSandbox/conf.lua");
+//    tryDirectLoad("~/Library/Application Support/GLSandbox/conf.lua");
     
     tryWatchingForFiles();
     

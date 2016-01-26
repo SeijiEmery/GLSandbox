@@ -41,15 +41,6 @@ public:
         const ThreadCallable<void(const ResourceError &)> onError,
         bool autorelease = true);
     
-    DirectoryWatcherHandleRef watchForChanges (
-        const FilePath & dirPath,
-        const std::function<void(const FilePath&)> onChanged,
-        const std::function<void(const ResourceError &)> onError,
-        bool autorelease = true
-    ) {
-        return watchForChanges(dirPath, { onChanged }, { onError }, autorelease);
-    }
-    
     DirectoryWatcherInstance ();
     ~DirectoryWatcherInstance ();
     

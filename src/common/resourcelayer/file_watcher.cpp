@@ -46,6 +46,7 @@ struct DirectoryWatcherHandle : public IDirectoryWatcherHandle {
     DirectoryWatcherHandle & operator= (const DirectoryWatcherHandle &) = default;
     
     void detatch () override {
+        std::cout << "Detatching handle on '" << (ref ? ref->path : "<nullref>") << "'\n";
         if (ref) ref->active = false;
     }
     ~DirectoryWatcherHandle () {
@@ -87,10 +88,15 @@ protected:
                  latency,
                  kFSEventStreamCreateFlagNone);
             
+            std::cout << "Created instance " << (void*)this << " " << *this << "\n";
+            
             FSEventStreamScheduleWithRunLoop(stream, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
             FSEventStreamStart(stream);
         }
         ~FSEventStreamInstance () {
+            
+            std::cout << "Killing instance " << (void*)this << " " << *this << "\n";
+            
             FSEventStreamStop(stream);
             CFRelease(stream);
             CFRelease(pathArray);
@@ -101,6 +107,16 @@ protected:
         FSEventStreamInstance & operator= (const FSEventStreamInstance&) = delete;
         FSEventStreamInstance (FSEventStreamInstance &&) = default;
         FSEventStreamInstance & operator= (FSEventStreamInstance &&) = default;
+        
+        friend std::ostream & operator << (std::ostream & os, const FSEventStreamInstance & s) {
+            os << "FSEventStream (file watcher) instance (paths = ";
+            for (auto i = CFArrayGetCount(s.pathArray); i --> 0; ) {
+                auto v = (CFStringRef)CFArrayGetValueAtIndex(s.pathArray, i);
+                auto path = CFStringGetCStringPtr(v, kCFStringEncodingUTF8);
+                os << '\'' << path << '\'' << (i ? ", " : "");
+            }
+            return os << "; activePaths = " << CFSetGetCount(s.activePaths) << ")";
+        }
     };
     std::vector<FSEventStreamInstance> m_runningStreams;
     unsigned m_deadStreamPaths = 0;
@@ -135,10 +151,15 @@ protected:
         
         m_runningStreams.emplace_back(&m_context, &cfpath, 1);
         
+        std::cout << "Created new stream " << m_runningStreams.back() << "\n";
+        
         CFRelease(cfpath);
     }
     
     void removePath (const char * path) {
+        
+        std::cout << "Removing path (internal op) '" << path << "'\n";
+        
         CFStringRef cfpath = CFStringCreateWithCStringNoCopy(kCFAllocatorNull, path, kCFStringEncodingUTF8, nullptr);
         
         m_deadStreamPaths = 0;
@@ -155,7 +176,7 @@ protected:
             auto & s = m_runningStreams[i];
             
             if (CFSetGetCount(s.activePaths) == 0) {
-                // remove value / kill stream
+                std::cout << "Killing empty stream " << s << "\n";
                 if (i != m_runningStreams.size() - 1)
                     std::swap(m_runningStreams.back(), s);
                 m_runningStreams.pop_back();
@@ -188,10 +209,11 @@ protected:
         m_runningStreams.emplace_back(&m_context,
                                       (const CFStringRef*)&tmpValues[0],
                                       CFSetGetCount(keepPaths));
-        
+        std::cout << "Consolidated streams -- created stream " << m_runningStreams.back() << "\n";
         std::swap(m_runningStreams[0], m_runningStreams.back());
         
         while (m_runningStreams.size() > 1) {
+            std::cout << "Consolidated streams -- removing stream " << m_runningStreams.back() << "\n";
             m_runningStreams.pop_back();
         }
         m_deadStreamPaths = 0;
@@ -201,6 +223,11 @@ public:
     void notifyPathsChanged (const char ** paths, size_t n) {
         
         std::lock_guard<decltype(m_mutex)> lock (m_mutex);
+        
+        std::cout << "Paths changed: (callback notify)\n";
+        for (auto i = 0; i < n; ++i) {
+            std::cout << "    '" << paths[i] << "'\n";
+        }
         
         unsigned n_removed = 0;
         
@@ -237,15 +264,19 @@ public:
             bool autorelease
     ) {
         std::lock_guard<decltype(m_mutex)> lock (m_mutex);
+        std::cout << "Starting request to watch path '" << path << "'\n";
         
         FileChangeCallbackRef callback = std::make_shared<RetainedFileChangeCallback>(onChanged, path);
-        if (m_pathCallbacks.find(path) != m_pathCallbacks.end()) {
+        if (m_pathCallbacks.find(path) == m_pathCallbacks.end()) {
+            
+            std::cout << "Starting new path watcher\n";
             
             m_pathCallbacks[path] = { callback };
             appendFSEventStream(path);
             consolidateStreams();
             
         } else {
+            std::cout << "Path watcher already exists\n";
             m_pathCallbacks[path].push_back(callback);
         }
         return DirectoryWatcherHandleRef(new DirectoryWatcherHandle(callback, autorelease));

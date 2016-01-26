@@ -16,41 +16,43 @@
 
 namespace gl_sandbox {
 
-struct ThreadTarget {
-    void enqueue (std::function<void()> closure) {}
-};
+//struct ThreadTarget {
+//    void enqueue (std::function<void()> closure) {}
+//};
 
+//template <typename T>
+//struct ThreadCallable {
+//protected:
+//    std::function<T> fcn;
+//    ThreadTarget*    target = nullptr;
+//    
+//public:
+//    ThreadCallable(decltype(target) target, decltype(fcn) fcn) :
+//        target(target), fcn(fcn) {}
+//    ThreadCallable(decltype(fcn) fcn) : fcn(fcn) {}
+//    ThreadCallable(std::nullptr_t _) : fcn(nullptr) {}
+//    
+//    template <typename... Args>
+//    void operator () (Args... args) const {
+//        if (fcn == nullptr)
+//            return;
+//        target ?
+//            target->enqueue([=]() { fcn(args...); }) :
+//            fcn(args...);
+//    }
+//    
+//    ThreadCallable (const ThreadCallable & other) = default;
+//    ThreadCallable & operator= (const ThreadCallable &) = default;
+//    
+//    ThreadCallable (ThreadCallable &&) = default;
+//    ThreadCallable & operator= (ThreadCallable &&) = default;
+//    
+//    operator bool () { return fcn != nullptr; }
+//    bool operator == (std::nullptr_t _) { return fcn == nullptr; }
+//    bool operator != (std::nullptr_t _) { return fcn != nullptr; }
+//};
 template <typename T>
-struct ThreadCallable {
-protected:
-    std::function<T> fcn;
-    ThreadTarget*    target = nullptr;
-    
-public:
-    ThreadCallable(decltype(target) target, decltype(fcn) fcn) :
-        target(target), fcn(fcn) {}
-    ThreadCallable(decltype(fcn) fcn) : fcn(fcn) {}
-    ThreadCallable(std::nullptr_t _) : fcn(nullptr) {}
-    
-    template <typename... Args>
-    void operator () (Args... args) const {
-        if (fcn == nullptr)
-            return;
-        target ?
-            target->enqueue([=]() { fcn(args...); }) :
-            fcn(args...);
-    }
-    
-    ThreadCallable (const ThreadCallable & other) = default;
-    ThreadCallable & operator= (const ThreadCallable &) = default;
-    
-    ThreadCallable (ThreadCallable &&) = default;
-    ThreadCallable & operator= (ThreadCallable &&) = default;
-    
-    operator bool () { return fcn != nullptr; }
-    bool operator == (std::nullptr_t _) { return fcn == nullptr; }
-    bool operator != (std::nullptr_t _) { return fcn != nullptr; }
-};
+    using ThreadCallable = std::function<T>;
 
 }; // namespace gl_sandbox
 
