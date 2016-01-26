@@ -109,25 +109,11 @@ public:
     Impl () : m_cfRunThread([](){
         CFRunLoopRun();
     }) {
-        std::lock_guard<decltype(m_mutex)> lock (m_mutex);
         
-        m_pathList = CFArrayCreateMutable(nullptr, 10, nullptr);
-        m_eventStream = FSEventStreamCreate(
-                nullptr,
-                (FSEventStreamCallback)&fsCallback,
-                &m_context,
-                m_pathList,
-                kFSEventStreamEventIdSinceNow,
-                latency,
-                kFSEventStreamCreateFlagNone);
-        
-        FSEventStreamScheduleWithRunLoop(m_eventStream, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
-        FSEventStreamStart(m_eventStream);
     }
     ~Impl () {
-        FSEventStreamStop(m_eventStream);
-        CFRelease(m_eventStream);
-        CFRelease(m_pathList);
+        while (m_runningStreams.size() > 0)
+            m_runningStreams.pop_back();
     }
     
 protected:
@@ -145,63 +131,31 @@ protected:
     
     void appendFSEventStream (const FilePath & path) {
         
-        m_runningStreams.emplace_back();
-        auto & s = m_runningStreams.back();
-        
         CFStringRef cfpath = CFStringCreateWithCString(nullptr, path.c_str(), kCFStringEncodingUTF8);
         
-        s.pathArray = CFArrayCreate(nullptr, (const void**)&cfpath, 1, nullptr);
+        m_runningStreams.emplace_back(&m_context, &cfpath, 1);
         
         CFRelease(cfpath);
-        
-        s.activePaths = 1;
-        s.stream = FSEventStreamCreate(
-            nullptr,
-            (FSEventStreamCallback)&fsCallback,
-            &m_context,
-            m_pathList,
-            kFSEventStreamEventIdSinceNow,
-            m_latency,
-            kFSEventStreamCreateFlagNone);
-        
-        FSEventStreamScheduleWithRunLoop(s.stream, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
-        FSEventStreamStart(s.stream);
     }
     
     void removePath (const char * path) {
         CFStringRef cfpath = CFStringCreateWithCStringNoCopy(kCFAllocatorNull, path, kCFStringEncodingUTF8, nullptr);
         
+        m_deadStreamPaths = 0;
         for (auto & s : m_runningStreams) {
-            CFRange range { 0, CFArrayGetCount(s.pathArray) };
-            CFIndex index;
-            
-            CFSetRe
-            
-            
-            while ((index = CFArrayGetFirstIndexOfValue(s.pathArray, range, cfpath)) != kCFNotFound) {
-                --s.activePaths;
-                ++s.deadPaths;
-                range.location = index;
-            }
+            CFSetRemoveValue(s.activePaths, cfpath);
+            m_deadStreamPaths += CFArrayGetCount(s.pathArray) - CFSetGetCount(s.activePaths);
         }
-        CFSet
-        
         
         CFRelease(cfpath);
     }
     
-    
-    
-    
     void cleanupEmptyStreams () {
         for (auto i = m_runningStreams.size(); i --> 0; ) {
             auto & s = m_runningStreams[i];
-            if (s.activePaths == 0) {
-                
-                FSEventStreamStop(s.stream);
-                CFRelease(s.stream);
-                CFRelease(s.pathArray);
             
+            if (CFSetGetCount(s.activePaths) == 0) {
+                // remove value / kill stream
                 if (i != m_runningStreams.size() - 1)
                     std::swap(m_runningStreams.back(), s);
                 m_runningStreams.pop_back();
@@ -210,52 +164,45 @@ protected:
     }
     
     void consolidateStreams () {
-        CFMutableSetRef keepPaths = CFSetCreateMutable(nullptr, 0, nullptr);
+        if (m_deadStreamPaths < 5 && m_runningStreams.size() < 4)
+            return;
+        
+        unsigned totalActivePaths = 0;
+        for (auto & s : m_runningStreams)
+            totalActivePaths += CFSetGetCount(s.activePaths);
+        
+        CFMutableSetRef keepPaths = CFSetCreateMutable(nullptr, totalActivePaths, nullptr);
+        std::vector<void*> tmpValues (totalActivePaths);
         
         for (auto & s : m_runningStreams) {
-            for (auto i = CFArrayGetCount(s.pathArray); i --> 0; ) {
-                CFStringRef cfstr = (CFStringRef)CFArrayGetValueAtIndex(s.pathArray, i);
-                const char * str = CFStringGetCStringPtr(cfstr, kCFStringEncodingUTF8);
-                
-                if (m_pathCallbacks.find(str) != m_pathCallbacks.end()) {
-                    CFSetAddValue(keepPaths, cfstr);
-                }
+            // I'm kinda surprised there doesn't appear to be CF set union operation. Oh well...
+            CFSetGetValues(s.activePaths, (const void**)&tmpValues[0]);
+            for (auto i = CFSetGetCount(s.activePaths); i --> 0; ) {
+                CFSetAddValue(keepPaths, tmpValues[i]);
             }
         }
         
-        m_runningStreams.emplace_back();
+        assert(CFSetGetCount(keepPaths) < totalActivePaths);
+        CFSetGetValues(keepPaths, (const void**)&tmpValues[0]);
+        
+        m_runningStreams.emplace_back(&m_context,
+                                      (const CFStringRef*)&tmpValues[0],
+                                      CFSetGetCount(keepPaths));
+        
         std::swap(m_runningStreams[0], m_runningStreams.back());
-        auto & s = m_runningStreams[0];
-        
-        auto npaths = CFSetGetCount(keepPaths);
-        std::vector<void*> values (npaths);
-        CFSetGetValues(keepPaths, (const void**)&values[0]);
-        
-        s.pathArray = CFArrayCreate(nullptr, (const void**)&values[0], npaths, nullptr);
-        s.activePaths = (unsigned)npaths;
-        s.stream = FSEventStreamCreate(nullptr,
-                (FSEventStreamCallback)&fsCallback,
-                &m_context,
-                s.pathArray,
-                kFSEventStreamEventIdSinceNow,
-                m_latency,
-                kFSEventStreamCreateFlagNone);
-        FSEventStreamScheduleWithRunLoop(s.stream, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
-        FSEventStreamStart(s.stream);
         
         while (m_runningStreams.size() > 1) {
-            auto & t = m_runningStreams.back();
-            FSEventStreamStop(t.stream);
-            CFRelease(t.stream);
-            CFRelease(t.pathArray);
             m_runningStreams.pop_back();
         }
+        m_deadStreamPaths = 0;
     }
 
 public:
     void notifyPathsChanged (const char ** paths, size_t n) {
         
         std::lock_guard<decltype(m_mutex)> lock (m_mutex);
+        
+        unsigned n_removed = 0;
         
         for (auto i = 0; i < n; ++i) {
             if (m_pathCallbacks.find(paths[i]) != m_pathCallbacks.end()) {
@@ -274,14 +221,14 @@ public:
                 if (callbacks.size() == 0) {
                     m_pathCallbacks.erase(m_pathCallbacks.find(paths[i]));
                     
-                    CFStringRef cfPath = CFStringCreateWithCString(nullptr, paths[i], kCFStringEncodingUTF8);
-                    CFArrayRemoveValueAtIndex(m_pathList,
-                            CFArrayGetFirstIndexOfValue(m_pathList,
-                                  CFRangeMake(0, CFArrayGetCount(m_pathList)),
-                                  (void*)cfPath));
-                    CFRelease(cfPath);
+                    removePath(paths[i]);
+                    ++n_removed;
                 }
             }
+        }
+        if (n_removed > 0) {
+            cleanupEmptyStreams();
+            consolidateStreams();
         }
     }
     DirectoryWatcherHandleRef startWatchingPath (
@@ -295,11 +242,9 @@ public:
         if (m_pathCallbacks.find(path) != m_pathCallbacks.end()) {
             
             m_pathCallbacks[path] = { callback };
+            appendFSEventStream(path);
+            consolidateStreams();
             
-            CFStringRef cfPath = CFStringCreateWithCString(nullptr, path.c_str(), kCFStringEncodingUTF8);
-            CFArrayAppendValue(m_pathList, (void*)cfPath);
-            CFRelease(cfPath);
-            return 0;
         } else {
             m_pathCallbacks[path].push_back(callback);
         }
