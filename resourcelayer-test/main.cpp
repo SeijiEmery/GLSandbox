@@ -7,7 +7,10 @@
 //
 
 #include "../src/common/resourcelayer/resource_layer.hpp"
+#include "../src/common/resourcelayer/file_watcher.hpp"
 #include <iostream>
+#include <sstream>
+#include <thread>
 
 using namespace gl_sandbox;
 using namespace resource;
@@ -52,10 +55,108 @@ void tryDirectLoad (std::string filepath) {
         }});
 }
 
+//std::mutex g_coutMutex;
+//
+//struct TestReporter {
+//    std::string title;
+//    std::stringstream report;
+//    std::function<void(const std::stringstream &)> logReport;
+//    
+//    unsigned num_passed = 0, num_failed = 0;
+//    bool reportFailures = true, reportSuccesses = false;
+//    
+//    TestReporter (std::string title, decltype(logReport) logReport) : title(title), logReport(logReport) {
+//        report << "-- " << title << " --\n";
+//    }
+//    TestReporter (std::string title) :
+//        TestReporter(title, [](const std::stringstream & results) {
+//            std::lock_guard<decltype(g_coutMutex)> lock (g_coutMutex);
+//            std::cout << results.str() << "\n";
+//        }) {}
+//    
+//    void pass (const std::string & what) {
+//        if (reportSuccesses)
+//            report << "SUCCESS: " << what << "\n";
+//        ++num_passed;
+//    }
+//    void fail (const std::string & what) {
+//        if (reportFailures)
+//            report << "FAILED:  " << what << "\n";
+//        ++num_failed;
+//    }
+//    ~TestReporter () {
+//        report << num_passed << " / " << (num_passed + num_failed) << " tests passed\n";
+//        logReport(report);
+//    }
+//};
+//
+//typedef std::function<bool()> TestCase;
+//typedef std::pair<std::string, TestCase> LabeledTestCase;
+//
+//void runTestCases (TestReporter & r, std::initializer_list<LabeledTestCase> cases) {
+//    for (auto labeledCase : cases) {
+//        if (!labeledCase.second()) {
+//            r.pass(labeledCase.first);
+//        }
+//    }
+//}
+//
+//std::vector<std::thread> g_launchedThreads;
+//class TestRunner {
+//    std::vector<std::thread> launchedThreads;
+//    
+//public:
+//    void launch (std::function<void()> f) {
+//        launchedThreads.emplace_back(f);
+//    }
+//    void launch (std::string title, std::function<void(TestReporter &)> f) {
+//        launch([=]{
+//            TestReporter r (title);
+//            f(r);
+//        });
+//    }
+//    ~TestRunner () {
+//        for (auto & thread : launchedThreads) {
+//            thread.join();
+//        }
+//    }
+//};
+//
+//void TestTests (TestRunner & runner) {
+//    runner.launch("Test test", [](TestReporter & reporter) {
+//        
+//        // do init...
+//        
+//        runTestCases (reporter, {
+//            { "this test should pass", [=]{
+//                return true;
+//            }},
+//            { "this test should fail", [=]{
+//                return false;
+//            }}
+//        });
+//    });
+//}
+
+void tryWatchingForFiles () {
+    using namespace resource_impl::platform_osx;
+    
+    DirectoryWatcherInstance watcher;
+    
+    std::cout << "Creating file watcher\n";
+    
+    watcher.watchForChanges("/", [](auto path) {
+        std::cout << "File maybe changed: " << path << "\n";
+    }, [](auto err) { std::cerr << err.what() << "\n"; }, false);
+    
+    std::this_thread::sleep_for(std::chrono::nanoseconds((long)10e9));
+}
 
 int main(int argc, const char * argv[]) {
     
     tryDirectLoad("~/Library/Application Support/GLSandbox/conf.lua");
+    
+    tryWatchingForFiles();
     
     return 0;
 }

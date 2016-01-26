@@ -11,6 +11,10 @@
 		81043F8A1C30877900CEB09C /* instanced_array.vs in Resources */ = {isa = PBXBuildFile; fileRef = 81043F891C30877900CEB09C /* instanced_array.vs */; settings = {ASSET_TAGS = (); }; };
 		811195C71C559B1000980109 /* resource_layer_declarative.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 811195C51C559B1000980109 /* resource_layer_declarative.cpp */; settings = {ASSET_TAGS = (); }; };
 		811195C81C559B1000980109 /* resource_layer_declarative.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 811195C51C559B1000980109 /* resource_layer_declarative.cpp */; settings = {ASSET_TAGS = (); }; };
+		811195E01C56EF5D00980109 /* file_watcher.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 811195DE1C56EF5D00980109 /* file_watcher.cpp */; settings = {ASSET_TAGS = (); }; };
+		811195E11C56EF5D00980109 /* file_watcher.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 811195DE1C56EF5D00980109 /* file_watcher.cpp */; settings = {ASSET_TAGS = (); }; };
+		811195E21C577FA700980109 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 81A01C001C522A4D00E00897 /* CoreFoundation.framework */; };
+		811195E31C577FAC00980109 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 81A01BFE1C52271600E00897 /* CoreServices.framework */; };
 		81176D851C1FC90D0025EB6C /* basic_shader.fs in Resources */ = {isa = PBXBuildFile; fileRef = 81176D841C1FC90D0025EB6C /* basic_shader.fs */; settings = {ASSET_TAGS = (); }; };
 		81176D871C1FC9230025EB6C /* basic_shader.vs in Resources */ = {isa = PBXBuildFile; fileRef = 81176D861C1FC9230025EB6C /* basic_shader.vs */; settings = {ASSET_TAGS = (); }; };
 		81176D8A1C1FC9640025EB6C /* gl_shaders.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 81176D881C1FC9640025EB6C /* gl_shaders.cpp */; settings = {ASSET_TAGS = (); }; };
@@ -158,6 +162,8 @@
 		81043F891C30877900CEB09C /* instanced_array.vs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = instanced_array.vs; path = shaders/modules/triangles/instanced_array.vs; sourceTree = SOURCE_ROOT; };
 		811195C51C559B1000980109 /* resource_layer_declarative.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = resource_layer_declarative.cpp; path = src/common/resourcelayer/resource_layer_declarative.cpp; sourceTree = SOURCE_ROOT; };
 		811195C61C559B1000980109 /* resource_layer_declarative.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = resource_layer_declarative.hpp; path = src/common/resourcelayer/resource_layer_declarative.hpp; sourceTree = SOURCE_ROOT; };
+		811195DE1C56EF5D00980109 /* file_watcher.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = file_watcher.cpp; path = src/common/resourcelayer/file_watcher.cpp; sourceTree = SOURCE_ROOT; };
+		811195DF1C56EF5D00980109 /* file_watcher.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = file_watcher.hpp; path = src/common/resourcelayer/file_watcher.hpp; sourceTree = SOURCE_ROOT; };
 		81176D841C1FC90D0025EB6C /* basic_shader.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = basic_shader.fs; path = shaders/modules/triangles/basic_shader.fs; sourceTree = SOURCE_ROOT; };
 		81176D861C1FC9230025EB6C /* basic_shader.vs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = basic_shader.vs; path = shaders/modules/triangles/basic_shader.vs; sourceTree = SOURCE_ROOT; };
 		81176D881C1FC9640025EB6C /* gl_shaders.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = gl_shaders.cpp; path = src/common/gl/gl_shaders.cpp; sourceTree = SOURCE_ROOT; };
@@ -355,6 +361,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				811195E31C577FAC00980109 /* CoreServices.framework in Frameworks */,
+				811195E21C577FA700980109 /* CoreFoundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -652,6 +660,8 @@
 				81A01C151C55562500E00897 /* resource_impl.hpp */,
 				811195C51C559B1000980109 /* resource_layer_declarative.cpp */,
 				811195C61C559B1000980109 /* resource_layer_declarative.hpp */,
+				811195DE1C56EF5D00980109 /* file_watcher.cpp */,
+				811195DF1C56EF5D00980109 /* file_watcher.hpp */,
 			);
 			name = resourcelayer;
 			sourceTree = "<group>";
@@ -1038,6 +1048,7 @@
 				815D62091C1F670F005DB2A8 /* app.cpp in Sources */,
 				81A01C131C543CA100E00897 /* resource_layer.cpp in Sources */,
 				815D61F41C1F6574005DB2A8 /* main.cpp in Sources */,
+				811195E01C56EF5D00980109 /* file_watcher.cpp in Sources */,
 				81A01C161C55562500E00897 /* resource_impl.cpp in Sources */,
 				81176D901C1FCBEF0025EB6C /* resources.cpp in Sources */,
 				81A01BD31C4B02FF00E00897 /* JSInstance.cpp in Sources */,
@@ -1060,6 +1071,7 @@
 			files = (
 				81A01C0C1C543BEF00E00897 /* main.cpp in Sources */,
 				81A01C171C55562500E00897 /* resource_impl.cpp in Sources */,
+				811195E11C56EF5D00980109 /* file_watcher.cpp in Sources */,
 				811195C81C559B1000980109 /* resource_layer_declarative.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
