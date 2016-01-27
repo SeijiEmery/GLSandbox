@@ -1,5 +1,5 @@
 //
-//  file_watcher.cpp
+//  file_watcher_osx.cpp
 //  GLSandbox
 //
 //  Created by semery on 1/25/16.
@@ -79,6 +79,7 @@ protected:
             for (auto i = 0; i < npaths; ++i) {
                 CFSetAddValue(activePaths, (const void*)paths[npaths]);
             }
+            std::cout << "---- Created " << *this << "\n";
             stream = FSEventStreamCreate(
                  nullptr,
                  (FSEventStreamCallback)&fsCallback,
@@ -88,28 +89,53 @@ protected:
                  latency,
                  kFSEventStreamCreateFlagNone);
             
-            std::cout << "Created instance " << (void*)this << " " << *this << "\n";
-            
             FSEventStreamScheduleWithRunLoop(stream, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
             FSEventStreamStart(stream);
         }
         ~FSEventStreamInstance () {
-            
-            std::cout << "Killing instance " << (void*)this << " " << *this << "\n";
+            if (stream) {
+                kill();
+            }
+            assert((stream != nullptr) == (pathArray != nullptr) && (stream != nullptr) == (activePaths != nullptr));
+        }
+    protected:
+        void kill () {
+            assert(stream != nullptr && pathArray != nullptr && activePaths != nullptr);
+            std::cout << "---- Killing " << *this << "\n";
             
             FSEventStreamStop(stream);
             CFRelease(stream);
             CFRelease(pathArray);
             CFRelease(activePaths);
         }
+    public:
         
         FSEventStreamInstance (const FSEventStreamInstance&) = delete;
         FSEventStreamInstance & operator= (const FSEventStreamInstance&) = delete;
-        FSEventStreamInstance (FSEventStreamInstance &&) = default;
-        FSEventStreamInstance & operator= (FSEventStreamInstance &&) = default;
+        
+        FSEventStreamInstance (FSEventStreamInstance && s) :
+            stream(s.stream), pathArray(s.pathArray), activePaths(s.activePaths)
+        {
+            s.stream = nullptr;
+            s.pathArray = nullptr;
+            s.activePaths = nullptr;
+        }
+        FSEventStreamInstance & operator= (FSEventStreamInstance && s) {
+            if (stream) { kill(); }
+            stream = s.stream; s.stream = nullptr;
+            pathArray = s.pathArray; s.pathArray = nullptr;
+            activePaths = s.activePaths; s.activePaths = nullptr;
+            return *this;
+        }
         
         friend std::ostream & operator << (std::ostream & os, const FSEventStreamInstance & s) {
-            os << "FSEventStream (file watcher) instance (paths = ";
+            os << "FSEventStream instance " << (void*)&s << " ";
+            
+            if (!s.stream) os << "null stream! ";
+            if (!s.pathArray) os << "null pathArray! ";
+            if (!s.activePaths) os << "null activePaths! ";
+            
+            os << "(paths = ";
             for (auto i = CFArrayGetCount(s.pathArray); i --> 0; ) {
                 auto v = (CFStringRef)CFArrayGetValueAtIndex(s.pathArray, i);
                 auto path = CFStringGetCStringPtr(v, kCFStringEncodingUTF8);
@@ -117,13 +143,17 @@ protected:
             }
             return os << "; activePaths = " << CFSetGetCount(s.activePaths) << ")";
         }
+        
+
     };
     std::vector<FSEventStreamInstance> m_runningStreams;
     unsigned m_deadStreamPaths = 0;
 
 public:
     Impl () : m_cfRunThread([](){
+        std::cout << "STARTING CFRUN LOOP\n";
         CFRunLoopRun();
+        std::cout << "ENDING CFRUN LOOP\n";
     }) {
         
     }
@@ -141,6 +171,7 @@ protected:
         const FSEventStreamEventFlags eventFlags[],
         const FSEventStreamEventId eventIds[]
     ) {
+        std::cout << "Recieved events!\n";
         static_cast<DirectoryWatcherInstance::Impl*>(clientCallbackInfo)
             ->notifyPathsChanged((const char**)eventPaths, numEvents);
     }
@@ -151,14 +182,14 @@ protected:
         
         m_runningStreams.emplace_back(&m_context, &cfpath, 1);
         
-        std::cout << "Created new stream " << m_runningStreams.back() << "\n";
+        std::cout << ">>>> Created new stream " << m_runningStreams.back() << "\n";
         
         CFRelease(cfpath);
     }
     
     void removePath (const char * path) {
         
-        std::cout << "Removing path (internal op) '" << path << "'\n";
+        std::cout << ">>>> Removing path (internal op) '" << path << "'\n";
         
         CFStringRef cfpath = CFStringCreateWithCStringNoCopy(kCFAllocatorNull, path, kCFStringEncodingUTF8, nullptr);
         
@@ -176,7 +207,7 @@ protected:
             auto & s = m_runningStreams[i];
             
             if (CFSetGetCount(s.activePaths) == 0) {
-                std::cout << "Killing empty stream " << s << "\n";
+                std::cout << ">>>> Killing empty stream " << s << "\n";
                 if (i != m_runningStreams.size() - 1)
                     std::swap(m_runningStreams.back(), s);
                 m_runningStreams.pop_back();
@@ -185,15 +216,17 @@ protected:
     }
     
     void consolidateStreams () {
-        if (m_deadStreamPaths < 5 && m_runningStreams.size() < 4)
-            return;
+        if (m_deadStreamPaths > 3 || m_runningStreams.size() > 2) {}
+        else return;
+        
+        std::cout << ">>>> Consolidating streams\n";
         
         unsigned totalActivePaths = 0;
         for (auto & s : m_runningStreams)
             totalActivePaths += CFSetGetCount(s.activePaths);
         
         CFMutableSetRef keepPaths = CFSetCreateMutable(nullptr, totalActivePaths, nullptr);
-        std::vector<void*> tmpValues (totalActivePaths);
+        std::vector<void*> tmpValues (totalActivePaths + 100);
         
         for (auto & s : m_runningStreams) {
             // I'm kinda surprised there doesn't appear to be CF set union operation. Oh well...
@@ -203,17 +236,41 @@ protected:
             }
         }
         
-        assert(CFSetGetCount(keepPaths) < totalActivePaths);
+        auto keepPathsCount = CFSetGetCount(keepPaths);
+        if (keepPathsCount > totalActivePaths) {
+            std::cout << "ERROR: num keepPaths > totalActivePaths: " << keepPathsCount << " > " << totalActivePaths << "\n";
+            tmpValues.resize(keepPathsCount);
+        }
+        
+//        assert(CFSetGetCount(keepPaths) < totalActivePaths);
+        
+        std::cout << "---- values before get: [";
+        for (auto i = keepPathsCount; i --> 0; ) {
+            std::cout << tmpValues[i] << (i ? ", " : "]\n");
+        }
         CFSetGetValues(keepPaths, (const void**)&tmpValues[0]);
+        std::cout << "---- values after  get: [";
+        for (auto i = keepPathsCount; i --> 0; ) {
+            std::cout << tmpValues[i] << (i ? ", " : "]\n");
+        }
+        
+        std::cout << "---- got " << keepPathsCount << " paths:\n";
+        for (auto i = keepPathsCount; i --> 0; ) {
+            auto ptr = tmpValues[i];
+            auto str = CFStringGetCStringPtr((CFStringRef)ptr, kCFStringEncodingUTF8);
+            std::cout << "----     '" << str << "'\n";
+        }
+        
+        
         
         m_runningStreams.emplace_back(&m_context,
                                       (const CFStringRef*)&tmpValues[0],
-                                      CFSetGetCount(keepPaths));
-        std::cout << "Consolidated streams -- created stream " << m_runningStreams.back() << "\n";
+                                      keepPathsCount);
+        std::cout << ">>>> Consolidated streams -- created stream " << m_runningStreams.back() << "\n";
         std::swap(m_runningStreams[0], m_runningStreams.back());
         
         while (m_runningStreams.size() > 1) {
-            std::cout << "Consolidated streams -- removing stream " << m_runningStreams.back() << "\n";
+            std::cout << ">>>> Consolidated streams -- removing stream " << m_runningStreams.back() << "\n";
             m_runningStreams.pop_back();
         }
         m_deadStreamPaths = 0;
@@ -255,7 +312,7 @@ public:
         }
         if (n_removed > 0) {
             cleanupEmptyStreams();
-            consolidateStreams();
+//            consolidateStreams();
         }
     }
     DirectoryWatcherHandleRef startWatchingPath (
@@ -273,7 +330,7 @@ public:
             
             m_pathCallbacks[path] = { callback };
             appendFSEventStream(path);
-            consolidateStreams();
+//            consolidateStreams();
             
         } else {
             std::cout << "Path watcher already exists\n";

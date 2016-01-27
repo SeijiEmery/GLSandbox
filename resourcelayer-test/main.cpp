@@ -139,7 +139,7 @@ void tryDirectLoad (std::string filepath) {
 //}
 
 void tryWatchingForFiles () {
-    using namespace resource_impl::platform_osx;
+    using namespace resource_impl::platform_bsd;
     
     DirectoryWatcherInstance watcher;
     
@@ -155,8 +155,10 @@ void tryWatchingForFiles () {
     watchFile(resolvedPath("~/foo"))->detatch();
     watchFile(resolvedPath("~/misc-projects"));
     watchFile(resolvedPath("~/"));
+    watchFile(resolvedPath("~/foo/bar.baz"));
+    watchFile(resolvedPath("~/foo/bar.borg"));
 
-    std::this_thread::sleep_for(std::chrono::nanoseconds((long)10e9));
+    std::this_thread::sleep_for(std::chrono::nanoseconds((long)30e9));
 }
 
 int main(int argc, const char * argv[]) {

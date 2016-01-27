@@ -23,6 +23,23 @@ struct IDirectoryWatcherHandle {
 typedef std::shared_ptr<IDirectoryWatcherHandle> DirectoryWatcherHandleRef;
     
     
+struct IFileWatcher {
+    // Callback actions (only one of each, so calling again will override)
+    virtual IFileWatcher & onFileModified (std::function<void(const FilePath &)>) = 0;
+    virtual IFileWatcher & onFileDeleted (std::function<void(const FilePath &)>) = 0;
+    virtual IFileWatcher & onFileCreated (std::function<void(const FilePath &)>) = 0;
+    virtual IFileWatcher & onFileRenamed (std::function<void(const FilePath &, const FilePath &)>) = 0;
+    
+    // Release file watcher (stop watching file)
+    virtual void release () = 0;
+    
+    // Set release / don't release on dtor (default on)
+    virtual IFileWatcher & setAutorelease (bool) = 0;
+    virtual ~IFileWatcher () {}
+};
+typedef std::shared_ptr<IFileWatcher> FileWatcherRef;
+    
+    
 // Platform-specific osx implementation
 namespace platform_osx {
     
@@ -50,6 +67,42 @@ protected:
 };
     
 }; // namespace platform_osx
+    
+namespace platform_bsd {
+    
+// Alternative implementation using kqueues.
+class DirectoryWatcherInstance {
+public:
+    DirectoryWatcherHandleRef watchForChanges (
+       const FilePath & dirPath,
+       const ThreadCallable<void(const FilePath&)> onChanged,
+       const ThreadCallable<void(const ResourceError &)> onError,
+       bool autorelease = true);
+    
+    FileWatcherRef watchFileForChanges (
+        const FilePath & path,
+        const std::function<void(ResourceError &)> onError);
+    
+    FileWatcherRef watchDirForChanges (
+        const FilePath & path,
+        const std::function<bool(const FilePath&)>& fileFilter,
+        const std::function<void(ResourceError &)>& onError);
+    
+    FileWatcherRef watchDirForRecursiveChanges (
+        const FilePath & path,
+        const std::function<bool(const FilePath&)> &fileFilter,
+        const std::function<bool(const FilePath&)> &subdirFilter,
+        const std::function<void(ResourceError &)> &onError);
+    
+    DirectoryWatcherInstance ();
+    ~DirectoryWatcherInstance ();
+    
+    struct Impl;
+protected:
+    std::unique_ptr<Impl> impl;
+};
+    
+}; // namespace platform_bsd
     
 
 namespace platform_windows {
